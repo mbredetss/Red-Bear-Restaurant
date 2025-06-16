@@ -1,10 +1,14 @@
+<?php
+include 'auth.php'; // Mengimpor file auth.php
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Responsive Login Form HTML CSS | CodingNepal</title>
+    <title>Login Red Bear</title>
     <link rel="stylesheet" href="style/style.css" />
     <!-- Font Awesome CDN link for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
@@ -13,22 +17,26 @@
 <body>
     <div class="wrapper">
         <div class="title"><span>Login Form</span></div>
-        <form action="#">
+        <form action="script/php/login_backend.php" method="POST">
             <div class="row">
                 <i class="fas fa-user"></i>
-                <input type="text" placeholder="Email or Phone" required />
+                <input type="text" name="email" placeholder="Email" required />
             </div>
             <div class="row">
                 <i class="fas fa-lock"></i>
-                <input type="password" placeholder="Password" required />
+                <input type="password" name="password" placeholder="Password" required />
             </div>
             <div class="pass"><a href="#">Forgot password?</a></div>
             <div class="row button">
                 <input type="submit" value="Login" />
             </div>
-            <div class="signup-link">Not a member? <a href="#">Signup now</a></div>
+            <div class="signup-link">Not a member? <a href="register.php">Signup now</a></div>
         </form>
+
+        <div id="login-error-message" style="display: none; color: red;">Email atau password salah.</div>
     </div>
+
+    <script src="script/js/script.js"></script>
 </body>
 
 </html>

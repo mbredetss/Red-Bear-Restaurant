@@ -1,5 +1,6 @@
 <?php
 include __DIR__ . '/init.php';
+require_once 'script/session_check.php'; // Mengimpor file session_check.php
 ?>
 
 <!DOCTYPE html>
@@ -11,6 +12,7 @@ include __DIR__ . '/init.php';
   <title>Red Bear</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <link href="style/styles.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 
 <body class="bg-white-100">
@@ -30,6 +32,33 @@ include __DIR__ . '/init.php';
       <a href="#" class="hover:bg-white hover:text-black px-3 py-1 rounded font-bold text-white">PRESS</a>
       <a href="#" class="hover:bg-white hover:text-black px-3 py-1 rounded font-bold text-white">BLOG</a>
       <a id="bookTable" href="#" class="bg-black text-white px-4 py-2 rounded font-bold">BOOK A TABLE</a>
+
+      <?php if ($user): ?>
+        <!-- Tampilkan Avatar & Dropdown jika login -->
+        <div class="relative ml-4">
+          <button id="userAvatar"
+            class="flex items-center justify-center h-10 w-10 rounded-full bg-white text-gray-800 border border-gray-300 shadow hover:shadow-lg transition duration-200 focus:outline-none">
+            <i class="fas fa-user"></i>
+          </button>
+
+          <div id="profileDropdown"
+            class="hidden absolute right-0 mt-3 w-56 bg-white rounded-xl shadow-lg z-50 text-sm text-gray-700 overflow-hidden ring-1 ring-black/5 transition-all duration-300">
+            <div class="px-4 py-3 border-b">
+              <p class="font-semibold">Halo, <?= htmlspecialchars($user['name']) ?></p>
+              <p class="text-xs text-gray-500 mt-1">Saldo: <span
+                  class="font-medium text-green-600">Rp<?= number_format($saldo, 0, ',', '.') ?></span></p>
+            </div>
+            <a href="logout.php" class="block px-4 py-2 hover:bg-gray-100">🚪 Logout</a>
+          </div>
+        </div>
+      <?php else: ?>
+        <!-- Tampilkan tombol login jika belum login -->
+        <a href="login_register/login.php"
+          class="ml-4 bg-white text-black border border-black px-4 py-2 rounded hover:bg-black hover:text-white font-bold transition">Login</a>
+      <?php endif; ?>
+
+      </div>
+
     </nav>
   </header>
 

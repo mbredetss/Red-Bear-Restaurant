@@ -74,4 +74,19 @@ indicators.forEach((indicator, index) => {
 setInterval(nextSlide, 5000);
 
 // Initialize first slide
-updateSlide(); 
+updateSlide();
+
+const avatar = document.getElementById('userAvatar');
+const dropdown = document.getElementById('profileDropdown');
+
+if (avatar) {
+  avatar.addEventListener('click', () => {
+    dropdown.classList.toggle('hidden');
+  });
+
+  window.addEventListener('click', function (e) {
+    if (!avatar.contains(e.target) && !dropdown.contains(e.target)) {
+      dropdown.classList.add('hidden');
+    }
+  });
+}
