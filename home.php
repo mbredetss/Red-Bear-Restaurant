@@ -103,8 +103,8 @@ include __DIR__ . '/init.php';
     <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" class="h-12 w-12">
   </a>
 
-  <script src="style/script.js"></script>
-  <script src="menuLoad.js"></script>
+  <script src="script/script.js"></script>
+  <script src="script/menuLoad.js"></script>
 </body>
 
 </html>
