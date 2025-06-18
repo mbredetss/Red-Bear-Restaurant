@@ -32,6 +32,15 @@ require_once 'script/session_check.php'; // Mengimpor file session_check.php
       <a href="#" class="hover:bg-white hover:text-black px-3 py-1 rounded font-bold text-white">PRESS</a>
       <a href="#" class="hover:bg-white hover:text-black px-3 py-1 rounded font-bold text-white">BLOG</a>
       <a id="bookTable" href="#" class="bg-black text-white px-4 py-2 rounded font-bold">BOOK A TABLE</a>
+      <a id="orderStatusBtn" href="#"
+        class="relative hover:bg-white hover:text-black px-3 py-2 rounded font-bold text-white flex items-center gap-2">
+        <i class="fas fa-receipt text-lg"></i>
+        <span id="orderBadge"
+          class="absolute -top-1 -right-2 bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full hidden">
+          •
+        </span>
+      </a>
+
 
       <?php if ($user): ?>
         <!-- Tampilkan Avatar & Dropdown jika login -->
@@ -98,6 +107,17 @@ require_once 'script/session_check.php'; // Mengimpor file session_check.php
     <div id="menu-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
   </section>
 
+  <div id="pesan-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center z-50">
+    <div class="bg-white p-6 rounded-lg w-80 space-y-4 relative">
+      <button id="pesan-close" class="absolute top-2 right-3 text-xl font-bold">&times;</button>
+      <h3 id="pesan-menu-nama" class="text-lg font-semibold"></h3>
+      <input type="number" id="pesan-jumlah" min="1" value="1" class="w-full p-2 border rounded" />
+      <button id="pesan-kirim" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">Pesan
+        Sekarang</button>
+    </div>
+  </div>
+
+
   <!-- Modal Tampilan Menu Detail -->
   <div id="menu-modal"
     class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 hidden transition-opacity duration-300">
@@ -125,7 +145,42 @@ require_once 'script/session_check.php'; // Mengimpor file session_check.php
     </div>
   </div>
 
+  <!-- Modal (dengan tombol Pesanan Saya) -->
+  <div id="orderModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
+    <div class="bg-white p-6 rounded-lg shadow-lg text-center w-80">
+      <h2 class="text-xl font-bold mb-4">Status Pesanan</h2>
+      <p id="orderStatusText" class="text-gray-700 text-lg mb-6">
+        <span id="orderStatusSpan">...</span>
+      </p>
+      <button id="closeOrderModal" class="bg-black text-white px-4 py-2 rounded hover:bg-gray-800">Tutup</button>
+    </div>
+  </div>
 
+  <!-- Modal Detail Pesanan dengan Tab -->
+  <div id="orderDetailsModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
+    <div class="bg-white p-6 rounded-lg shadow-lg w-[500px] max-h-[80vh] overflow-auto">
+      <h2 class="text-2xl font-bold mb-4">Detail Pesanan Anda</h2>
+
+      <!-- Tab Navigation -->
+      <div class="flex border-b mb-4">
+        <button id="tabAktif" class="flex-1 py-2 text-center font-medium border-b-2 border-black">Aktif</button>
+        <button id="tabSelesai"
+          class="flex-1 py-2 text-center font-medium text-gray-500 hover:text-black">Selesai</button>
+      </div>
+
+      <!-- Tab Content -->
+      <ul id="orderListAktif" class="space-y-3 text-gray-700">
+        <!-- Pesanan Aktif akan diisi via JS -->
+      </ul>
+      <ul id="orderListSelesai" class="space-y-3 text-gray-700 hidden">
+        <!-- Pesanan Selesai akan diisi via JS -->
+      </ul>
+
+      <div class="text-right mt-4">
+        <button id="closeOrderDetails" class="px-4 py-2 bg-black text-white rounded hover:bg-gray-800">Tutup</button>
+      </div>
+    </div>
+  </div>
 
   <!-- WhatsApp Button -->
   <a href="https://api.whatsapp.com/send" target="_blank" class="fixed bottom-4 right-4 z-50">

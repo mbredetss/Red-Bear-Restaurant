@@ -17,19 +17,23 @@ $menus = [];
 foreach ($resources['resources'] as $res) {
   $publicId = pathinfo($res['public_id'], PATHINFO_FILENAME);
 
-  $statusQuery = $koneksi->prepare("SELECT tersedia, jenis FROM menu WHERE public_id = ?");
+  $statusQuery = $koneksi->prepare("SELECT id, tersedia, jenis FROM menu WHERE public_id = ?");
   $statusQuery->bind_param("s", $publicId);
   $statusQuery->execute();
   $statusResult = $statusQuery->get_result();
   $statusRow = $statusResult->fetch_assoc();
+  
   $tersedia = $statusRow['tersedia'] ?? false;
   $jenis = $statusRow['jenis'] ?? 'makanan';
+  $id = $statusRow['id'];
+
 
   $menus[] = [
     'name' => $publicId,
     'tersedia' => $tersedia,
     'jenis' => $jenis,
-    'image' => $res['secure_url']
+    'image' => $res['secure_url'],
+    'id' => $id,
   ];
 }
 header('Content-Type: application/json');
