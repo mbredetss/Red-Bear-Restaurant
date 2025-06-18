@@ -34,7 +34,7 @@ require_once 'script/session_check.php'; // Mengimpor file session_check.php
       <a id="bookTable" href="#" class="bg-black text-white px-4 py-2 rounded font-bold">BOOK A TABLE</a>
       <a id="orderStatusBtn" href="#"
         class="relative hover:bg-white hover:text-black px-3 py-2 rounded font-bold text-white flex items-center gap-2">
-        <i class="fas fa-receipt text-lg"></i>
+        <i class="fas fa-shopping-cart text-lg"></i>
         <span id="orderBadge"
           class="absolute -top-1 -right-2 bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full hidden">
           •
