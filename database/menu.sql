@@ -30,6 +30,7 @@ SET time_zone = "+00:00";
 CREATE TABLE `menu` (
   `id` int(11) NOT NULL,
   `public_id` varchar(255) NOT NULL,
+  `image_path` varchar(255) NOT NULL,
   `tersedia` tinyint(1) NOT NULL DEFAULT 1,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `jenis` varchar(50) NOT NULL
@@ -39,14 +40,14 @@ CREATE TABLE `menu` (
 -- Dumping data untuk tabel `menu`
 --
 
-INSERT INTO `menu` (`id`, `public_id`, `tersedia`, `created_at`, `jenis`) VALUES
-(27, 'asdas', 1, '2025-06-15 12:11:53', 'makanan'),
-(28, 'asdaw', 1, '2025-06-15 12:16:14', 'minuman'),
-(29, 'adwad', 1, '2025-06-15 12:16:27', 'makanan'),
-(31, 'asdaw', 1, '2025-06-15 12:16:54', 'minuman'),
-(32, 'asdaw', 1, '2025-06-15 12:17:16', 'minuman'),
-(33, 'asdwa', 1, '2025-06-15 12:18:18', 'minuman'),
-(34, 'sadw', 1, '2025-06-15 12:18:36', 'makanan');
+INSERT INTO `menu` (`id`, `public_id`, `image_path`, `tersedia`, `created_at`, `jenis`) VALUES
+(27, 'asdas', '', 1, '2025-06-15 12:11:53', 'makanan'),
+(28, 'asdaw', '', 1, '2025-06-15 12:16:14', 'minuman'),
+(29, 'adwad', '', 1, '2025-06-15 12:16:27', 'makanan'),
+(31, 'asdaw', '', 1, '2025-06-15 12:16:54', 'minuman'),
+(32, 'asdaw', '', 1, '2025-06-15 12:17:16', 'minuman'),
+(33, 'asdwa', '', 1, '2025-06-15 12:18:18', 'minuman'),
+(34, 'sadw', '', 1, '2025-06-15 12:18:36', 'makanan');
 
 --
 -- Indexes for dumped tables

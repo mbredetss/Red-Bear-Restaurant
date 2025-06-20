@@ -1,5 +1,4 @@
 <?php
-include __DIR__ . '/init.php';
 require_once 'script/session_check.php'; // Mengimpor file session_check.php
 ?>
 

@@ -1,7 +1,6 @@
 <?php
 session_start();
 
-
 require_once '../../../database.php'; // sesuaikan path
 
 if (!isset($_SESSION['user_id'])) {

@@ -1,41 +1,28 @@
 <?php
-include __DIR__ . '/../../../init.php';
 require_once '../../../database.php';
 
 $koneksi = koneksiDatabase("red bear");
 
-// Ambil data dari menu.json
-$jsonPath = __DIR__ . '/../menu.json';
-$menuStatus = [];
-if (file_exists($jsonPath)) {
-  $menuStatus = json_decode(file_get_contents($jsonPath), true);
-}
+// Ambil data dari database
+$result = $koneksi->query("SELECT id, public_id, image_path, tersedia, jenis FROM menu");
 
-// Ambil gambar dari Cloudinary
-$resources = $adminApi->assets(['type' => 'upload', 'prefix' => 'menu_items/']);
+// Tentukan base URL
+$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
+$host = $_SERVER['HTTP_HOST'];
+$base_dir = rtrim(dirname(dirname(dirname(dirname($_SERVER['SCRIPT_NAME'])))), '/\\'); // Naik 3 level dari /admin/menu/api
+$base_url = "$protocol$host$base_dir/";
+
 $menus = [];
-foreach ($resources['resources'] as $res) {
-  $publicId = pathinfo($res['public_id'], PATHINFO_FILENAME);
-
-  $statusQuery = $koneksi->prepare("SELECT id, tersedia, jenis FROM menu WHERE public_id = ?");
-  $statusQuery->bind_param("s", $publicId);
-  $statusQuery->execute();
-  $statusResult = $statusQuery->get_result();
-  $statusRow = $statusResult->fetch_assoc();
-  
-  $tersedia = $statusRow['tersedia'] ?? false;
-  $jenis = $statusRow['jenis'] ?? 'makanan';
-  $id = $statusRow['id'];
-
-
+while ($row = $result->fetch_assoc()) {
   $menus[] = [
-    'name' => $publicId,
-    'tersedia' => $tersedia,
-    'jenis' => $jenis,
-    'image' => $res['secure_url'],
-    'id' => $id,
+    'id' => $row['id'],
+    'name' => $row['public_id'],
+    'image' => $base_url . $row['image_path'], // Buat URL absolut
+    'tersedia' => (bool)$row['tersedia'],
+    'jenis' => $row['jenis']
   ];
 }
+
 header('Content-Type: application/json');
 usort($menus, fn($a, $b) => strcmp($a['jenis'], $b['jenis']));
 echo json_encode($menus);

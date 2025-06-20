@@ -1,5 +1,4 @@
 <?php
-include __DIR__ . '/../../../init.php';
 require_once '../../../database.php';
 
 $koneksi = koneksiDatabase("red bear");
