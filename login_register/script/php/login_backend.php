@@ -25,7 +25,7 @@ if ($result->num_rows === 1) {
 
         // Redirect berdasarkan role
         if ($user['role'] === 'admin') {
-            header("Location: ../../admin/menu_admin.html");
+            header("Location: ../../../admin/beranda.php");
         } else {
             header("Location: ../../../home.php");
         }
