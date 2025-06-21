@@ -3,43 +3,64 @@ require_once 'script/session_check.php'; // Mengimpor file session_check.php
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Red Bear</title>
+  <title>Red Bear - Korean BBQ Test</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <link href="style/styles.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  
+  <!-- Custom Styles -->
+  <style>
+    body { font-family: 'Poppins', sans-serif; color: #333; }
+    h1, h2, h3, h4, h5, h6 { font-family: 'Montserrat', sans-serif; }
+    .nav-scrolled { background-color: rgba(26, 26, 26, 0.8) !important; backdrop-filter: blur(10px); }
+    .hero-gradient { background: linear-gradient(to top, rgba(0,0,0,0.7), transparent 40%); }
+    .group:hover .group-hover-scale-105 { transform: scale(1.05); }
+  </style>
 </head>
 
-<body class="bg-white-100">
+<body class="bg-gray-50">
   <!-- Navbar -->
   <header id="navbar" class="fixed w-full z-50 flex items-center justify-between px-6 py-4">
     <a href="home.php">
-      <img src="img/red-bear-logo.png" alt="Logo" class="h-20" style="border-radius: 50%;">
+      <img src="img/red-bear-logo.png" alt="Logo" class="h-16" style="border-radius: 50%;">
     </a>
 
-    <nav class="flex gap-6 items-center">
-      <a href="#" class="hover:bg-white hover:text-black px-3 py-1 rounded font-bold text-white">HOME</a>
-      <a href="#menu" class="hover:bg-white hover:text-black px-3 py-1 rounded font-bold text-white">MENU</a>
-      <a href="#" class="hover:bg-white hover:text-black px-3 py-1 rounded font-bold text-white">ABOUT</a>
-      <a href="#" class="hover:bg-white hover:text-black px-3 py-1 rounded font-bold text-white">FOLLOW</a>
-      <a href="#" class="hover:bg-white hover:text-black px-3 py-1 rounded font-bold text-white">LOCATION</a>
-      <a href="#" class="hover:bg-white hover:text-black px-3 py-1 rounded font-bold text-white">MERCHANDISE</a>
-      <a href="#" class="hover:bg-white hover:text-black px-3 py-1 rounded font-bold text-white">PRESS</a>
-      <a href="#" class="hover:bg-white hover:text-black px-3 py-1 rounded font-bold text-white">BLOG</a>
-      <a id="bookTable" href="#" class="bg-black text-white px-4 py-2 rounded font-bold">BOOK A TABLE</a>
-      <a id="orderStatusBtn" href="#"
-        class="relative hover:bg-white hover:text-black px-3 py-2 rounded font-bold text-white flex items-center gap-2">
-        <i class="fas fa-shopping-cart text-lg"></i>
-        <span id="orderBadge"
-          class="absolute -top-1 -right-2 bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full hidden">
-          •
+    <nav class="flex gap-1 md:gap-4 items-center">
+      <a href="#" class="hover:bg-white/10 text-white px-3 py-2 rounded-md font-semibold text-sm transition-colors">HOME</a>
+      <a href="#menu" class="hover:bg-white/10 text-white px-3 py-2 rounded-md font-semibold text-sm transition-colors">MENU</a>
+      
+      <!-- More Dropdown -->
+      <div class="relative" id="more-dropdown">
+        <button id="more-btn" class="hover:bg-white/10 text-white px-3 py-2 rounded-md font-semibold text-sm transition-colors flex items-center gap-1">
+          MORE <i class="fas fa-chevron-down text-xs"></i>
+        </button>
+        <div id="more-menu" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl py-1 z-50 text-gray-800 dropdown-menu">
+          <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100">ABOUT</a>
+          <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100">LOCATION</a>
+          <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100">BLOG</a>
+        </div>
+      </div>
+      
+      <a id="bookTable" href="#" class="bg-red-600 text-white px-5 py-2 rounded-full font-bold text-sm hover:bg-red-700 transition-all duration-300 shadow-lg">BOOK A TABLE</a>
+      
+      <a id="orderStatusBtn" href="#" class="relative text-white hover:bg-white/10 p-2 rounded-full">
+        <i class="fas fa-shopping-cart text-xl"></i>
+        <span id="orderBadge" class="absolute -top-0.5 -right-0.5 flex h-3 w-3">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
         </span>
       </a>
-
 
       <?php if ($user): ?>
         <!-- Tampilkan Avatar & Dropdown jika login -->
@@ -50,7 +71,7 @@ require_once 'script/session_check.php'; // Mengimpor file session_check.php
           </button>
 
           <div id="profileDropdown"
-            class="hidden absolute right-0 mt-3 w-56 bg-white rounded-xl shadow-lg z-50 text-sm text-gray-700 overflow-hidden ring-1 ring-black/5 transition-all duration-300">
+            class="hidden absolute right-0 mt-3 w-56 bg-white rounded-xl shadow-lg z-50 text-sm text-gray-700 overflow-hidden ring-1 ring-black/5 transition-all duration-300 dropdown-menu">
             <div class="px-4 py-3 border-b">
               <p class="font-semibold">Halo, <?= htmlspecialchars($user['name']) ?></p>
               <p class="text-xs text-gray-500 mt-1">Saldo: <span
@@ -62,89 +83,84 @@ require_once 'script/session_check.php'; // Mengimpor file session_check.php
       <?php else: ?>
         <!-- Tampilkan tombol login jika belum login -->
         <a href="login_register/login.php"
-          class="ml-4 bg-white text-black border border-black px-4 py-2 rounded hover:bg-black hover:text-white font-bold transition">Login</a>
+          class="bg-white text-gray-800 border border-gray-300 px-4 py-2 rounded-full hover:bg-gray-100 hover:shadow-md font-bold text-sm transition-all">Login</a>
       <?php endif; ?>
-
-      </div>
 
     </nav>
   </header>
 
   <!-- Hero Section -->
-  <section class="relative h-screen bg-cover bg-center carousel-slide overflow-hidden"
-    style="background-image: url('img/image.png');">
+  <section class="relative h-screen bg-cover bg-center carousel-slide overflow-hidden" style="background-image: url('img/image1.png');">
     <div class="carousel-bg absolute inset-0 transition-opacity duration-700 opacity-0 pointer-events-none"></div>
-    <div
-      class="absolute inset-0 bg-black bg-opacity-50 flex flex-col items-center justify-center text-center text-white px-4">
-      <h1 class="text-5xl font-extrabold">RED BEAR</h1>
-      <p class="text-xl mt-2">Korean Barbeque</p>
+    <div class="absolute inset-0 hero-gradient flex flex-col items-center justify-center text-center text-white px-4">
+      <h1 class="text-6xl md:text-7xl font-extrabold" style="font-family: 'Montserrat', sans-serif;">RED BEAR</h1>
+      <p class="text-xl md:text-2xl mt-4 font-light tracking-wider">PREMIUM KOREAN BARBEQUE</p>
 
       <!-- Carousel indicators -->
-      <div class="flex gap-3 mt-8">
+      <div class="absolute bottom-10 flex gap-3 mt-8">
         <span class="carousel-indicator active w-3 h-3 bg-white rounded-full cursor-pointer" data-slide="0"></span>
-        <span class="carousel-indicator w-3 h-3 bg-white rounded-full opacity-60 cursor-pointer" data-slide="1"></span>
-        <span class="carousel-indicator w-3 h-3 bg-white rounded-full opacity-60 cursor-pointer" data-slide="2"></span>
+        <span class="carousel-indicator w-3 h-3 bg-white/60 rounded-full cursor-pointer" data-slide="1"></span>
+        <span class="carousel-indicator w-3 h-3 bg-white/60 rounded-full cursor-pointer" data-slide="2"></span>
       </div>
 
       <!-- Navigation buttons -->
-      <button
-        class="carousel-btn prev-btn absolute left-10 top-1/2 transform -translate-y-1/2 p-3 text-white bg-black bg-opacity-50 rounded-full hover:bg-opacity-75">&#60;</button>
-      <button
-        class="carousel-btn next-btn absolute right-10 top-1/2 transform -translate-y-1/2 p-3 text-white bg-black bg-opacity-50 rounded-full hover:bg-opacity-75">&#62;</button>
+      <button class="carousel-btn prev-btn absolute left-4 md:left-10 top-1/2 transform -translate-y-1/2 p-3 text-white bg-black/30 rounded-full hover:bg-black/50 transition-colors">&#10094;</button>
+      <button class="carousel-btn next-btn absolute right-4 md:right-10 top-1/2 transform -translate-y-1/2 p-3 text-white bg-black/30 rounded-full hover:bg-black/50 transition-colors">&#10095;</button>
     </div>
   </section>
 
   <!-- Public Display + Menu Grid -->
-  <section id="menu" class="flex flex-col items-center py-12">
-    <div class="flex items-center mb-8 justify-between w-full max-w-5xl">
-      <img src="img/sapi.png" alt="sapi" style="height: 8rem;" />
-      <h1 class="text-4xl font-bold text-center flex-1">TASTY BITES</h1>
-      <img src="img/sapi.png" alt="sapi" style="height: 8rem;" />
+  <section id="menu" class="py-20 bg-gray-50">
+    <div class="text-center mb-12">
+      <h2 class="text-4xl font-bold text-gray-800">TASTY BITES</h2>
+      <p class="text-gray-500 mt-2">Discover our signature dishes and popular drinks.</p>
     </div>
 
     <!-- Menu Grid -->
-    <div id="menu-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+    <div id="menu-container" class="container mx-auto px-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"></div>
   </section>
 
-  <div id="pesan-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center z-50">
-    <div class="bg-white p-6 rounded-lg w-80 space-y-4 relative">
-      <button id="pesan-close" class="absolute top-2 right-3 text-xl font-bold">&times;</button>
-      <h3 id="pesan-menu-nama" class="text-lg font-semibold"></h3>
-      <input type="number" id="pesan-jumlah" min="1" value="1" class="w-full p-2 border rounded" />
-      <button id="pesan-kirim" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">Pesan
-        Sekarang</button>
+  <div id="pesan-modal" class="fixed inset-0 bg-black bg-opacity-60 hidden items-center justify-center z-50 px-4">
+    <div id="pesan-modal-content" class="bg-white p-6 rounded-xl shadow-2xl w-full max-w-sm space-y-4 relative transform transition-all opacity-0 scale-95">
+      <button id="pesan-close" class="absolute top-3 right-4 text-gray-400 hover:text-gray-800 text-2xl font-bold">&times;</button>
+      <h3 id="pesan-menu-nama" class="text-xl font-bold text-gray-800">Order Menu</h3>
+      <div class="flex items-center gap-4">
+        <label for="pesan-jumlah" class="font-semibold text-gray-600">Quantity:</label>
+        <input type="number" id="pesan-jumlah" min="1" value="1" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500" />
+      </div>
+      <button id="pesan-kirim" class="w-full bg-red-600 text-white py-3 rounded-lg font-bold hover:bg-red-700 transition-colors shadow-lg hover:shadow-xl">
+        <i class="fas fa-paper-plane mr-2"></i>Place Order
+      </button>
     </div>
   </div>
 
 
   <!-- Modal Tampilan Menu Detail -->
-  <div id="menu-modal"
-    class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 hidden transition-opacity duration-300">
+  <div id="menu-modal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 hidden transition-opacity duration-300 px-4">
     <div
-      class="relative bg-white rounded-xl overflow-hidden max-w-md w-full max-h-screen overflow-y-auto scale-95 opacity-0 transform transition-all duration-300"
+      class="relative bg-white rounded-xl overflow-hidden max-w-md w-full max-h-[90vh] scale-95 opacity-0 transform transition-all duration-300 flex flex-col"
       id="modal-content">
 
       <!-- Tombol Tutup -->
-      <button id="modal-close"
-        class="absolute top-2 right-2 text-white text-3xl z-10 bg-black bg-opacity-50 px-2 rounded-full">&times;</button>
+      <button id="modal-close" class="absolute top-3 right-3 text-white text-3xl z-20 bg-black/40 w-10 h-10 rounded-full hover:bg-black/60 transition-colors">&times;</button>
 
       <!-- Navigasi Kiri -->
-      <button id="modal-prev"
-        class="absolute left-2 top-1/2 transform -translate-y-1/2 text-white text-4xl z-10 bg-black bg-opacity-50 px-3 rounded-full">&lt;</button>
+      <button id="modal-prev" class="absolute left-3 top-1/2 transform -translate-y-1/2 text-white text-4xl z-20 bg-black/40 p-2 rounded-full hover:bg-black/60 transition-colors w-12 h-12 flex items-center justify-center">&lt;</button>
 
       <!-- Navigasi Kanan -->
-      <button id="modal-next"
-        class="absolute right-2 top-1/2 transform -translate-y-1/2 text-white text-4xl z-10 bg-black bg-opacity-50 px-3 rounded-full">&gt;</button>
+      <button id="modal-next" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-white text-4xl z-20 bg-black/40 p-2 rounded-full hover:bg-black/60 transition-colors w-12 h-12 flex items-center justify-center">&gt;</button>
 
       <!-- Gambar Menu -->
-      <img id="modal-image" src="" alt="Menu Detail" class="w-full object-cover max-h-[400px]" />
+      <div class="relative w-full h-80">
+        <img id="modal-image" src="" alt="Menu Detail" class="w-full h-full object-cover" />
+      </div>
 
       <!-- Nama Menu -->
-      <div class="bg-white text-black text-center text-lg font-semibold py-3 border-t" id="modal-name"></div>
+      <div class="bg-white text-gray-800 text-center text-xl font-bold py-4 border-t border-gray-200" id="modal-name"></div>
     </div>
   </div>
 
-  <!-- Modal (dengan tombol Pesanan Saya) -->
+  <!-- Modal Status Pesanan (Disederhanakan, digabung ke Detail) -->
   <div id="orderModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
     <div class="bg-white p-6 rounded-lg shadow-lg text-center w-80">
       <h2 class="text-xl font-bold mb-4">Status Pesanan</h2>
@@ -156,35 +172,71 @@ require_once 'script/session_check.php'; // Mengimpor file session_check.php
   </div>
 
   <!-- Modal Detail Pesanan dengan Tab -->
-  <div id="orderDetailsModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
-    <div class="bg-white p-6 rounded-lg shadow-lg w-[500px] max-h-[80vh] overflow-auto">
-      <h2 class="text-2xl font-bold mb-4">Detail Pesanan Anda</h2>
-
+  <div id="orderDetailsModal" class="fixed inset-0 bg-black bg-opacity-60 hidden items-center justify-center z-50 px-4">
+    <div id="orderDetailsModal-content" class="bg-white rounded-xl shadow-2xl w-full max-w-lg max-h-[85vh] flex flex-col transform transition-all opacity-0 scale-95">
+      <div class="p-6 border-b border-gray-200 flex justify-between items-center">
+        <h2 class="text-2xl font-bold text-gray-800">Your Orders</h2>
+        <button id="closeOrderDetails" class="text-gray-400 hover:text-gray-800 text-2xl">&times;</button>
+      </div>
+      
       <!-- Tab Navigation -->
-      <div class="flex border-b mb-4">
-        <button id="tabAktif" class="flex-1 py-2 text-center font-medium border-b-2 border-black">Aktif</button>
-        <button id="tabSelesai"
-          class="flex-1 py-2 text-center font-medium text-gray-500 hover:text-black">Selesai</button>
+      <div class="flex border-b border-gray-200 px-6">
+        <button id="tabAktif" class="flex-1 py-3 text-center font-semibold border-b-2 border-red-600 text-red-600 transition-colors">Active</button>
+        <button id="tabSelesai" class="flex-1 py-3 text-center font-semibold text-gray-500 hover:text-red-600 border-b-2 border-transparent transition-colors">History</button>
       </div>
 
       <!-- Tab Content -->
-      <ul id="orderListAktif" class="space-y-3 text-gray-700">
-        <!-- Pesanan Aktif akan diisi via JS -->
-      </ul>
-      <ul id="orderListSelesai" class="space-y-3 text-gray-700 hidden">
-        <!-- Pesanan Selesai akan diisi via JS -->
-      </ul>
-
-      <div class="text-right mt-4">
-        <button id="closeOrderDetails" class="px-4 py-2 bg-black text-white rounded hover:bg-gray-800">Tutup</button>
+      <div class="p-6 space-y-4 overflow-y-auto">
+        <ul id="orderListAktif" class="space-y-4 text-gray-700">
+          <!-- Pesanan Aktif akan diisi via JS -->
+        </ul>
+        <ul id="orderListSelesai" class="space-y-4 text-gray-700 hidden">
+          <!-- Pesanan Selesai akan diisi via JS -->
+        </ul>
       </div>
     </div>
   </div>
 
   <!-- WhatsApp Button -->
-  <a href="https://api.whatsapp.com/send" target="_blank" class="fixed bottom-4 right-4 z-50">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" class="h-12 w-12">
+  <a href="https://api.whatsapp.com/send" target="_blank" class="fixed bottom-6 right-6 z-50 bg-green-500 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-lg hover:bg-green-600 transition-all transform hover:scale-110">
+    <i class="fab fa-whatsapp text-3xl"></i>
   </a>
+  
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-white pt-12 pb-8">
+    <div class="container mx-auto px-6 md:px-12">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- About -->
+        <div>
+          <h4 class="text-lg font-bold mb-3">RED BEAR</h4>
+          <p class="text-gray-400 text-sm">
+            Experience the finest Korean Barbeque with premium ingredients and an unforgettable ambiance. Join us for a sizzling good time.
+          </p>
+        </div>
+        <!-- Links -->
+        <div>
+          <h4 class="text-lg font-bold mb-3">Quick Links</h4>
+          <ul class="text-sm space-y-2">
+            <li><a href="#" class="text-gray-400 hover:text-white">Home</a></li>
+            <li><a href="#menu" class="text-gray-400 hover:text-white">Menu</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white">Book a Table</a></li>
+          </ul>
+        </div>
+        <!-- Social -->
+        <div>
+          <h4 class="text-lg font-bold mb-3">Follow Us</h4>
+          <div class="flex gap-4">
+            <a href="#" class="text-gray-400 hover:text-white text-2xl"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="text-gray-400 hover:text-white text-2xl"><i class="fab fa-facebook-square"></i></a>
+            <a href="#" class="text-gray-400 hover:text-white text-2xl"><i class="fab fa-twitter-square"></i></a>
+          </div>
+        </div>
+      </div>
+      <div class="border-t border-gray-700 mt-8 pt-6 text-center text-gray-500 text-sm">
+        <p>&copy; 2024 Red Bear. All Rights Reserved.</p>
+      </div>
+    </div>
+  </footer>
 
   <script src="script/script.js"></script>
   <script src="script/menuLoad.js"></script>
