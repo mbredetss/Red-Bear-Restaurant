@@ -51,27 +51,30 @@ table {
     width: 90%;
     margin: 30px auto;
     border-collapse: collapse;
-    background-color: white;
-    color: #333;
+    background-color: rgba(255, 255, 255, 0.2); /* Transparan */
+    color: #f1f1f1; /* Warna font agar tetap kontras */
     border-radius: 10px;
     overflow: hidden;
-}
-
-table th,
-table td {
-    padding: 12px 15px;
-    text-align: center;
-    border-bottom: 1px solid #ddd;
+    backdrop-filter: blur(6px); /* Efek blur di belakang (opsional) */
 }
 
 table th {
-    background-color: #3498db;
+    background-color: rgba(237, 76, 76, 0.7); /* Biru transparan */
     color: white;
 }
 
-table tr:hover {
-    background-color: #f1f1f1;
+table td {
+    padding: 20px 25px; /* sebelumnya: 12px 15px */
+    text-align: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    background-color: rgba(0, 0, 0, 0.3); /* Baris transparan */
+    color: #f1f1f1;
 }
+
+table tr:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
 
 .aksi a {
     margin: 0 5px;
