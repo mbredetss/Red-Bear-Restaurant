@@ -17,7 +17,7 @@ $cekStmt->store_result();
 
 if ($cekStmt->num_rows > 0) {
     // Email sudah terdaftar, arahkan kembali ke register dengan pesan error
-    header("Location: ../../register/register.html?error=email_exists");
+    header("Location: ../../register.php?error=email_exists");
     exit();
 }
 $cekStmt->close();
@@ -31,7 +31,7 @@ $stmt->bind_param("sss", $name, $email, $password);
 
 if ($stmt->execute()) {
     // Registrasi berhasil
-    header("Location: ../../login/login.html?register=success");
+    header("Location: ../../login.php?register=success");
     exit();
 } else {
     echo "Registrasi gagal: " . $stmt->error;
