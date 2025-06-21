@@ -51,7 +51,7 @@ if ($stmt->execute()) {
     if ($user['role'] == 'admin') {
         header("Location: ../../../admin/beranda.php");
     } else {
-        header("Location: ../../home.php");
+        header("Location: ../../../home.php");
     }
     exit();
 } else {
