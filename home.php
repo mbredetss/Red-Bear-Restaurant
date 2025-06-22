@@ -257,6 +257,115 @@ require_once 'script/session_check.php'; // Mengimpor file session_check.php
   </div>
 </section>
 
+<!-- Blog Section -->
+<section id="blog" class="py-20 bg-white">
+  <div class="container mx-auto px-4 max-w-5xl">
+    <div class="text-center mb-12">
+      <h2 class="text-4xl font-bold text-gray-800 mb-4">Red Bear Blog</h2>
+      <p class="text-gray-600 text-lg">
+        Get the latest updates, tips, and stories from Red Bear Restaurant.
+      </p>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <!-- Blog Post 1 -->
+      <article class="bg-gray-50 rounded-xl shadow hover:shadow-lg transition p-6 flex flex-col">
+        <img src="img/blog1.jpg" alt="Blog 1" class="rounded-lg mb-4 object-cover h-40 w-full">
+        <h3 class="text-xl font-semibold text-gray-800 mb-2">5 Tips for the Perfect Korean BBQ Experience</h3>
+        <p class="text-gray-600 mb-4 flex-1">
+          Discover how to make the most of your Korean BBQ meal at Red Bear, from grilling techniques to sauce pairings!
+        </p>
+        <a href="#" class="text-red-600 font-bold hover:underline mt-auto">Read More</a>
+      </article>
+      <!-- Blog Post 2 -->
+      <article class="bg-gray-50 rounded-xl shadow hover:shadow-lg transition p-6 flex flex-col">
+        <img src="img/blog2.jpg" alt="Blog 2" class="rounded-lg mb-4 object-cover h-40 w-full">
+        <h3 class="text-xl font-semibold text-gray-800 mb-2">Behind the Scenes: Our Signature Dishes</h3>
+        <p class="text-gray-600 mb-4 flex-1">
+          Go behind the scenes with our chefs and learn what makes our signature dishes so special and delicious.
+        </p>
+        <a href="#" class="text-red-600 font-bold hover:underline mt-auto">Read More</a>
+      </article>
+      <!-- Blog Post 3 -->
+      <article class="bg-gray-50 rounded-xl shadow hover:shadow-lg transition p-6 flex flex-col">
+        <img src="img/blog3.jpg" alt="Blog 3" class="rounded-lg mb-4 object-cover h-40 w-full">
+        <h3 class="text-xl font-semibold text-gray-800 mb-2">Celebrating Special Moments at Red Bear</h3>
+        <p class="text-gray-600 mb-4 flex-1">
+          See how our guests celebrate birthdays, anniversaries, and more with us. Your special moments, our honor!
+        </p>
+        <a href="#" class="text-red-600 font-bold hover:underline mt-auto">Read More</a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<script>
+// Blog "Read More" functionality
+document.addEventListener('DOMContentLoaded', function() {
+  // Blog data (replace with dynamic data if needed)
+  const blogPosts = [
+    {
+      title: "5 Tips for the Perfect Korean BBQ Experience",
+      image: "img/blog1.jpg",
+      content: "Discover how to make the most of your Korean BBQ meal at Red Bear, from grilling techniques to sauce pairings!<br><br>1. Preheat the grill properly.<br>2. Use the right cuts of meat.<br>3. Don’t overcrowd the grill.<br>4. Try all the sauces.<br>5. Enjoy with friends and family for the best experience.",
+    },
+    {
+      title: "Behind the Scenes: Our Signature Dishes",
+      image: "img/blog2.jpg",
+      content: "Go behind the scenes with our chefs and learn what makes our signature dishes so special and delicious.<br><br>Our chefs use only the freshest ingredients and traditional Korean techniques. Each dish is crafted with care and passion, ensuring authentic flavors in every bite.",
+    },
+    {
+      title: "Celebrating Special Moments at Red Bear",
+      image: "img/blog3.jpg",
+      content: "See how our guests celebrate birthdays, anniversaries, and more with us. Your special moments, our honor!<br><br>We offer special packages and decorations for your celebrations. Let us know your occasion, and we’ll make it memorable.",
+    }
+  ];
+
+  // Create modal
+  const blogModal = document.createElement('div');
+  blogModal.id = 'blogModal';
+  blogModal.className = 'fixed inset-0 bg-black bg-opacity-60 hidden items-center justify-center z-50 px-4';
+  blogModal.innerHTML = `
+    <div class="bg-white rounded-xl shadow-2xl w-full max-w-lg p-8 relative">
+      <button id="closeBlogModal" class="absolute top-3 right-4 text-gray-400 hover:text-gray-800 text-2xl font-bold">&times;</button>
+      <img id="blogModalImg" src="" alt="" class="rounded-lg mb-4 object-cover w-full h-56">
+      <h3 id="blogModalTitle" class="text-2xl font-bold mb-4"></h3>
+      <div id="blogModalContent" class="text-gray-700 text-base"></div>
+    </div>
+  `;
+  document.body.appendChild(blogModal);
+
+  // Show modal function
+  function showBlogModal(idx) {
+    document.getElementById('blogModalImg').src = blogPosts[idx].image;
+    document.getElementById('blogModalTitle').textContent = blogPosts[idx].title;
+    document.getElementById('blogModalContent').innerHTML = blogPosts[idx].content;
+    blogModal.classList.remove('hidden');
+    blogModal.classList.add('flex');
+  }
+
+  // Hide modal function
+  function hideBlogModal() {
+    blogModal.classList.add('hidden');
+    blogModal.classList.remove('flex');
+  }
+
+  // Attach event listeners to "Read More" links
+  document.querySelectorAll('section#blog a.text-red-600').forEach(function(link, idx) {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+      showBlogModal(idx);
+    });
+  });
+
+  // Close modal on button click or background click
+  blogModal.addEventListener('click', function(e) {
+    if (e.target === blogModal || e.target.id === 'closeBlogModal') {
+      hideBlogModal();
+    }
+  });
+});
+</script>
+
 
   <!-- Footer -->
   <footer class="bg-gray-800 text-white pt-12 pb-8">
