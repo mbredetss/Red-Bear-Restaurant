@@ -52,15 +52,79 @@ require_once 'script/session_check.php'; // Mengimpor file session_check.php
         </div>
       </div>
       
-      <a id="bookTable" href="#" class="bg-red-600 text-white px-5 py-2 rounded-full font-bold text-sm hover:bg-red-700 transition-all duration-300 shadow-lg">BOOK A TABLE</a>
-      
-      <a id="orderStatusBtn" href="#" class="relative text-white hover:bg-white/10 p-2 rounded-full">
-        <i class="fas fa-shopping-cart text-xl"></i>
-        <span id="orderBadge" class="absolute -top-0.5 -right-0.5 flex h-3 w-3">
-          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-          <span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
-        </span>
-      </a>
+<!-- ✅ Tombol BOOK A TABLE -->
+<button onclick="document.getElementById('bookingModal').classList.remove('hidden')" 
+  class="uppercase bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-full font-bold text-sm tracking-wider shadow-md hover:shadow-lg transition duration-300 ease-in-out">
+  Book a Table
+</button>
+
+<!-- ✅ Modal -->
+<div id="bookingModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+  <div class="bg-white w-full max-w-2xl mx-4 rounded-xl shadow-lg p-6 relative">
+    <!-- ❌ Tombol Close -->
+    <button onclick="document.getElementById('bookingModal').classList.add('hidden')" 
+      class="absolute top-4 right-4 text-gray-600 hover:text-red-600 text-2xl font-bold">
+      &times;
+    </button>
+
+    <h2 class="text-2xl font-bold text-center text-red-600 uppercase mb-6">Book a Table</h2>
+
+    <form action="#" method="POST" class="space-y-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label for="name" class="block text-sm font-medium">Full Name</label>
+          <input type="text" id="name" name="name" required
+            class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-red-500 focus:outline-none">
+        </div>
+
+        <div>
+          <label for="email" class="block text-sm font-medium">Email</label>
+          <input type="email" id="email" name="email" required
+            class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-red-500 focus:outline-none">
+        </div>
+
+        <div>
+          <label for="phone" class="block text-sm font-medium">Phone</label>
+          <input type="tel" id="phone" name="phone" required
+            class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-red-500 focus:outline-none">
+        </div>
+
+        <div>
+          <label for="guests" class="block text-sm font-medium">Guests</label>
+          <input type="number" id="guests" name="guests" required min="1"
+            class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-red-500 focus:outline-none">
+        </div>
+
+        <div>
+          <label for="date" class="block text-sm font-medium">Date</label>
+          <input type="date" id="date" name="date" required
+            class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-red-500 focus:outline-none">
+        </div>
+
+        <div>
+          <label for="time" class="block text-sm font-medium">Time</label>
+          <input type="time" id="time" name="time" required
+            class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-red-500 focus:outline-none">
+        </div>
+      </div>
+
+      <div>
+        <label for="message" class="block text-sm font-medium">Special Request</label>
+        <textarea id="message" name="message" rows="3"
+          class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-red-500 focus:outline-none"></textarea>
+      </div>
+
+      <div class="text-center">
+        <button type="submit"
+          class="mt-4 bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-8 rounded-full shadow-lg transition-all duration-300">
+          Submit Booking
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
 
       <?php if ($user): ?>
         <!-- Tampilkan Avatar & Dropdown jika login -->
