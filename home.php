@@ -290,7 +290,7 @@ require_once 'script/session_check.php'; // Mengimpor file session_check.php
       </p>
     </div>
     <div class="flex flex-col md:flex-row items-center gap-8">
-      <img src="img/about-red-bear.jpg" alt="About Red Bear" class="w-full md:w-1/2 rounded-xl shadow-lg object-cover">
+      <img src="img/about-red-bear.png" alt="About Red Bear" class="w-full md:w-1/2 rounded-xl shadow-lg object-cover">
       <div class="flex-1">
         <h3 class="text-2xl font-semibold text-gray-700 mb-3">Why Choose Us?</h3>
         <ul class="list-disc list-inside text-gray-600 space-y-2">
