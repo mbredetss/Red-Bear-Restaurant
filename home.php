@@ -46,9 +46,9 @@ require_once 'script/session_check.php'; // Mengimpor file session_check.php
           MORE <i class="fas fa-chevron-down text-xs"></i>
         </button>
         <div id="more-menu" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl py-1 z-50 text-gray-800 dropdown-menu">
-          <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100">ABOUT</a>
-          <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100">LOCATION</a>
-          <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100">BLOG</a>
+          <a href="#about" class="block px-4 py-2 text-sm hover:bg-gray-100">ABOUT</a>
+          <a href="#location" class="block px-4 py-2 text-sm hover:bg-gray-100">LOCATION</a>
+          <a href="#blog" class="block px-4 py-2 text-sm hover:bg-gray-100">BLOG</a>
         </div>
       </div>
       
@@ -202,6 +202,62 @@ require_once 'script/session_check.php'; // Mengimpor file session_check.php
     <i class="fab fa-whatsapp text-3xl"></i>
   </a>
   
+
+<!-- About Section -->
+<section id="about" class="py-20 bg-white">
+  <div class="container mx-auto px-4 max-w-4xl">
+    <div class="text-center mb-10">
+      <h2 class="text-4xl font-bold text-gray-800 mb-4">About Red Bear</h2>
+      <p class="text-gray-600 text-lg">
+        Red Bear is your destination for authentic Korean Barbeque, offering premium meats, fresh ingredients, and a cozy atmosphere. Our mission is to bring the best of Korean cuisine to your table, ensuring every visit is a memorable dining experience.
+      </p>
+    </div>
+    <div class="flex flex-col md:flex-row items-center gap-8">
+      <img src="img/about-red-bear.jpg" alt="About Red Bear" class="w-full md:w-1/2 rounded-xl shadow-lg object-cover">
+      <div class="flex-1">
+        <h3 class="text-2xl font-semibold text-gray-700 mb-3">Why Choose Us?</h3>
+        <ul class="list-disc list-inside text-gray-600 space-y-2">
+          <li>Premium quality meats and ingredients</li>
+          <li>Traditional Korean recipes with a modern twist</li>
+          <li>Comfortable and stylish dining environment</li>
+          <li>Friendly and attentive service</li>
+          <li>Perfect for family gatherings, friends, and celebrations</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- Location Section -->
+<section id="location" class="py-20 bg-gray-100">
+  <div class="container mx-auto px-4 max-w-4xl">
+    <div class="text-center mb-10">
+      <h2 class="text-4xl font-bold text-gray-800 mb-4">Our Location</h2>
+      <p class="text-gray-600 text-lg">
+        Visit Red Bear at our convenient location. We look forward to serving you!
+      </p>
+    </div>
+    <div class="flex flex-col md:flex-row items-center gap-8">
+      <div class="w-full md:w-1/2 rounded-xl overflow-hidden shadow-lg">
+        <iframe
+          src="https://www.google.com/maps?q=Jakarta+Indonesia&output=embed"
+          width="100%" height="320" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+      </div>
+      <div class="flex-1">
+        <h3 class="text-2xl font-semibold text-gray-700 mb-3">Red Bear Restaurant</h3>
+        <ul class="text-gray-600 space-y-2">
+          <li><i class="fas fa-map-marker-alt mr-2 text-red-600"></i>Jl. Contoh Alamat No. 123, Jakarta, Indonesia</li>
+          <li><i class="fas fa-phone-alt mr-2 text-red-600"></i>(021) 1234-5678</li>
+          <li><i class="fas fa-clock mr-2 text-red-600"></i>Open: 10:00 - 22:00 (Everyday)</li>
+          <li><i class="fas fa-envelope mr-2 text-red-600"></i>info@redbear.com</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+
   <!-- Footer -->
   <footer class="bg-gray-800 text-white pt-12 pb-8">
     <div class="container mx-auto px-6 md:px-12">

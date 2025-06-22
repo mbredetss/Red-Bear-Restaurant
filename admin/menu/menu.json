@@ -1,8 +1,34 @@
 {
-    "asfasf": {
-        "tersedia": true
+    "udang-kuah": {
+        "tersedia": true,
+        "jenis": "makanan"
     },
-    "hgfhgfdd": {
-        "tersedia": true
+    "ayam-pedas": {
+        "tersedia": true,
+        "jenis": "makanan"
+    },
+    "nasi-goreng": {
+        "tersedia": true,
+        "jenis": "makanan"
+    },
+    "whiskey": {
+        "tersedia": true,
+        "jenis": "minuman"
+    },
+    "anggur": {
+        "tersedia": true,
+        "jenis": "minuman"
+    },
+    "jus-aneka-rasa": {
+        "tersedia": true,
+        "jenis": "minuman"
+    },
+    "teh": {
+        "tersedia": true,
+        "jenis": "minuman"
+    },
+    "ikan": {
+        "tersedia": true,
+        "jenis": "makanan"
     }
 }
