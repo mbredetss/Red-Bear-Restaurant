@@ -1,34 +1,14 @@
 {
-    "udang-kuah": {
+    "Nasi Goreng": {
         "tersedia": true,
         "jenis": "makanan"
     },
-    "ayam-pedas": {
+    "BBQ": {
         "tersedia": true,
         "jenis": "makanan"
     },
-    "nasi-goreng": {
-        "tersedia": true,
-        "jenis": "makanan"
-    },
-    "whiskey": {
+    "Amer": {
         "tersedia": true,
         "jenis": "minuman"
-    },
-    "anggur": {
-        "tersedia": true,
-        "jenis": "minuman"
-    },
-    "jus-aneka-rasa": {
-        "tersedia": true,
-        "jenis": "minuman"
-    },
-    "teh": {
-        "tersedia": true,
-        "jenis": "minuman"
-    },
-    "ikan": {
-        "tersedia": true,
-        "jenis": "makanan"
     }
 }
