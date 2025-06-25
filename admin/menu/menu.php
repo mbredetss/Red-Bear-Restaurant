@@ -59,6 +59,24 @@
     </div>
   </div>
 
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <canvas id="myChart"></canvas>
+  <script>
+    const ctx = document.getElementById('myChart');
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['A', 'B', 'C'],
+        datasets: [{
+          label: 'Contoh Data',
+          data: [12, 19, 3],
+          backgroundColor: 'rgba(255, 99, 132, 0.5)'
+        }]
+      }
+    });
+  </script>
+
   <script src="script/script.js"></script>
 </body>
 
