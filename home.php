@@ -55,6 +55,96 @@ require_once 'script/session_check.php'; // Mengimpor file session_check.php
         class="bg-red-600 text-white px-5 py-2 rounded-full font-bold text-sm hover:bg-red-700 transition-all duration-300 shadow-lg">BOOK
         A TABLE</a>
 
+      <!-- Modal Book A Table -->
+      <div id="bookTableModal" class="fixed inset-0 bg-black bg-opacity-60 hidden items-center justify-center z-50 px-4">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-md p-8 relative flex flex-col items-center">
+          <!-- Tombol Tutup -->
+          <button id="closeBookTableModal" class="absolute top-3 right-4 text-gray-400 hover:text-gray-800 text-2xl font-bold">&times;</button>
+          <h2 class="text-2xl font-bold text-center mb-6 text-gray-800">Book A Table</h2>
+          <!-- Pilihan Jumlah Tamu -->
+          <div class="w-full mb-4">
+            <label class="block text-gray-700 font-semibold mb-1">Jumlah Tamu</label>
+            <select id="guestCount" class="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-red-500">
+              <option value="1">1 Guest</option>
+              <option value="2" selected>2 Guests</option>
+              <option value="3">3 Guests</option>
+              <option value="4">4 Guests</option>
+              <option value="5">5 Guests</option>
+              <option value="6">6 Guests</option>
+              <option value="7">7 Guests</option>
+              <option value="8">8 Guests</option>
+            </select>
+          </div>
+          <!-- Pilihan Tanggal -->
+          <div class="w-full mb-4">
+            <label class="block text-gray-700 font-semibold mb-1">Tanggal</label>
+            <input type="date" id="bookingDate" class="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-red-500" min="" />
+          </div>
+          <!-- Pilihan Waktu -->
+          <div class="w-full mb-6">
+            <label class="block text-gray-700 font-semibold mb-1">Waktu</label>
+            <select id="bookingTime" class="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-red-500">
+              <!-- Opsi waktu akan diisi via JS -->
+            </select>
+          </div>
+          <!-- Pilihan Meja -->
+          <div class="w-full mb-6">
+            <label class="block text-gray-700 font-semibold mb-2">Pilih Meja</label>
+            <div id="tableIcons" class="grid grid-cols-4 gap-4 justify-items-center">
+              <!-- 8 icon meja dummy -->
+              <button class="table-icon bg-green-100 border-2 border-green-500 rounded-full w-14 h-14 flex flex-col items-center justify-center hover:bg-green-200 focus:ring-2 focus:ring-green-500" data-table="1">
+                <span class="text-2xl">🍽️</span>
+                <span class="text-xs font-bold mt-1">Meja 1</span>
+              </button>
+              <button class="table-icon bg-green-100 border-2 border-green-500 rounded-full w-14 h-14 flex flex-col items-center justify-center hover:bg-green-200 focus:ring-2 focus:ring-green-500" data-table="2">
+                <span class="text-2xl">🍽️</span>
+                <span class="text-xs font-bold mt-1">Meja 2</span>
+              </button>
+              <button class="table-icon bg-green-100 border-2 border-green-500 rounded-full w-14 h-14 flex flex-col items-center justify-center hover:bg-green-200 focus:ring-2 focus:ring-green-500" data-table="3">
+                <span class="text-2xl">🍽️</span>
+                <span class="text-xs font-bold mt-1">Meja 3</span>
+              </button>
+              <button class="table-icon bg-green-100 border-2 border-green-500 rounded-full w-14 h-14 flex flex-col items-center justify-center hover:bg-green-200 focus:ring-2 focus:ring-green-500" data-table="4">
+                <span class="text-2xl">🍽️</span>
+                <span class="text-xs font-bold mt-1">Meja 4</span>
+              </button>
+              <button class="table-icon bg-green-100 border-2 border-green-500 rounded-full w-14 h-14 flex flex-col items-center justify-center hover:bg-green-200 focus:ring-2 focus:ring-green-500" data-table="5">
+                <span class="text-2xl">🍽️</span>
+                <span class="text-xs font-bold mt-1">Meja 5</span>
+              </button>
+              <button class="table-icon bg-green-100 border-2 border-green-500 rounded-full w-14 h-14 flex flex-col items-center justify-center hover:bg-green-200 focus:ring-2 focus:ring-green-500" data-table="6">
+                <span class="text-2xl">🍽️</span>
+                <span class="text-xs font-bold mt-1">Meja 6</span>
+              </button>
+              <button class="table-icon bg-green-100 border-2 border-green-500 rounded-full w-14 h-14 flex flex-col items-center justify-center hover:bg-green-200 focus:ring-2 focus:ring-green-500" data-table="7">
+                <span class="text-2xl">🍽️</span>
+                <span class="text-xs font-bold mt-1">Meja 7</span>
+              </button>
+              <button class="table-icon bg-green-100 border-2 border-green-500 rounded-full w-14 h-14 flex flex-col items-center justify-center hover:bg-green-200 focus:ring-2 focus:ring-green-500" data-table="8">
+                <span class="text-2xl">🍽️</span>
+                <span class="text-xs font-bold mt-1">Meja 8</span>
+              </button>
+            </div>
+          </div>
+          <!-- Tombol Submit -->
+          <div class="w-full mt-4">
+            <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4">
+              <div class="flex items-center">
+                <i class="fas fa-info-circle text-yellow-600 mr-2"></i>
+                <div>
+                  <p class="text-sm font-medium text-yellow-800">Biaya Booking Meja</p>
+                  <p class="text-lg font-bold text-yellow-900">Rp400.000</p>
+                  <p class="text-xs text-yellow-700 mt-1">Saldo Anda: <span id="userSaldo" class="font-medium">Rp<?php echo number_format($saldo, 0, ',', '.'); ?></span></p>
+                </div>
+              </div>
+            </div>
+            <button id="submitBookTable" class="w-full bg-red-600 text-white py-3 rounded-lg font-bold hover:bg-red-700 transition-colors shadow-lg hover:shadow-xl">
+              <i class="fas fa-credit-card mr-2"></i>Pesan Meja (Rp400.000)
+            </button>
+          </div>
+        </div>
+      </div>
+
       <a id="orderStatusBtn" href="#" class="relative text-white hover:bg-white/10 p-2 rounded-full">
         <i class="fas fa-shopping-cart text-xl"></i>
         <span id="orderBadge" class="absolute -top-0.5 -right-0.5 flex h-3 w-3">
@@ -419,6 +509,172 @@ require_once 'script/session_check.php'; // Mengimpor file session_check.php
           hideBlogModal();
         }
       });
+    });
+
+    // Modal Book A Table
+    const bookTableBtn = document.getElementById('bookTable');
+    const bookTableModal = document.getElementById('bookTableModal');
+    const closeBookTableModal = document.getElementById('closeBookTableModal');
+    bookTableBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      bookTableModal.classList.remove('hidden');
+      bookTableModal.classList.add('flex');
+    });
+    closeBookTableModal.addEventListener('click', function() {
+      bookTableModal.classList.add('hidden');
+      bookTableModal.classList.remove('flex');
+    });
+    // Tutup modal jika klik di luar konten
+    bookTableModal.addEventListener('click', function(e) {
+      if (e.target === bookTableModal) {
+        bookTableModal.classList.add('hidden');
+        bookTableModal.classList.remove('flex');
+      }
+    });
+    // Set min date hari ini untuk input tanggal
+    const bookingDate = document.getElementById('bookingDate');
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+    const dd = String(today.getDate()).padStart(2, '0');
+    bookingDate.min = `${yyyy}-${mm}-${dd}`;
+    // Isi opsi waktu (08:00 - 22:00, interval 30 menit)
+    const bookingTime = document.getElementById('bookingTime');
+    function fillTimeOptions() {
+      bookingTime.innerHTML = '';
+      let start = 8 * 60; // 08:00 dalam menit
+      let end = 22 * 60; // 22:00 dalam menit
+      const now = new Date();
+      const currentHour = now.getHours();
+      const currentMinute = now.getMinutes();
+      const currentTimeInMinutes = currentHour * 60 + currentMinute;
+      
+      for (let m = start; m <= end; m += 30) {
+        let h = Math.floor(m / 60);
+        let min = m % 60;
+        let label = `${h.toString().padStart(2, '0')}:${min.toString().padStart(2, '0')}`;
+        let option = document.createElement('option');
+        option.value = label;
+        option.textContent = label;
+        
+        // Disable waktu yang sudah lewat untuk hari ini
+        if (bookingDate.value === now.toISOString().split('T')[0] && m <= currentTimeInMinutes) {
+          option.disabled = true;
+          option.textContent += ' (Sudah lewat)';
+        }
+        
+        bookingTime.appendChild(option);
+      }
+    }
+    fillTimeOptions();
+    
+    // Update opsi waktu saat tanggal berubah
+    bookingDate.addEventListener('change', function() {
+      fillTimeOptions();
+      updateTableStatus();
+    });
+
+    // --- Integrasi Booking Table ---
+    const tableIcons = document.querySelectorAll('#tableIcons .table-icon');
+    let selectedTable = null;
+
+    // Fungsi update status meja dari API
+    function updateTableStatus() {
+      const date = bookingDate.value;
+      const time = bookingTime.value;
+      if (!date || !time) return;
+      fetch(`admin/book_table/api/check_table_availability.php?date=${date}&time=${time}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            data.tables.forEach((meja, idx) => {
+              const btn = tableIcons[idx];
+              if (!btn) return;
+              btn.setAttribute('data-table', meja.id);
+              btn.disabled = false;
+              btn.classList.remove('bg-gray-300', 'border-gray-400', 'cursor-not-allowed', 'opacity-60');
+              btn.classList.add('bg-green-100', 'border-green-500');
+              btn.innerHTML = `<span class="text-2xl">🍽️</span><span class="text-xs font-bold mt-1">Meja ${meja.table_number}</span>`;
+              if (meja.status === 'booked') {
+                btn.disabled = true;
+                btn.classList.remove('bg-green-100', 'border-green-500');
+                btn.classList.add('bg-gray-300', 'border-gray-400', 'cursor-not-allowed', 'opacity-60');
+                btn.innerHTML = `<span class='text-2xl'>🔒</span><span class='text-xs font-bold mt-1'>Meja ${meja.table_number}</span>`;
+                if (selectedTable == meja.id) selectedTable = null;
+              }
+            });
+          }
+        });
+    }
+
+    // Trigger update saat tanggal/waktu berubah
+    bookingDate.addEventListener('change', updateTableStatus);
+    bookingTime.addEventListener('change', updateTableStatus);
+
+    // Pilih meja
+    tableIcons.forEach(btn => {
+      btn.addEventListener('click', function() {
+        if (btn.disabled) return;
+        tableIcons.forEach(b => b.classList.remove('ring-4', 'ring-red-500'));
+        btn.classList.add('ring-4', 'ring-red-500');
+        selectedTable = btn.getAttribute('data-table');
+      });
+    });
+
+    // Submit booking
+    document.getElementById('submitBookTable').addEventListener('click', function() {
+      const guestCount = document.getElementById('guestCount').value;
+      const date = bookingDate.value;
+      const time = bookingTime.value;
+      if (!selectedTable) {
+        alert('Silakan pilih meja yang tersedia.');
+        return;
+      }
+      if (!date || !time) {
+        alert('Tanggal dan waktu harus diisi.');
+        return;
+      }
+      // Kirim booking
+      const formData = new FormData();
+      formData.append('table_id', selectedTable);
+      formData.append('guest_count', guestCount);
+      formData.append('date', date);
+      formData.append('time', time);
+      // Jika ada user_id, bisa ditambahkan di sini
+      fetch('admin/book_table/api/book_table.php', {
+        method: 'POST',
+        body: formData
+      })
+      .then(res => res.json())
+      .then(data => {
+        alert(data.message);
+        if (data.success) {
+          bookTableModal.classList.add('hidden');
+          bookTableModal.classList.remove('flex');
+          // Update saldo user jika ada
+          if (data.saldo_baru !== undefined) {
+            document.getElementById('userSaldo').textContent = 'Rp' + data.saldo_baru.toLocaleString('id-ID');
+            // Update saldo di navbar juga jika ada
+            const navbarSaldo = document.querySelector('.text-green-600');
+            if (navbarSaldo) {
+              navbarSaldo.textContent = 'Rp' + data.saldo_baru.toLocaleString('id-ID');
+            }
+          }
+        } else {
+          if (data.message && data.message.toLowerCase().includes('login')) {
+            window.location.href = 'login_register/login.php';
+          } else {
+            updateTableStatus();
+          }
+        }
+      });
+    });
+
+    // Update status meja saat modal dibuka
+    bookTableBtn.addEventListener('click', function() {
+      updateTableStatus();
+      tableIcons.forEach(b => b.classList.remove('ring-4', 'ring-red-500'));
+      selectedTable = null;
     });
   </script>
   <script src="script/script.js"></script>
