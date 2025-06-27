@@ -65,6 +65,14 @@ $result = new ArrayObject([
             <?php endforeach; ?>
         </table>
     </div>
+
+            <!-- Di dalam div button-container atau di mana pun Anda ingin menempatkannya -->
+        <div class="button-container">
+            <a href="../admin/menu/menu.php" class="button">Ke Halaman Menu</a>
+            <a href="../admin/order/order.php" class="button">Ke Halaman Order</a>
+            <a href="../admin/blog/manage_blog.php" class="button">Kelola Blog</a> <!-- Tambahkan ini -->
+        </div>
+        
 </body>
 
 </html>

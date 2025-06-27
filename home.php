@@ -439,47 +439,14 @@ if (isset($_GET['table_id']) && is_numeric($_GET['table_id'])) {
     </div>
   </section>
 
-  <!-- Blog Section -->
-  <section id="blog" class="py-20 bg-white">
-    <div class="container mx-auto px-4 max-w-5xl">
-      <div class="text-center mb-12">
-        <h2 class="text-4xl font-bold text-gray-800 mb-4">Red Bear Blog</h2>
-        <p class="text-gray-600 text-lg">
-          Get the latest updates, tips, and stories from Red Bear Restaurant.
-        </p>
-      </div>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        <!-- Blog Post 1 -->
-        <article class="bg-gray-50 rounded-xl shadow hover:shadow-lg transition p-6 flex flex-col">
-          <img src="img/blog1.jpg" alt="Blog 1" class="rounded-lg mb-4 object-cover h-40 w-full">
-          <h3 class="text-xl font-semibold text-gray-800 mb-2">5 Tips for the Perfect Korean BBQ Experience</h3>
-          <p class="text-gray-600 mb-4 flex-1">
-            Discover how to make the most of your Korean BBQ meal at Red Bear, from grilling techniques to sauce
-            pairings!
-          </p>
-          <a href="#" class="text-red-600 font-bold hover:underline mt-auto">Read More</a>
-        </article>
-        <!-- Blog Post 2 -->
-        <article class="bg-gray-50 rounded-xl shadow hover:shadow-lg transition p-6 flex flex-col">
-          <img src="img/blog2.jpg" alt="Blog 2" class="rounded-lg mb-4 object-cover h-40 w-full">
-          <h3 class="text-xl font-semibold text-gray-800 mb-2">Behind the Scenes: Our Signature Dishes</h3>
-          <p class="text-gray-600 mb-4 flex-1">
-            Go behind the scenes with our chefs and learn what makes our signature dishes so special and delicious.
-          </p>
-          <a href="#" class="text-red-600 font-bold hover:underline mt-auto">Read More</a>
-        </article>
-        <!-- Blog Post 3 -->
-        <article class="bg-gray-50 rounded-xl shadow hover:shadow-lg transition p-6 flex flex-col">
-          <img src="img/blog3.jpg" alt="Blog 3" class="rounded-lg mb-4 object-cover h-40 w-full">
-          <h3 class="text-xl font-semibold text-gray-800 mb-2">Celebrating Special Moments at Red Bear</h3>
-          <p class="text-gray-600 mb-4 flex-1">
-            See how our guests celebrate birthdays, anniversaries, and more with us. Your special moments, our honor!
-          </p>
-          <a href="#" class="text-red-600 font-bold hover:underline mt-auto">Read More</a>
-        </article>
-      </div>
-    </div>
-  </section>
+  
+
+          <!-- Di dalam bagian navbar atau di mana pun Anda ingin menempatkannya -->
+        <a href="blog.php" class="hover:bg-white/10 text-white px-3 py-2 rounded-md font-semibold text-sm transition-colors">BLOG</a>
+        <?php if (isset($_SESSION['user_id']) && $_SESSION['role'] === 'user'): ?>
+            <a href="blog_form.php" class="bg-blue-600 text-white px-3 py-2 rounded-full font-bold text-sm hover:bg-blue-700 transition-all duration-300 shadow-lg">Tulis Blog</a>
+        <?php endif; ?>
+        
 
   <!-- Footer -->
   <footer class="bg-gray-800 text-white pt-12 pb-8">
