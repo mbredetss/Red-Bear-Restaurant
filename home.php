@@ -7,6 +7,18 @@ if (isset($_GET['table_id']) && is_numeric($_GET['table_id'])) {
     $_SESSION['scanned_table_id'] = $table_id;
     // Anda bisa menambahkan logika untuk menandai meja sebagai 'occupied' di sini jika diperlukan
 }
+
+$koneksi = koneksiDatabase("red bear");
+
+// Ambil postingan blog yang sudah dipublikasikan
+$blog_posts = [];
+$query_blog = "SELECT bp.id, bp.title, bp.content, bp.image_path, bp.created_at, u.name as author_name FROM blog_posts bp JOIN users u ON bp.user_id = u.id WHERE bp.status = 'published' ORDER BY bp.created_at DESC LIMIT 3"; // Ambil 3 postingan terbaru
+$result_blog = $koneksi->query($query_blog);
+if ($result_blog) {
+    while ($row = $result_blog->fetch_assoc()) {
+        $blog_posts[] = $row;
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -439,10 +451,46 @@ if (isset($_GET['table_id']) && is_numeric($_GET['table_id'])) {
     </div>
   </section>
 
+
+
+  <!-- Blog Section -->
+<section id="blog" class="py-20 bg-white">
+    <div class="container mx-auto px-4 max-w-4xl">
+        <div class="text-center mb-10">
+            <h2 class="text-4xl font-bold text-gray-800 mb-4">Our Latest Blog</h2>
+            <p class="text-gray-600 text-lg">
+                Stay updated with our news, recipes, and special events.
+            </p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <?php if (empty($blog_posts)): ?>
+                <p class="col-span-full text-center text-gray-500">Belum ada postingan blog yang dipublikasikan.</p>
+            <?php else: ?>
+                <?php foreach ($blog_posts as $post): ?>
+                    <div class="bg-gray-50 rounded-lg shadow-md overflow-hidden">
+                        <?php if ($post['image_path']): ?>
+                            <img src="<?php echo htmlspecialchars($post['image_path']); ?>" alt="<?php echo htmlspecialchars($post['title']); ?>" class="w-full h-48 object-cover">
+                        <?php endif; ?>
+                        <div class="p-6">
+                            <h3 class="text-xl font-semibold mb-2 text-gray-800"><?php echo htmlspecialchars($post['title']); ?></h3>
+                            <p class="text-gray-600 text-sm mb-4">Oleh: <?php echo htmlspecialchars($post['author_name']); ?> pada <?php echo date('d M Y', strtotime($post['created_at'])); ?></p>
+                            <p class="text-gray-700 mb-4"><?php echo nl2br(substr(strip_tags($post['content']), 0, 100)); ?>...</p>
+                            <a href="blog_detail.php?id=<?php echo $post['id']; ?>" class="text-red-600 hover:underline font-medium">Baca Selengkapnya</a>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            <?php endif; ?>
+        </div>
+        <div class="text-center mt-10">
+            <a href="blog.php" class="bg-red-600 text-white px-6 py-3 rounded-full font-bold hover:bg-red-700 transition-colors shadow-lg">Lihat Semua Blog</a>
+        </div>
+    </div>
+</section>
+
   
 
           <!-- Di dalam bagian navbar atau di mana pun Anda ingin menempatkannya -->
-        <a href="blog.php" class="hover:bg-white/10 text-white px-3 py-2 rounded-md font-semibold text-sm transition-colors">BLOG</a>
+    
         <?php if (isset($_SESSION['user_id']) && $_SESSION['role'] === 'user'): ?>
             <a href="blog_form.php" class="bg-blue-600 text-white px-3 py-2 rounded-full font-bold text-sm hover:bg-blue-700 transition-all duration-300 shadow-lg">Tulis Blog</a>
         <?php endif; ?>
