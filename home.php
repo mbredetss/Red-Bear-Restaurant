@@ -1,5 +1,12 @@
 <?php
 require_once 'script/session_check.php'; // Mengimpor file session_check.php
+
+// Logika untuk menangani scan QR Code Meja
+if (isset($_GET['table_id']) && is_numeric($_GET['table_id'])) {
+    $table_id = intval($_GET['table_id']);
+    $_SESSION['scanned_table_id'] = $table_id;
+    // Anda bisa menambahkan logika untuk menandai meja sebagai 'occupied' di sini jika diperlukan
+}
 ?>
 
 <!DOCTYPE html>
@@ -36,6 +43,8 @@ require_once 'script/session_check.php'; // Mengimpor file session_check.php
         class="hover:bg-white/10 text-white px-3 py-2 rounded-md font-semibold text-sm transition-colors">MENU</a>
       <a href="#"
         class="hover:bg-white/10 text-white px-3 py-2 rounded-md font-semibold text-sm transition-colors">MERCHANDISE</a>
+      <a href="#" id="tableStatusBtn"
+        class="hover:bg-white/10 text-white px-3 py-2 rounded-md font-semibold text-sm transition-colors">STATUS MEJA</a>
 
       <!-- More Dropdown -->
       <div class="relative" id="more-dropdown">
@@ -219,19 +228,67 @@ require_once 'script/session_check.php'; // Mengimpor file session_check.php
       class="bg-white p-6 rounded-xl shadow-2xl w-full max-w-sm space-y-4 relative transform transition-all opacity-0 scale-95">
       <button id="pesan-close"
         class="absolute top-3 right-4 text-gray-400 hover:text-gray-800 text-2xl font-bold">&times;</button>
-      <h3 id="pesan-menu-nama" class="text-xl font-bold text-gray-800">Order Menu</h3>
-      <div class="flex items-center gap-4">
-        <label for="pesan-jumlah" class="font-semibold text-gray-600">Quantity:</label>
-        <input type="number" id="pesan-jumlah" min="1" value="1"
-          class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500" />
+      <h3 id="pesan-menu-nama" class="text-xl font-bold text-gray-800">Pesan Menu</h3>
+      
+      <div class="space-y-3">
+        <div>
+            <label for="pesan-nama" class="font-semibold text-gray-600 text-sm">Namas Pemesan</label>
+            <input type="text" id="pesan-nama" placeholder="Masukkan nama Anda" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500" />
+        </div>
+        <div>
+            <label for="pesan-tamu" class="font-semibold text-gray-600 text-sm">Jumlah Tamu di Meja</label>
+            <input type="number" id="pesan-tamu" min="1" value="1" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500" />
+        </div>
+        <div>
+            <label for="pesan-jumlah" class="font-semibold text-gray-600 text-sm">Jumlah Pesanan Menu Ini</label>
+            <input type="number" id="pesan-jumlah" min="1" value="1" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500" />
+        </div>
+        <div>
+            <label for="pesan-catatan" class="font-semibold text-gray-600 text-sm">Catatan (Opsional)</label>
+            <textarea id="pesan-catatan" rows="2" placeholder="Contoh: Pedas, tidak pakai sayur" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500"></textarea>
+        </div>
       </div>
+
       <button id="pesan-kirim"
         class="w-full bg-red-600 text-white py-3 rounded-lg font-bold hover:bg-red-700 transition-colors shadow-lg hover:shadow-xl">
-        <i class="fas fa-paper-plane mr-2"></i>Place Order
+        <i class="fas fa-paper-plane mr-2"></i>Tambah Pesanan
       </button>
     </div>
   </div>
 
+  <!-- Cart Modal -->
+  <div id="cart-modal" class="fixed inset-0 bg-black bg-opacity-60 hidden items-center justify-center z-50 px-4">
+    <div id="cart-modal-content"
+      class="bg-white rounded-xl shadow-2xl w-full max-w-md max-h-[85vh] flex flex-col transform transition-all opacity-0 scale-95">
+      <div class="p-6 border-b border-gray-200 flex justify-between items-center">
+        <h2 class="text-2xl font-bold text-gray-800">Keranjang Pesanan</h2>
+        <button id="cart-close" class="text-gray-400 hover:text-gray-800 text-2xl">&times;</button>
+      </div>
+
+      <!-- Cart Items -->
+      <div class="flex-1 overflow-y-auto">
+        <div id="cart-items" class="p-4">
+          <!-- Cart items will be rendered here -->
+        </div>
+      </div>
+
+      <!-- Checkout Form -->
+      <div class="p-6 border-t border-gray-200 space-y-4">
+        <div>
+          <label for="checkout-nama" class="font-semibold text-gray-600 text-sm">Nama Pemesan</label>
+          <input type="text" id="checkout-nama" placeholder="Masukkan nama Anda" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500" />
+        </div>
+        <div>
+          <label for="checkout-tamu" class="font-semibold text-gray-600 text-sm">Jumlah Tamu di Meja</label>
+          <input type="number" id="checkout-tamu" min="1" value="1" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500" />
+        </div>
+        <button id="checkout-btn"
+          class="w-full bg-red-600 text-white py-3 rounded-lg font-bold hover:bg-red-700 transition-colors shadow-lg hover:shadow-xl">
+          <i class="fas fa-check mr-2"></i>Checkout
+        </button>
+      </div>
+    </div>
+  </div>
 
   <!-- Modal Tampilan Menu Detail -->
   <div id="menu-modal"
@@ -277,14 +334,14 @@ require_once 'script/session_check.php'; // Mengimpor file session_check.php
   <!-- Modal Detail Pesanan dengan Tab -->
   <div id="orderDetailsModal" class="fixed inset-0 bg-black bg-opacity-60 hidden items-center justify-center z-50 px-4">
     <div id="orderDetailsModal-content"
-      class="bg-white rounded-xl shadow-2xl w-full max-w-lg max-h-[85vh] flex flex-col transform transition-all opacity-0 scale-95">
+      class="bg-white rounded-xl shadow-2xl w-full max-w-lg max-h-[90vh] flex flex-col transform transition-all opacity-0 scale-95">
       <div class="p-6 border-b border-gray-200 flex justify-between items-center">
         <h2 class="text-2xl font-bold text-gray-800">Your Orders</h2>
         <button id="closeOrderDetails" class="text-gray-400 hover:text-gray-800 text-2xl">&times;</button>
       </div>
 
       <!-- Tab Navigation -->
-      <div class="flex border-b border-gray-200 px-6">
+      <div class="flex flex-col sm:flex-row border-b border-gray-200 px-6 gap-2 sm:gap-0">
         <button id="tabAktif"
           class="flex-1 py-3 text-center font-semibold border-b-2 border-red-600 text-red-600 transition-colors">Active</button>
         <button id="tabSelesai"
@@ -292,13 +349,29 @@ require_once 'script/session_check.php'; // Mengimpor file session_check.php
       </div>
 
       <!-- Tab Content -->
-      <div class="p-6 space-y-4 overflow-y-auto">
+      <div class="p-6 space-y-4 overflow-y-auto" style="max-height:calc(90vh - 160px);">
         <ul id="orderListAktif" class="space-y-4 text-gray-700">
           <!-- Pesanan Aktif akan diisi via JS -->
         </ul>
         <ul id="orderListSelesai" class="space-y-4 text-gray-700 hidden">
           <!-- Pesanan Selesai akan diisi via JS -->
         </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Status Meja -->
+  <div id="tableStatusModal" class="fixed inset-0 bg-black bg-opacity-60 hidden items-center justify-center z-50 px-4">
+    <div id="tableStatusModal-content"
+      class="bg-white rounded-xl shadow-2xl w-full max-w-2xl p-8 relative transform transition-all opacity-0 scale-95">
+      <button id="closeTableStatusModal" class="absolute top-3 right-4 text-gray-400 hover:text-gray-800 text-2xl font-bold">&times;</button>
+      <h2 class="text-2xl font-bold text-center mb-6 text-gray-800">Status Meja Real-time</h2>
+      <div id="tableStatusContainer" class="grid grid-cols-4 md:grid-cols-6 gap-4 justify-items-center">
+          <!-- Status meja akan di-generate oleh JS -->
+      </div>
+      <div class="mt-6 flex justify-center space-x-6 text-sm">
+          <div class="flex items-center"><span class="h-4 w-4 rounded-full bg-green-500 mr-2"></span>Tersedia</div>
+          <div class="flex items-center"><span class="h-4 w-4 rounded-full bg-red-500 mr-2"></span>Tidak Tersedia</div>
       </div>
     </div>
   </div>
@@ -676,6 +749,12 @@ require_once 'script/session_check.php'; // Mengimpor file session_check.php
       tableIcons.forEach(b => b.classList.remove('ring-4', 'ring-red-500'));
       selectedTable = null;
     });
+
+   
+  </script>
+  <script>
+    // Melewatkan status scan ke Javascript
+    window.hasScannedTable = <?php echo isset($_SESSION['scanned_table_id']) ? 'true' : 'false'; ?>;
   </script>
   <script src="script/script.js"></script>
   <script src="script/menuLoad.js"></script>

@@ -7,7 +7,7 @@
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 
-<body class="bg-gray-100 p-8">
+<body class="font-sans bg-gray-100 p-8">
   <div id="message" class="hidden bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4"></div>
   <!-- Form Tambah Menu -->
   <div class="bg-white p-6 rounded shadow mb-8 max-w-xl mx-auto">
@@ -58,25 +58,6 @@
       </form>
     </div>
   </div>
-
-
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <canvas id="myChart"></canvas>
-  <script>
-    const ctx = document.getElementById('myChart');
-    new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: ['A', 'B', 'C'],
-        datasets: [{
-          label: 'Contoh Data',
-          data: [12, 19, 3],
-          backgroundColor: 'rgba(255, 99, 132, 0.5)'
-        }]
-      }
-    });
-  </script>
-
   <script src="script/script.js"></script>
 </body>
 

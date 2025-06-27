@@ -1,0 +1,322 @@
+/* Admin Order Management Styles */
+.status-menunggu { 
+    background-color: #fef3c7; 
+    color: #92400e; 
+}
+
+.status-memasak { 
+    background-color: #fed7aa; 
+    color: #c2410c; 
+}
+
+.status-selesai { 
+    background-color: #bbf7d0; 
+    color: #166534; 
+}
+
+.status-ditolak { 
+    background-color: #fecaca; 
+    color: #991b1b; 
+}
+
+/* Table Group Styles */
+.table-group {
+    transition: all 0.3s ease;
+}
+
+.table-group:hover {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.table-header {
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.table-header:hover {
+    background: linear-gradient(to right, #dbeafe, #c7d2fe);
+}
+
+/* Table Number Badge */
+.table-number-badge {
+    transition: transform 0.2s ease;
+}
+
+.table-header:hover .table-number-badge {
+    transform: scale(1.05);
+}
+
+/* Status Summary Badges */
+.status-summary-badge {
+    transition: all 0.2s ease;
+}
+
+.status-summary-badge:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Order Item Styles */
+.order-item {
+    transition: all 0.2s ease;
+}
+
+.order-item:hover {
+    background-color: #f9fafb;
+    transform: translateX(2px);
+}
+
+/* Collapse Indicator */
+.collapse-indicator {
+    transition: transform 0.2s ease;
+}
+
+.table-header:hover .collapse-indicator {
+    transform: scale(1.1);
+}
+
+/* Search Highlight */
+mark.bg-yellow-200 {
+    padding: 1px 2px;
+    border-radius: 2px;
+    font-weight: 600;
+}
+
+/* Empty State */
+.empty-state {
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .table-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    
+    .status-summary {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+    
+    .order-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    
+    .action-buttons {
+        width: 100%;
+        justify-content: flex-start;
+    }
+}
+
+/* Loading States */
+.loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+}
+
+/* Animation for status updates */
+.status-badge {
+    transition: all 0.3s ease;
+}
+
+.status-badge.updated {
+    animation: pulse 0.6s ease-in-out;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Hover effects for table rows */
+.hover\:bg-gray-50:hover {
+    background-color: #f9fafb;
+}
+
+/* Enhanced button visibility */
+.status-btn {
+    transition: all 0.2s ease-in-out;
+    border: 1px solid transparent;
+    font-weight: 600;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    position: relative;
+    z-index: 5;
+    min-width: 100px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(4px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+.status-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.status-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.status-btn:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
+}
+
+/* Specific button colors for better contrast */
+.status-btn.bg-blue-600 {
+    background-color: #2563eb !important;
+    color: white !important;
+    border-color: #1d4ed8;
+}
+
+.status-btn.bg-blue-600:hover {
+    background-color: #1d4ed8 !important;
+    border-color: #1e40af;
+}
+
+.status-btn.bg-green-600 {
+    background-color: #16a34a !important;
+    color: white !important;
+    border-color: #15803d;
+}
+
+.status-btn.bg-green-600:hover {
+    background-color: #15803d !important;
+    border-color: #166534;
+}
+
+.status-btn.bg-red-600 {
+    background-color: #dc2626 !important;
+    color: white !important;
+    border-color: #b91c1c;
+}
+
+.status-btn.bg-red-600:hover {
+    background-color: #b91c1c !important;
+    border-color: #991b1b;
+}
+
+/* Loading animation */
+.loading {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Responsive table */
+@media (max-width: 768px) {
+    .overflow-x-auto {
+        overflow-x: auto;
+    }
+    
+    table {
+        min-width: 800px;
+    }
+}
+
+/* Status badge animations */
+.status-badge {
+    transition: all 0.3s ease;
+}
+
+.status-badge:hover {
+    transform: scale(1.05);
+}
+
+/* Stats card hover effects */
+.bg-white.overflow-hidden.shadow.rounded-lg {
+    transition: all 0.3s ease;
+}
+
+.bg-white.overflow-hidden.shadow.rounded-lg:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+/* Auto-refresh indicator */
+.auto-refresh-indicator {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.auto-refresh-indicator.show {
+    opacity: 1;
+}
+
+/* Table group animations */
+.border.border-gray-200.rounded-lg {
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Stagger animation for multiple table groups */
+.border.border-gray-200.rounded-lg:nth-child(1) { animation-delay: 0.1s; }
+.border.border-gray-200.rounded-lg:nth-child(2) { animation-delay: 0.2s; }
+.border.border-gray-200.rounded-lg:nth-child(3) { animation-delay: 0.3s; }
+.border.border-gray-200.rounded-lg:nth-child(4) { animation-delay: 0.4s; }
+.border.border-gray-200.rounded-lg:nth-child(5) { animation-delay: 0.5s; }
+
+/* Action buttons container */
+.action-buttons {
+    position: relative;
+    z-index: 10;
+} 

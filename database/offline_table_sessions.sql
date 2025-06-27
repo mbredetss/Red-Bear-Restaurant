@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 27 Jun 2025 pada 11.50
+-- Waktu pembuatan: 26 Jun 2025 pada 11.48
 -- Versi server: 10.4.32-MariaDB
 -- Versi PHP: 8.1.25
 
@@ -24,46 +24,49 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `orders`
+-- Struktur dari tabel `offline_table_sessions`
 --
 
-CREATE TABLE `orders` (
+CREATE TABLE `offline_table_sessions` (
   `id` int(11) NOT NULL,
-  `offline_table_session_id` int(11) NOT NULL,
-  `username` varchar(255) NOT NULL,
-  `menu_id` int(11) NOT NULL,
-  `menu_name` varchar(255) NOT NULL,
-  `quantity` int(11) NOT NULL DEFAULT 1,
-  `catatan` text DEFAULT NULL,
-  `status` enum('menunggu','memasak','selesai','ditolak') NOT NULL DEFAULT 'menunggu',
+  `table_id` int(11) NOT NULL,
+  `guest_count` int(11) NOT NULL DEFAULT 1,
+  `session_code` varchar(255) NOT NULL,
+  `status` enum('occupied','vacant') DEFAULT 'occupied',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Indexes for dumped tables
 --
 
 --
--- Indeks untuk tabel `orders`
+-- Indeks untuk tabel `offline_table_sessions`
 --
-ALTER TABLE `orders`
+ALTER TABLE `offline_table_sessions`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `offline_table_session_id` (`offline_table_session_id`),
-  ADD KEY `menu_id` (`menu_id`),
-  ADD KEY `status` (`status`),
-  ADD KEY `created_at` (`created_at`),
-  ADD KEY `idx_orders_session_status` (`offline_table_session_id`,`status`),
-  ADD KEY `idx_orders_created_status` (`created_at`,`status`);
+  ADD UNIQUE KEY `session_code` (`session_code`),
+  ADD KEY `table_id` (`table_id`);
 
 --
 -- AUTO_INCREMENT untuk tabel yang dibuang
 --
 
 --
--- AUTO_INCREMENT untuk tabel `orders`
+-- AUTO_INCREMENT untuk tabel `offline_table_sessions`
 --
-ALTER TABLE `orders`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
+ALTER TABLE `offline_table_sessions`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+
+--
+-- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
+--
+
+--
+-- Ketidakleluasaan untuk tabel `offline_table_sessions`
+--
+ALTER TABLE `offline_table_sessions`
+  ADD CONSTRAINT `offline_table_sessions_ibfk_1` FOREIGN KEY (`table_id`) REFERENCES `tables` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

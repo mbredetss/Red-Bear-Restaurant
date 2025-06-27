@@ -2,33 +2,10 @@
 session_start();
 require_once '../../../database.php';
 
-
-if (!isset($_SESSION['user_id'])) {
-    http_response_code(401);
-    echo json_encode(['items' => []]);
-    exit;
-}
+header('Content-Type: application/json');
 
 $koneksi = koneksiDatabase("red bear");
-$userId = $_SESSION['user_id'];
-
-// Ambil semua order_items untuk user ini, beserta path gambarnya
-$sql = "
- SELECT
-  m.public_id AS menu_name,
-  m.image_path,
-  oi.quantity,
-  oi.status
-FROM orders o
-JOIN order_items oi ON o.id     = oi.order_id
-JOIN menu        m  ON oi.menu_id = m.id
-WHERE o.user_id = ?
-ORDER BY oi.id DESC;
-";
-$stmt = $koneksi->prepare($sql);
-$stmt->bind_param("i", $userId);
-$stmt->execute();
-$result = $stmt->get_result();
+$items = [];
 
 // Tentukan base URL untuk membuat URL gambar absolut
 $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
@@ -36,14 +13,68 @@ $host = $_SERVER['HTTP_HOST'];
 $base_dir = rtrim(dirname(dirname(dirname(dirname($_SERVER['SCRIPT_NAME'])))), '/\\');
 $base_url = "$protocol$host$base_dir/";
 
-$items = [];
-while ($row = $result->fetch_assoc()) {
-    $items[] = [
-        'name' => $row['menu_name'],
-        'quantity' => (int) $row['quantity'],
-        'status' => $row['status'],
-        'image' => $base_url . $row['image_path']
-    ];
+$whereClause = "";
+$params = [];
+$types = "";
+
+// Cek apakah user login atau pelanggan offline
+if (isset($_SESSION['user_id']) && isset($_SESSION['username'])) {
+    // User online
+    $whereClause = "o.username = ?";
+    $params[] = $_SESSION['username'];
+    $types .= "s";
+} elseif (isset($_SESSION['scanned_table_id'])) {
+    // User offline
+    $session_code = session_id() . "_" . $_SESSION['scanned_table_id'];
+    $stmt_session = $koneksi->prepare("SELECT id FROM offline_table_sessions WHERE session_code = ?");
+    $stmt_session->bind_param("s", $session_code);
+    $stmt_session->execute();
+    $result_session = $stmt_session->get_result();
+    if ($result_session->num_rows > 0) {
+        $offline_session_id = $result_session->fetch_assoc()['id'];
+        $whereClause = "o.offline_table_session_id = ?";
+        $params[] = $offline_session_id;
+        $types .= "i";
+    } else {
+        echo json_encode(['items' => []]);
+        exit;
+    }
+} else {
+    // Tidak ada sesi valid
+    echo json_encode(['items' => []]);
+    exit;
+}
+
+// Query baru untuk mengambil pesanan dari tabel 'orders'
+$sql = "
+ SELECT
+  o.menu_name,
+  o.quantity,
+  o.status,
+  m.image_path,
+  m.jenis
+FROM orders o
+LEFT JOIN menu m ON o.menu_id = m.id
+WHERE $whereClause
+ORDER BY o.id DESC;
+";
+
+$stmt = $koneksi->prepare($sql);
+if ($stmt && !empty($types)) {
+    $stmt->bind_param($types, ...$params);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    while ($row = $result->fetch_assoc()) {
+        $items[] = [
+            'name' => $row['menu_name'],
+            'quantity' => (int) $row['quantity'],
+            'status' => $row['status'],
+            'image' => $row['image_path'] ? $base_url . $row['image_path'] : null,
+            'jenis' => $row['jenis'] ?? null
+        ];
+    }
+    $stmt->close();
 }
 
 echo json_encode(['items' => $items]);

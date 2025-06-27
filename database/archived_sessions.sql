@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 21 Jun 2025 pada 07.54
+-- Waktu pembuatan: 26 Jun 2025 pada 11.47
 -- Versi server: 10.4.32-MariaDB
 -- Versi PHP: 8.1.25
 
@@ -24,15 +24,14 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `order_items`
+-- Struktur dari tabel `archived_sessions`
 --
 
-CREATE TABLE `order_items` (
+CREATE TABLE `archived_sessions` (
   `id` int(11) NOT NULL,
-  `order_id` int(11) DEFAULT NULL,
-  `menu_id` int(11) DEFAULT NULL,
-  `quantity` int(11) DEFAULT NULL,
-  `status` enum('menunggu','diproses','dikirim','selesai','ditolak') DEFAULT 'menunggu'
+  `guest_count` int(11) NOT NULL,
+  `session_start_time` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `archived_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -40,33 +39,20 @@ CREATE TABLE `order_items` (
 --
 
 --
--- Indeks untuk tabel `order_items`
+-- Indeks untuk tabel `archived_sessions`
 --
-ALTER TABLE `order_items`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `order_id` (`order_id`),
-  ADD KEY `menu_id` (`menu_id`);
+ALTER TABLE `archived_sessions`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- AUTO_INCREMENT untuk tabel yang dibuang
 --
 
 --
--- AUTO_INCREMENT untuk tabel `order_items`
+-- AUTO_INCREMENT untuk tabel `archived_sessions`
 --
-ALTER TABLE `order_items`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
-
---
--- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
---
-
---
--- Ketidakleluasaan untuk tabel `order_items`
---
-ALTER TABLE `order_items`
-  ADD CONSTRAINT `order_items_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `order_items_ibfk_2` FOREIGN KEY (`menu_id`) REFERENCES `menu` (`id`) ON DELETE CASCADE;
+ALTER TABLE `archived_sessions`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

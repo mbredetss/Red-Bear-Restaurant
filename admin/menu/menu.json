@@ -1,14 +1,11 @@
 {
     "Nasi Goreng": {
-        "tersedia": true,
-        "jenis": "makanan"
+        "tersedia": true
     },
     "BBQ": {
-        "tersedia": true,
-        "jenis": "makanan"
+        "tersedia": true
     },
     "Amer": {
-        "tersedia": true,
-        "jenis": "minuman"
+        "tersedia": true
     }
 }
