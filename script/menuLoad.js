@@ -37,21 +37,37 @@ document.addEventListener('DOMContentLoaded', () => {
   const renderMenu = () => {
     container.innerHTML = menuData.length === 0
       ? '<div class="col-span-full text-center text-gray-500">Belum ada menu.</div>'
-      : menuData.map((menu, index) => `
-        <div class="bg-white shadow-lg rounded-xl overflow-hidden relative group cursor-pointer transition-transform duration-300 hover:-translate-y-2" data-index="${index}">
-          <div class="relative">
-            <img src="${menu.image}" alt="${menu.name}" class="w-full h-64 object-cover transition-all duration-300 group-hover:opacity-40" />
-            <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-60 transition-all duration-300 pointer-events-none"></div>
-            <div class="absolute inset-0 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              <span class="text-white text-xl font-bold mb-2 bg-black/60 px-4 py-2 rounded-full">${menu.name}</span>
-              ${window.hasScannedTable ? `
-              <button class="add-to-cart-btn bg-white bg-opacity-80 hover:bg-red-600 hover:text-white text-red-600 rounded-full w-12 h-12 flex items-center justify-center text-2xl font-bold shadow transition-all duration-200 mt-2" data-index="${index}">
-                <i class="fas fa-plus"></i>
-              </button>
-              ` : ''}
+      : menuData.map((menu, index) => {
+        if (!menu.tersedia) {
+          // Menu habis
+          return `
+          <div class="bg-white shadow-lg rounded-xl overflow-hidden relative group cursor-not-allowed opacity-80 select-none" data-index="${index}">
+            <div class="relative">
+              <img src="${menu.image}" alt="${menu.name}" class="w-full h-64 object-cover grayscale brightness-50" />
+              <div class="absolute inset-0 bg-black bg-opacity-70 flex items-center justify-center">
+                <span class="text-white text-2xl font-extrabold bg-black/70 px-6 py-3 rounded-full">HABIS</span>
+              </div>
             </div>
-          </div>
-        </div>`).join('');
+          </div>`;
+        } else {
+          // Menu tersedia
+          return `
+          <div class="bg-white shadow-lg rounded-xl overflow-hidden relative group cursor-pointer transition-transform duration-300 hover:-translate-y-2" data-index="${index}">
+            <div class="relative">
+              <img src="${menu.image}" alt="${menu.name}" class="w-full h-64 object-cover transition-all duration-300 group-hover:opacity-40" />
+              <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-60 transition-all duration-300 pointer-events-none"></div>
+              <div class="absolute inset-0 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <span class="text-white text-xl font-bold mb-2 bg-black/60 px-4 py-2 rounded-full">${menu.name}</span>
+                ${window.hasScannedTable ? `
+                <button class="add-to-cart-btn bg-white bg-opacity-80 hover:bg-red-600 hover:text-white text-red-600 rounded-full w-12 h-12 flex items-center justify-center text-2xl font-bold shadow transition-all duration-200 mt-2" data-index="${index}">
+                  <i class="fas fa-plus"></i>
+                </button>
+                ` : ''}
+              </div>
+            </div>
+          </div>`;
+        }
+      }).join('');
   };
 
   // --- MODAL INPUT JUMLAH & CATATAN ---
