@@ -15,19 +15,26 @@ $query = "
     SELECT 
         t.table_number,
         t.id as table_id,
-        ots.guest_count,
-        ots.session_code,
-        ots.created_at as session_created,
+        COALESCE(ots.guest_count, tb.guest_count) as guest_count,
+        COALESCE(ots.session_code, tb.table_code) as session_code,
+        COALESCE(ots.created_at, tb.created_at) as session_created,
         COUNT(o.id) as total_orders,
         SUM(CASE WHEN o.status = 'menunggu' THEN 1 ELSE 0 END) as pending_orders,
         SUM(CASE WHEN o.status = 'memasak' THEN 1 ELSE 0 END) as cooking_orders,
         SUM(CASE WHEN o.status = 'selesai' THEN 1 ELSE 0 END) as completed_orders,
-        SUM(CASE WHEN o.status = 'ditolak' THEN 1 ELSE 0 END) as rejected_orders
+        SUM(CASE WHEN o.status = 'ditolak' THEN 1 ELSE 0 END) as rejected_orders,
+        CASE 
+            WHEN ots.id IS NOT NULL THEN 'offline'
+            WHEN tb.id IS NOT NULL THEN 'booking'
+            ELSE 'unknown'
+        END as order_type
     FROM tables t
     LEFT JOIN offline_table_sessions ots ON t.id = ots.table_id AND ots.status = 'occupied'
-    LEFT JOIN orders o ON ots.id = o.offline_table_session_id
-    GROUP BY t.id, t.table_number, ots.id, ots.guest_count, ots.session_code, ots.created_at
-    ORDER BY t.table_number ASC, ots.created_at DESC
+    LEFT JOIN table_bookings tb ON t.id = tb.table_id AND tb.booking_date = CURDATE() AND tb.status = 'booked'
+    LEFT JOIN orders o ON (ots.id = o.offline_table_session_id OR tb.id = o.booking_id)
+    WHERE o.id IS NOT NULL
+    GROUP BY t.id, t.table_number, ots.id, tb.id, ots.guest_count, tb.guest_count, ots.session_code, tb.table_code, ots.created_at, tb.created_at
+    ORDER BY t.table_number ASC, session_created DESC
 ";
 
 $result = $koneksi->query($query);
@@ -51,15 +58,16 @@ foreach ($tableGroups as $table) {
             o.catatan,
             o.status,
             o.created_at,
-            o.username
+            o.username,
+            o.order_type
         FROM orders o
-        JOIN offline_table_sessions ots ON o.offline_table_session_id = ots.id
-        WHERE ots.table_id = ? AND ots.session_code = ?
+        WHERE (o.offline_table_session_id = (SELECT id FROM offline_table_sessions WHERE table_id = ? AND session_code = ?) 
+               OR o.booking_id = (SELECT id FROM table_bookings WHERE table_id = ? AND table_code = ?))
         ORDER BY o.created_at DESC
     ";
     
     $stmt = $koneksi->prepare($detailQuery);
-    $stmt->bind_param('is', $table['table_id'], $table['session_code']);
+    $stmt->bind_param('isis', $table['table_id'], $table['session_code'], $table['table_id'], $table['session_code']);
     $stmt->execute();
     $detailResult = $stmt->get_result();
     
@@ -225,6 +233,15 @@ foreach ($tableGroups as $table) {
                                             <span><i class="fas fa-users mr-1"></i><?= $table['guest_count'] ?> tamu</span>
                                             <span><i class="fas fa-clock mr-1"></i><?= date('d/m/Y H:i', strtotime($table['session_created'])) ?></span>
                                             <span><i class="fas fa-shopping-cart mr-1"></i><?= $table['total_orders'] ?> pesanan</span>
+                                            <?php if ($table['order_type'] === 'booking'): ?>
+                                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                                <i class="fas fa-calendar-check mr-1"></i>Booking Online
+                                            </span>
+                                            <?php else: ?>
+                                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                                                <i class="fas fa-qrcode mr-1"></i>Scan QR
+                                            </span>
+                                            <?php endif; ?>
                                         </div>
                                     </div>
                                 </div>

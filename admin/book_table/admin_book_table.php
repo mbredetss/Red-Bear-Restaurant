@@ -105,7 +105,7 @@ while($row = $result_offline->fetch_assoc()) {
                                 <div class="flex items-center justify-between">
                                     <p class="text-sm font-medium text-gray-900">Meja <?php echo $row['table_number']; ?> (Sejak: <?php echo date('H:i', strtotime($row['created_at'])); ?>)</p>
                                     <button onclick="markAsVacant(<?php echo $row['id']; ?>)" class="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700">
-                                        <i class="fas fa-check mr-1"></i> Selesai / Kosongkan
+                                        <i class="fas fa-check mr-1"></i> Selesai
                                     </button>
                                 </div>
                             </li>
@@ -147,7 +147,7 @@ while($row = $result_offline->fetch_assoc()) {
         }
 
         function markAsVacant(sessionId) {
-            if (confirm('Anda yakin ingin mengosongkan meja ini?')) {
+            if (confirm('Apakah Anda yakin ingin menandai sesi ini sebagai selesai? Meja akan kembali tersedia.')) {
                 fetch('api/mark_vacant.php', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -156,7 +156,7 @@ while($row = $result_offline->fetch_assoc()) {
                 .then(res => res.json())
                 .then(data => {
                     if (data.success) {
-                        alert('Meja berhasil dikosongkan.');
+                        alert('Sesi berhasil ditandai sebagai selesai.');
                         location.reload();
                     } else {
                         alert('Gagal: ' + data.message);

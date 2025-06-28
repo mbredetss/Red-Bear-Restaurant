@@ -40,30 +40,7 @@ try {
     $stmt_archive_session->execute();
     $stmt_archive_session->close();
 
-    // 3. Ambil dan arsipkan item pesanan terkait
-    $stmt_get_orders = $koneksi->prepare("SELECT menu_name, quantity, status FROM orders WHERE offline_table_session_id = ?");
-    $stmt_get_orders->bind_param("i", $session_id);
-    $stmt_get_orders->execute();
-    $result_orders = $stmt_get_orders->get_result();
-    
-    $stmt_archive_order = $koneksi->prepare("INSERT INTO archived_orders (menu_name, quantity) VALUES (?, ?)");
-    while ($order = $result_orders->fetch_assoc()) {
-        if ($order['status'] === 'selesai') {
-            $stmt_archive_order->bind_param("si", $order['menu_name'], $order['quantity']);
-            $stmt_archive_order->execute();
-        }
-        // Jika status bukan 'selesai', tidak diarsipkan
-    }
-    $stmt_archive_order->close();
-    $stmt_get_orders->close();
-
-    // 4. Hapus item pesanan dari tabel operasional
-    $stmt_delete_orders = $koneksi->prepare("DELETE FROM orders WHERE offline_table_session_id = ?");
-    $stmt_delete_orders->bind_param("i", $session_id);
-    $stmt_delete_orders->execute();
-    $stmt_delete_orders->close();
-    
-    // 5. Hapus sesi dari tabel operasional
+    // 3. Hapus sesi dari tabel operasional (orders tetap ada untuk riwayat)
     $stmt_delete_session = $koneksi->prepare("DELETE FROM offline_table_sessions WHERE id = ?");
     $stmt_delete_session->bind_param("i", $session_id);
     $stmt_delete_session->execute();

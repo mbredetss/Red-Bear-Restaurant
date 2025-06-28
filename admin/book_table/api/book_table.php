@@ -52,13 +52,33 @@ if ($count > 0) {
     exit;
 }
 
+// Fungsi untuk menghasilkan kode meja yang aman
+function generateTableCode() {
+    // Kode 12 digit: 4 digit angka + 4 digit huruf + 4 digit angka
+    $numbers1 = str_pad(rand(0, 9999), 4, '0', STR_PAD_LEFT);
+    $letters = strtoupper(substr(str_shuffle('ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0, 4));
+    $numbers2 = str_pad(rand(0, 9999), 4, '0', STR_PAD_LEFT);
+    return $numbers1 . $letters . $numbers2;
+}
+
+// Generate kode meja yang unik
+do {
+    $table_code = generateTableCode();
+    $stmt = $koneksi->prepare('SELECT COUNT(*) FROM table_bookings WHERE table_code = ?');
+    $stmt->bind_param('s', $table_code);
+    $stmt->execute();
+    $stmt->bind_result($code_exists);
+    $stmt->fetch();
+    $stmt->close();
+} while ($code_exists > 0);
+
 // Mulai transaksi
 $koneksi->begin_transaction();
 
 try {
-    // Simpan booking
-    $stmt = $koneksi->prepare('INSERT INTO table_bookings (table_id, user_id, guest_count, booking_date, booking_time, status) VALUES (?, ?, ?, ?, ?, "booked")');
-    $stmt->bind_param('iiiss', $table_id, $user_id, $guest_count, $date, $time);
+    // Simpan booking dengan kode meja
+    $stmt = $koneksi->prepare('INSERT INTO table_bookings (table_id, user_id, guest_count, booking_date, booking_time, table_code) VALUES (?, ?, ?, ?, ?, ?)');
+    $stmt->bind_param('iiisss', $table_id, $user_id, $guest_count, $date, $time, $table_code);
     $success = $stmt->execute();
     $stmt->close();
     
@@ -82,7 +102,8 @@ try {
     
     echo json_encode([
         'success' => true, 
-        'message' => 'Booking meja berhasil! Saldo berkurang Rp' . number_format($biaya_booking, 0, ',', '.'),
+        'message' => 'Booking meja berhasil! Silahkan cek code meja di menu profile',
+        'table_code' => $table_code,
         'saldo_baru' => $saldo_baru
     ]);
     

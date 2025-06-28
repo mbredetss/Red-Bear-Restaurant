@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
     .catch(error => console.error('Gagal memuat menu:', error));
 
   const renderMenu = () => {
-    container.innerHTML = menuData.length === 0
+    container.innerHTML = menuData.length === 0 
       ? '<div class="col-span-full text-center text-gray-500">Belum ada menu.</div>'
       : menuData.map((menu, index) => {
         if (!menu.tersedia) {
@@ -52,13 +52,13 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
           // Menu tersedia
           return `
-          <div class="bg-white shadow-lg rounded-xl overflow-hidden relative group cursor-pointer transition-transform duration-300 hover:-translate-y-2" data-index="${index}">
-            <div class="relative">
+        <div class="bg-white shadow-lg rounded-xl overflow-hidden relative group cursor-pointer transition-transform duration-300 hover:-translate-y-2" data-index="${index}">
+          <div class="relative">
               <img src="${menu.image}" alt="${menu.name}" class="w-full h-64 object-cover transition-all duration-300 group-hover:opacity-40" />
               <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-60 transition-all duration-300 pointer-events-none"></div>
               <div class="absolute inset-0 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                 <span class="text-white text-xl font-bold mb-2 bg-black/60 px-4 py-2 rounded-full">${menu.name}</span>
-                ${window.hasScannedTable ? `
+                ${(window.hasScannedTable || window.hasBookedTable) ? `
                 <button class="add-to-cart-btn bg-white bg-opacity-80 hover:bg-red-600 hover:text-white text-red-600 rounded-full w-12 h-12 flex items-center justify-center text-2xl font-bold shadow transition-all duration-200 mt-2" data-index="${index}">
                   <i class="fas fa-plus"></i>
                 </button>
@@ -267,7 +267,14 @@ document.addEventListener('DOMContentLoaded', () => {
         alert('Keranjang kosong!');
         return;
       }
-      // Modal input nama pemesan & jumlah tamu
+      
+      // Jika user sudah booking meja, langsung proses pesanan tanpa form konfirmasi
+      if (window.hasBookedTable) {
+        processBookingOrders();
+        return;
+      }
+      
+      // Modal input nama pemesan & jumlah tamu (hanya untuk pelanggan offline)
       let checkoutModal = document.getElementById('checkoutModal');
       if (!checkoutModal) {
         checkoutModal = document.createElement('div');
@@ -307,12 +314,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         checkoutModal.querySelector('#checkoutConfirmBtn').disabled = true;
         checkoutModal.querySelector('#checkoutConfirmBtn').innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Memproses...';
-        // Kirim semua item dalam cart
+        
+        // Kirim semua item dalam cart untuk pelanggan offline
         const promises = cart.map(item =>
           fetch('./admin/order/api/order_menu.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
+            body: JSON.stringify({ 
               menu_id: item.menu_id,
               menu_name: item.menu_name,
               quantity: item.quantity,
@@ -342,6 +350,38 @@ document.addEventListener('DOMContentLoaded', () => {
         checkoutModal.querySelector('#checkoutConfirmBtn').innerHTML = '<i class="fas fa-check mr-2"></i>Pesan Sekarang!';
       };
     };
+    
+    // Fungsi untuk memproses pesanan user yang sudah booking
+    async function processBookingOrders() {
+      const promises = cart.map(item =>
+        fetch('./admin/order/api/order_menu.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+            menu_id: item.menu_id,
+            menu_name: item.menu_name,
+            quantity: item.quantity,
+            note: item.note
+          })
+        }).then(res => res.json())
+      );
+      
+      const results = await Promise.all(promises);
+      const success = results.every(result => result.success);
+      
+      if (success) {
+        alert('Semua pesanan berhasil ditambahkan!');
+        cart = [];
+        updateCartBadge();
+        document.getElementById('cart-modal').classList.add('hidden');
+        document.getElementById('cart-modal').classList.remove('flex');
+        showCartCapsule();
+        // Refresh status pesanan
+        if (typeof checkOrderStatus === 'function') checkOrderStatus();
+      } else {
+        alert('Beberapa pesanan gagal ditambahkan. Silakan coba lagi.');
+      }
+    }
     modal.classList.remove('hidden');
     modal.classList.add('flex');
   }
@@ -456,59 +496,65 @@ document.addEventListener('DOMContentLoaded', () => {
   const orderStatusBtn = document.getElementById('orderStatusBtn');
   orderStatusBtn.addEventListener('click', e => {
     e.preventDefault();
-    fetch('./admin/order/api/get_user_orders.php').then(res => res.json()).then(data => {
-      const listAktif = document.getElementById('orderListAktif');
-      const listSelesai = document.getElementById('orderListSelesai');
-      listAktif.innerHTML = '';
-      listSelesai.innerHTML = '';
-      let hasAktif = false, hasSelesai = false;
-      if (data.items && data.items.length > 0) {
-        data.items.forEach(item => {
-          let statusText = '';
-          let statusColor = '';
-          if (item.status === 'memasak') {
-            if (item.jenis === 'makanan') {
-              statusText = 'sedang di masak';
-              statusColor = 'text-yellow-500';
-            } else if (item.jenis === 'minuman') {
-              statusText = 'sedang dibuat';
-              statusColor = 'text-yellow-500';
+    fetch('./admin/order/api/get_user_orders.php')
+      .then(res => res.json())
+      .then(data => {
+        const listAktif = document.getElementById('orderListAktif');
+        const listSelesai = document.getElementById('orderListSelesai');
+        listAktif.innerHTML = '';
+        listSelesai.innerHTML = '';
+        let hasAktif = false, hasSelesai = false;
+        if (data.items && data.items.length > 0) {
+          data.items.forEach(item => {
+            let statusText = '';
+            let statusColor = '';
+            if (item.status === 'memasak') {
+              if (item.jenis === 'makanan') {
+                statusText = 'sedang di masak';
+                statusColor = 'text-yellow-500';
+              } else if (item.jenis === 'minuman') {
+                statusText = 'sedang dibuat';
+                statusColor = 'text-yellow-500';
+              } else {
+                statusText = item.status;
+                statusColor = 'text-yellow-500';
+              }
+            } else if (item.status === 'selesai') {
+              statusText = 'selesai';
+              statusColor = 'text-green-600';
             } else {
               statusText = item.status;
-              statusColor = 'text-yellow-500';
+              statusColor = 'text-blue-600';
             }
-          } else if (item.status === 'selesai') {
-            statusText = 'selesai';
-            statusColor = 'text-green-600';
-          } else {
-            statusText = item.status;
-            statusColor = 'text-blue-600';
-          }
-          const li = `
-            <li class="border-b last:border-b-0 py-3 flex items-center">
-              <img src="${item.image || 'img/default.png'}" alt="${item.name}" class="w-16 h-16 object-cover rounded-lg mr-4">
-              <div class="flex-1">
-                <div class="flex justify-between items-start">
-                  <span class="font-bold text-gray-800">${item.name}</span>
-                  <span class="text-sm bg-gray-100 font-medium px-2 py-1 rounded-md">x${item.quantity}</span>
+            const li = `
+              <li class="border-b last:border-b-0 py-3 flex items-center">
+                <img src="${item.image || 'img/default.png'}" alt="${item.name}" class="w-16 h-16 object-cover rounded-lg mr-4">
+                <div class="flex-1">
+                  <div class="flex justify-between items-start">
+                    <span class="font-bold text-gray-800">${item.name}</span>
+                    <span class="text-sm bg-gray-100 font-medium px-2 py-1 rounded-md">x${item.quantity}</span>
+                  </div>
+                  <div class="text-sm text-gray-600 mt-1"><span class="font-semibold capitalize ${statusColor}">${statusText}</span></div>
                 </div>
-                <div class="text-sm text-gray-600 mt-1"><span class="font-semibold capitalize ${statusColor}">${statusText}</span></div>
-              </div>
-            </li>`;
-          if (item.status === 'selesai' || item.status === 'ditolak') {
-            listSelesai.innerHTML += li;
-            hasSelesai = true;
-          } else {
-            listAktif.innerHTML += li;
-            hasAktif = true;
-          }
-        });
-      }
-      if (!hasAktif) listAktif.innerHTML = '<li class="text-center text-gray-500 py-4">Tidak ada pesanan aktif.</li>';
-      if (!hasSelesai) listSelesai.innerHTML = '<li class="text-center text-gray-500 py-4">Tidak ada riwayat pesanan.</li>';
-      switchToAktif();
-      openModal(detailsModal, detailsModalContent);
-    });
+              </li>`;
+            if (item.status === 'selesai' || item.status === 'ditolak') {
+              listSelesai.innerHTML += li;
+              hasSelesai = true;
+            } else {
+              listAktif.innerHTML += li;
+              hasAktif = true;
+            }
+          });
+        }
+        if (!hasAktif) listAktif.innerHTML = '<li class="text-center text-gray-500 py-4">Tidak ada pesanan aktif.</li>';
+        if (!hasSelesai) listSelesai.innerHTML = '<li class="text-center text-gray-500 py-4">Tidak ada riwayat pesanan.</li>';
+        switchToAktif();
+        openModal(detailsModal, detailsModalContent);
+      })
+      .catch(error => {
+        console.error('Error fetching orders:', error);
+        alert('Gagal memuat status pesanan. Silakan coba lagi.');
+      });
   });
 
   const tabAktifBtn = document.getElementById('tabAktif');
@@ -530,10 +576,18 @@ document.addEventListener('DOMContentLoaded', () => {
   detailsModal.addEventListener('click', (e) => { if (e.target === detailsModal) closeModal(detailsModal, detailsModalContent); });
 
   const checkOrderStatus = () => {
-    fetch('./admin/order/api/check_order_status.php').then(res => res.json()).then(data => {
-      const badge = document.getElementById('orderBadge');
-      if (badge) badge.style.display = (data.hasActiveOrder && data.status !== 'selesai' && data.status !== 'ditolak') ? 'flex' : 'none';
-    }).catch(() => { });
+    fetch('./admin/order/api/check_order_status.php')
+      .then(res => res.json())
+      .then(data => {
+        const badge = document.getElementById('orderBadge');
+        if (badge) {
+          const shouldShow = data.hasActiveOrder && data.status !== 'selesai' && data.status !== 'ditolak';
+          badge.style.display = shouldShow ? 'flex' : 'none';
+        }
+      })
+      .catch(error => {
+        console.error('Error checking order status:', error);
+      });
   };
   checkOrderStatus();
   setInterval(checkOrderStatus, 15000);
@@ -546,16 +600,16 @@ document.addEventListener('DOMContentLoaded', () => {
   const tableStatusContainer = document.getElementById('tableStatusContainer');
 
   if (tableStatusBtn) {
-    function renderTableStatuses(tables) {
-      if (!tableStatusContainer) return;
-      tableStatusContainer.innerHTML = tables.map(table => {
-        let bgColor = 'bg-green-500';
-        let icon = '<i class="fas fa-check text-white"></i>';
-        if (table.status !== 'available') {
-          bgColor = 'bg-red-500';
-          icon = '<i class="fas fa-times text-white"></i>';
-        }
-        return `
+      function renderTableStatuses(tables) {
+          if (!tableStatusContainer) return;
+          tableStatusContainer.innerHTML = tables.map(table => {
+              let bgColor = 'bg-green-500';
+              let icon = '<i class="fas fa-check text-white"></i>';
+              if (table.status !== 'available') {
+                  bgColor = 'bg-red-500';
+                  icon = '<i class="fas fa-times text-white"></i>';
+              }
+              return `
                   <div class="flex flex-col items-center">
                       <div class="w-16 h-16 rounded-full flex items-center justify-center ${bgColor} shadow-md text-2xl">
                           ${icon}
@@ -563,30 +617,30 @@ document.addEventListener('DOMContentLoaded', () => {
                       <span class="mt-2 font-semibold text-gray-700">Meja ${table.table_number}</span>
                   </div>
               `;
-      }).join('');
-    }
+          }).join('');
+      }
 
-    function fetchTableStatuses() {
-      fetch('./admin/tables/api/get_all_table_statuses.php')
-        .then(res => res.json())
-        .then(data => {
-          if (data.success) {
-            renderTableStatuses(data.tables);
-          }
-        })
-        .catch(error => console.error('Gagal memuat status meja:', error));
-    }
+      function fetchTableStatuses() {
+          fetch('./admin/tables/api/get_all_table_statuses.php')
+              .then(res => res.json())
+              .then(data => {
+                  if (data.success) {
+                      renderTableStatuses(data.tables);
+                  }
+              })
+              .catch(error => console.error('Gagal memuat status meja:', error));
+      }
 
-    tableStatusBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      fetchTableStatuses();
-      openModal(tableStatusModal, tableStatusModalContent);
-    });
+      tableStatusBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          fetchTableStatuses();
+          openModal(tableStatusModal, tableStatusModalContent);
+      });
 
-    closeTableStatusModal.addEventListener('click', () => closeModal(tableStatusModal, tableStatusModalContent));
-    tableStatusModal.addEventListener('click', (e) => { if (e.target === tableStatusModal) closeModal(tableStatusModal, tableStatusModalContent); });
-
-    setInterval(fetchTableStatuses, 15000);
+      closeTableStatusModal.addEventListener('click', () => closeModal(tableStatusModal, tableStatusModalContent));
+      tableStatusModal.addEventListener('click', (e) => { if (e.target === tableStatusModal) closeModal(tableStatusModal, tableStatusModalContent); });
+      
+      setInterval(fetchTableStatuses, 15000);
   }
 
   // Initialize cart badge

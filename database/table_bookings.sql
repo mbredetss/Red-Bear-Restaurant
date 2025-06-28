@@ -34,6 +34,7 @@ CREATE TABLE `table_bookings` (
   `guest_count` int(11) NOT NULL,
   `booking_date` date NOT NULL,
   `booking_time` time NOT NULL,
+  `table_code` varchar(12) NOT NULL,
   `status` enum('booked','cancelled') DEFAULT 'booked',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -47,6 +48,7 @@ CREATE TABLE `table_bookings` (
 --
 ALTER TABLE `table_bookings`
   ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `table_code` (`table_code`),
   ADD KEY `table_id` (`table_id`);
 
 --

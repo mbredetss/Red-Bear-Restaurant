@@ -18,14 +18,42 @@ $params = [];
 $types = "";
 
 // Cek apakah user login atau pelanggan offline
-if (isset($_SESSION['user_id']) && isset($_SESSION['username'])) {
-    // User online
-    $whereClause = "o.username = ?";
-    $params[] = $_SESSION['username'];
-    $types .= "s";
+if (isset($_SESSION['user_id'])) {
+    // User online - cek apakah memiliki booking aktif
+    $user_id = $_SESSION['user_id'];
+    $today = date('Y-m-d');
+    
+    // Cek apakah user memiliki booking aktif hari ini
+    $stmt_booking = $koneksi->prepare("
+        SELECT tb.id 
+        FROM table_bookings tb 
+        WHERE tb.user_id = ? AND tb.booking_date = ? AND tb.status = 'booked'
+        ORDER BY tb.booking_time ASC 
+        LIMIT 1
+    ");
+    $stmt_booking->bind_param("is", $user_id, $today);
+    $stmt_booking->execute();
+    $result_booking = $stmt_booking->get_result();
+    
+    if ($result_booking->num_rows > 0) {
+        // User memiliki booking - ambil pesanan berdasarkan booking_id
+        $booking = $result_booking->fetch_assoc();
+        $booking_id = $booking['id'];
+        
+        $whereClause = "o.booking_id = ?";
+        $params[] = $booking_id;
+        $types .= "i";
+    } else {
+        // User tidak memiliki booking - tidak ada pesanan untuk ditampilkan
+        echo json_encode(['items' => []]);
+        exit;
+    }
+    $stmt_booking->close();
+    
 } elseif (isset($_SESSION['scanned_table_id'])) {
     // User offline
     $session_code = session_id() . "_" . $_SESSION['scanned_table_id'];
+    
     $stmt_session = $koneksi->prepare("SELECT id FROM offline_table_sessions WHERE session_code = ?");
     $stmt_session->bind_param("s", $session_code);
     $stmt_session->execute();
@@ -39,13 +67,14 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['username'])) {
         echo json_encode(['items' => []]);
         exit;
     }
+    $stmt_session->close();
 } else {
     // Tidak ada sesi valid
     echo json_encode(['items' => []]);
     exit;
 }
 
-// Query baru untuk mengambil pesanan dari tabel 'orders'
+// Query untuk mengambil pesanan dari tabel 'orders'
 $sql = "
  SELECT
   o.menu_name,

@@ -29,13 +29,15 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `orders` (
   `id` int(11) NOT NULL,
-  `offline_table_session_id` int(11) NOT NULL,
+  `offline_table_session_id` int(11) DEFAULT NULL,
+  `booking_id` int(11) DEFAULT NULL,
   `username` varchar(255) NOT NULL,
   `menu_id` int(11) NOT NULL,
   `menu_name` varchar(255) NOT NULL,
   `quantity` int(11) NOT NULL DEFAULT 1,
   `catatan` text DEFAULT NULL,
   `status` enum('menunggu','memasak','selesai','ditolak') NOT NULL DEFAULT 'menunggu',
+  `order_type` enum('offline','booking') NOT NULL DEFAULT 'offline',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -49,10 +51,13 @@ CREATE TABLE `orders` (
 ALTER TABLE `orders`
   ADD PRIMARY KEY (`id`),
   ADD KEY `offline_table_session_id` (`offline_table_session_id`),
+  ADD KEY `booking_id` (`booking_id`),
   ADD KEY `menu_id` (`menu_id`),
   ADD KEY `status` (`status`),
   ADD KEY `created_at` (`created_at`),
+  ADD KEY `order_type` (`order_type`),
   ADD KEY `idx_orders_session_status` (`offline_table_session_id`,`status`),
+  ADD KEY `idx_orders_booking_status` (`booking_id`,`status`),
   ADD KEY `idx_orders_created_status` (`created_at`,`status`);
 
 --

@@ -112,39 +112,7 @@ if ($result_blog) {
           <div class="w-full mb-6">
             <label class="block text-gray-700 font-semibold mb-2">Pilih Meja</label>
             <div id="tableIcons" class="grid grid-cols-4 gap-4 justify-items-center">
-              <!-- 8 icon meja dummy -->
-              <button class="table-icon bg-green-100 border-2 border-green-500 rounded-full w-14 h-14 flex flex-col items-center justify-center hover:bg-green-200 focus:ring-2 focus:ring-green-500" data-table="1">
-                <span class="text-2xl">🍽️</span>
-                <span class="text-xs font-bold mt-1">Meja 1</span>
-              </button>
-              <button class="table-icon bg-green-100 border-2 border-green-500 rounded-full w-14 h-14 flex flex-col items-center justify-center hover:bg-green-200 focus:ring-2 focus:ring-green-500" data-table="2">
-                <span class="text-2xl">🍽️</span>
-                <span class="text-xs font-bold mt-1">Meja 2</span>
-              </button>
-              <button class="table-icon bg-green-100 border-2 border-green-500 rounded-full w-14 h-14 flex flex-col items-center justify-center hover:bg-green-200 focus:ring-2 focus:ring-green-500" data-table="3">
-                <span class="text-2xl">🍽️</span>
-                <span class="text-xs font-bold mt-1">Meja 3</span>
-              </button>
-              <button class="table-icon bg-green-100 border-2 border-green-500 rounded-full w-14 h-14 flex flex-col items-center justify-center hover:bg-green-200 focus:ring-2 focus:ring-green-500" data-table="4">
-                <span class="text-2xl">🍽️</span>
-                <span class="text-xs font-bold mt-1">Meja 4</span>
-              </button>
-              <button class="table-icon bg-green-100 border-2 border-green-500 rounded-full w-14 h-14 flex flex-col items-center justify-center hover:bg-green-200 focus:ring-2 focus:ring-green-500" data-table="5">
-                <span class="text-2xl">🍽️</span>
-                <span class="text-xs font-bold mt-1">Meja 5</span>
-              </button>
-              <button class="table-icon bg-green-100 border-2 border-green-500 rounded-full w-14 h-14 flex flex-col items-center justify-center hover:bg-green-200 focus:ring-2 focus:ring-green-500" data-table="6">
-                <span class="text-2xl">🍽️</span>
-                <span class="text-xs font-bold mt-1">Meja 6</span>
-              </button>
-              <button class="table-icon bg-green-100 border-2 border-green-500 rounded-full w-14 h-14 flex flex-col items-center justify-center hover:bg-green-200 focus:ring-2 focus:ring-green-500" data-table="7">
-                <span class="text-2xl">🍽️</span>
-                <span class="text-xs font-bold mt-1">Meja 7</span>
-              </button>
-              <button class="table-icon bg-green-100 border-2 border-green-500 rounded-full w-14 h-14 flex flex-col items-center justify-center hover:bg-green-200 focus:ring-2 focus:ring-green-500" data-table="8">
-                <span class="text-2xl">🍽️</span>
-                <span class="text-xs font-bold mt-1">Meja 8</span>
-              </button>
+              <!-- Meja akan di-generate secara dinamis berdasarkan status real-time -->
             </div>
           </div>
           <!-- Tombol Submit -->
@@ -188,6 +156,11 @@ if ($result_blog) {
               <p class="font-semibold">Halo, <?= htmlspecialchars($user['name']) ?></p>
               <p class="text-xs text-gray-500 mt-1">Saldo: <span
                   class="font-medium text-green-600">Rp<?= number_format($saldo, 0, ',', '.') ?></span></p>
+              <div id="tableCodeInfo" class="mt-2 text-xs text-blue-600 hidden">
+                <p class="font-semibold">Kode Meja Anda:</p>
+                <p id="userTableCode" class="font-mono font-bold text-lg text-blue-800"></p>
+                <p id="tableCodeDetails" class="text-blue-700"></p>
+              </div>
             </div>
             <a href="logout.php" class="block px-4 py-2 hover:bg-gray-100">🚪 Logout</a>
           </div>
@@ -454,15 +427,15 @@ if ($result_blog) {
 
 
   <!-- Blog Section -->
-<section id="blog" class="py-20 bg-white">
+  <section id="blog" class="py-20 bg-white">
     <div class="container mx-auto px-4 max-w-4xl">
         <div class="text-center mb-10">
             <h2 class="text-4xl font-bold text-gray-800 mb-4">Our Latest Blog</h2>
-            <p class="text-gray-600 text-lg">
+        <p class="text-gray-600 text-lg">
                 Stay updated with our news, recipes, and special events.
-            </p>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        </p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <?php if (empty($blog_posts)): ?>
                 <p class="col-span-full text-center text-gray-500">Belum ada postingan blog yang dipublikasikan.</p>
             <?php else: ?>
@@ -483,9 +456,9 @@ if ($result_blog) {
         </div>
         <div class="text-center mt-10">
             <a href="blog.php" class="bg-red-600 text-white px-6 py-3 rounded-full font-bold hover:bg-red-700 transition-colors shadow-lg">Lihat Semua Blog</a>
-        </div>
+      </div>
     </div>
-</section>
+  </section>
 
   
 
@@ -607,6 +580,8 @@ if ($result_blog) {
       e.preventDefault();
       bookTableModal.classList.remove('hidden');
       bookTableModal.classList.add('flex');
+      updateTableStatus(); // Update status meja saat modal dibuka
+      selectedTable = null;
     });
     closeBookTableModal.addEventListener('click', function() {
       bookTableModal.classList.add('hidden');
@@ -662,52 +637,60 @@ if ($result_blog) {
       updateTableStatus();
     });
 
+    // Update status meja saat waktu berubah
+    bookingTime.addEventListener('change', updateTableStatus);
+
     // --- Integrasi Booking Table ---
     const tableIcons = document.querySelectorAll('#tableIcons .table-icon');
     let selectedTable = null;
 
-    // Fungsi update status meja dari API
+    // Fungsi update status meja dari API real-time
     function updateTableStatus() {
       const date = bookingDate.value;
       const time = bookingTime.value;
-      if (!date || !time) return;
-      fetch(`admin/book_table/api/check_table_availability.php?date=${date}&time=${time}`)
+      const url = time ? `./admin/tables/api/get_all_table_statuses.php?date=${date}&time=${time}` : `./admin/tables/api/get_all_table_statuses.php?date=${date}`;
+      
+      fetch(url)
         .then(res => res.json())
         .then(data => {
           if (data.success) {
-            data.tables.forEach((meja, idx) => {
-              const btn = tableIcons[idx];
-              if (!btn) return;
-              btn.setAttribute('data-table', meja.id);
-              btn.disabled = false;
-              btn.classList.remove('bg-gray-300', 'border-gray-400', 'cursor-not-allowed', 'opacity-60');
-              btn.classList.add('bg-green-100', 'border-green-500');
-              btn.innerHTML = `<span class="text-2xl">🍽️</span><span class="text-xs font-bold mt-1">Meja ${meja.table_number}</span>`;
-              if (meja.status === 'booked') {
-                btn.disabled = true;
-                btn.classList.remove('bg-green-100', 'border-green-500');
-                btn.classList.add('bg-gray-300', 'border-gray-400', 'cursor-not-allowed', 'opacity-60');
-                btn.innerHTML = `<span class='text-2xl'>🔒</span><span class='text-xs font-bold mt-1'>Meja ${meja.table_number}</span>`;
-                if (selectedTable == meja.id) selectedTable = null;
-              }
+            const tableIconsContainer = document.getElementById('tableIcons');
+            tableIconsContainer.innerHTML = '';
+            
+            data.tables.forEach((table) => {
+              const isAvailable = table.status === 'available';
+              const tableBtn = document.createElement('button');
+              tableBtn.className = `table-icon rounded-full w-14 h-14 flex flex-col items-center justify-center transition-all duration-200 ${
+                isAvailable 
+                  ? 'bg-green-100 border-2 border-green-500 hover:bg-green-200 focus:ring-2 focus:ring-green-500 cursor-pointer' 
+                  : 'bg-gray-300 border-2 border-gray-400 cursor-not-allowed opacity-60'
+              }`;
+              tableBtn.setAttribute('data-table', table.id);
+              tableBtn.setAttribute('data-next-available', table.next_available_time || '');
+              tableBtn.disabled = !isAvailable;
+              
+              tableBtn.innerHTML = `
+                <span class="text-2xl">${isAvailable ? '🍽️' : '🔒'}</span>
+                <span class="text-xs font-bold mt-1">Meja ${table.table_number}</span>
+              `;
+              
+              tableBtn.addEventListener('click', function() {
+                if (this.disabled) {
+                  return;
+                }
+                document.querySelectorAll('.table-icon').forEach(btn => btn.classList.remove('ring-4', 'ring-red-500'));
+                this.classList.add('ring-4', 'ring-red-500');
+                selectedTable = this.getAttribute('data-table');
+              });
+              
+              tableIconsContainer.appendChild(tableBtn);
             });
           }
+        })
+        .catch(error => {
+          console.error('Gagal memuat status meja:', error);
         });
     }
-
-    // Trigger update saat tanggal/waktu berubah
-    bookingDate.addEventListener('change', updateTableStatus);
-    bookingTime.addEventListener('change', updateTableStatus);
-
-    // Pilih meja
-    tableIcons.forEach(btn => {
-      btn.addEventListener('click', function() {
-        if (btn.disabled) return;
-        tableIcons.forEach(b => b.classList.remove('ring-4', 'ring-red-500'));
-        btn.classList.add('ring-4', 'ring-red-500');
-        selectedTable = btn.getAttribute('data-table');
-      });
-    });
 
     // Submit booking
     document.getElementById('submitBookTable').addEventListener('click', function() {
@@ -748,6 +731,16 @@ if ($result_blog) {
               navbarSaldo.textContent = 'Rp' + data.saldo_baru.toLocaleString('id-ID');
             }
           }
+          // Tampilkan kode meja
+          if (data.table_code) {
+            showTableCode(data.table_code, date, time);
+          }
+          // Aktifkan pemesanan makanan
+          window.hasBookedTable = true;
+          // Refresh menu untuk menampilkan tombol plus
+          if (typeof renderMenu === 'function') {
+            renderMenu();
+          }
         } else {
           if (data.message && data.message.toLowerCase().includes('login')) {
             window.location.href = 'login_register/login.php';
@@ -757,6 +750,41 @@ if ($result_blog) {
         }
       });
     });
+
+    // Fungsi untuk menampilkan kode meja
+    function showTableCode(tableCode, date, time) {
+      const tableCodeInfo = document.getElementById('tableCodeInfo');
+      const userTableCode = document.getElementById('userTableCode');
+      const tableCodeDetails = document.getElementById('tableCodeDetails');
+      
+      if (tableCodeInfo && userTableCode && tableCodeDetails) {
+        userTableCode.textContent = tableCode;
+        tableCodeDetails.textContent = `Tanggal: ${date} | Waktu: ${time}`;
+        tableCodeInfo.classList.remove('hidden');
+      }
+    }
+
+    // Fungsi untuk memuat kode meja user yang sudah ada
+    function loadUserTableCode() {
+      fetch('admin/book_table/api/get_user_table_code.php')
+        .then(res => res.json())
+        .then(data => {
+          if (data.success && data.bookings.length > 0) {
+            const booking = data.bookings[0]; // Ambil booking pertama
+            showTableCode(booking.table_code, booking.booking_date, booking.booking_time);
+            // Aktifkan pemesanan makanan
+            window.hasBookedTable = true;
+            // Refresh menu untuk menampilkan tombol plus
+            if (typeof renderMenu === 'function') {
+              renderMenu();
+            }
+          }
+        })
+        .catch(error => console.error('Gagal memuat kode meja:', error));
+    }
+
+    // Load kode meja saat halaman dimuat
+    loadUserTableCode();
 
     // Update status meja saat modal dibuka
     bookTableBtn.addEventListener('click', function() {
@@ -770,6 +798,8 @@ if ($result_blog) {
   <script>
     // Melewatkan status scan ke Javascript
     window.hasScannedTable = <?php echo isset($_SESSION['scanned_table_id']) ? 'true' : 'false'; ?>;
+    // Melewatkan status booking ke Javascript
+    window.hasBookedTable = false; // Akan diupdate via loadUserTableCode()
   </script>
   <script src="script/script.js"></script>
   <script src="script/menuLoad.js"></script>
