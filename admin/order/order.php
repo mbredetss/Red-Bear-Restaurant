@@ -18,6 +18,7 @@ $query = "
         COALESCE(ots.guest_count, tb.guest_count) as guest_count,
         COALESCE(ots.session_code, tb.table_code) as session_code,
         COALESCE(ots.created_at, tb.created_at) as session_created,
+        COALESCE(ots.id, tb.id) as session_id,
         COUNT(o.id) as total_orders,
         SUM(CASE WHEN o.status = 'menunggu' THEN 1 ELSE 0 END) as pending_orders,
         SUM(CASE WHEN o.status = 'memasak' THEN 1 ELSE 0 END) as cooking_orders,
@@ -32,7 +33,7 @@ $query = "
     LEFT JOIN offline_table_sessions ots ON t.id = ots.table_id AND ots.status = 'occupied'
     LEFT JOIN table_bookings tb ON t.id = tb.table_id AND tb.booking_date = CURDATE() AND tb.status = 'booked'
     LEFT JOIN orders o ON (ots.id = o.offline_table_session_id OR tb.id = o.booking_id)
-    WHERE o.id IS NOT NULL
+    WHERE (ots.id IS NOT NULL OR tb.id IS NOT NULL)
     GROUP BY t.id, t.table_number, ots.id, tb.id, ots.guest_count, tb.guest_count, ots.session_code, tb.table_code, ots.created_at, tb.created_at
     ORDER BY t.table_number ASC, session_created DESC
 ";
@@ -41,9 +42,8 @@ $result = $koneksi->query($query);
 $tableGroups = [];
 if ($result) {
     while ($row = $result->fetch_assoc()) {
-        if ($row['total_orders'] > 0) { // Hanya tampilkan meja yang ada pesanan
-            $tableGroups[] = $row;
-        }
+        // Tampilkan semua meja yang memiliki sesi aktif (baik ada pesanan maupun tidak)
+        $tableGroups[] = $row;
     }
 }
 
@@ -61,13 +61,12 @@ foreach ($tableGroups as $table) {
             o.username,
             o.order_type
         FROM orders o
-        WHERE (o.offline_table_session_id = (SELECT id FROM offline_table_sessions WHERE table_id = ? AND session_code = ?) 
-               OR o.booking_id = (SELECT id FROM table_bookings WHERE table_id = ? AND table_code = ?))
+        WHERE (o.offline_table_session_id = ? OR o.booking_id = ?)
         ORDER BY o.created_at DESC
     ";
     
     $stmt = $koneksi->prepare($detailQuery);
-    $stmt->bind_param('isis', $table['table_id'], $table['session_code'], $table['table_id'], $table['session_code']);
+    $stmt->bind_param('ii', $table['session_id'], $table['session_id']);
     $stmt->execute();
     $detailResult = $stmt->get_result();
     
@@ -271,12 +270,41 @@ foreach ($tableGroups as $table) {
                                         <i class="fas fa-times mr-1"></i><?= $table['rejected_orders'] ?>menu ditolak
                                     </span>
                                     <?php endif; ?>
+                                    
+                                    <!-- Tombol Aksi Meja -->
+                                    <div class="flex items-center space-x-2">
+                                        <?php if ($table['order_type'] === 'offline'): ?>
+                                        <button class="table-action-btn bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-xs transition-colors shadow-md" 
+                                                data-table-id="<?= $table['table_id'] ?>" data-session-id="<?= $table['session_id'] ?>" data-action="complete-all">
+                                            <i class="fas fa-check-double mr-1"></i>Selesaikan Semua
+                                        </button>
+                                        <button class="table-action-btn bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-xs transition-colors shadow-md" 
+                                                data-table-id="<?= $table['table_id'] ?>" data-session-id="<?= $table['session_id'] ?>" data-action="vacate-table">
+                                            <i class="fas fa-door-open mr-1"></i>Kosongkan Meja
+                                        </button>
+                                        <?php else: ?>
+                                        <button class="table-action-btn bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-xs transition-colors shadow-md" 
+                                                data-table-id="<?= $table['table_id'] ?>" data-session-id="<?= $table['session_id'] ?>" data-action="complete-booking">
+                                            <i class="fas fa-check mr-1"></i>Selesaikan Booking
+                                        </button>
+                                        <?php endif; ?>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         
                         <!-- Orders List -->
                         <div class="divide-y divide-gray-200">
+                            <?php if (empty($detailedOrders[$table['table_number']])): ?>
+                            <!-- Meja belum ada pesanan -->
+                            <div class="px-6 py-8 text-center">
+                                <div class="text-gray-400">
+                                    <i class="fas fa-utensils text-3xl mb-3"></i>
+                                    <p class="text-sm font-medium text-gray-500">Belum ada pesanan</p>
+                                    <p class="text-xs text-gray-400 mt-1">Pelanggan belum memesan menu apapun</p>
+                                </div>
+                            </div>
+                            <?php else: ?>
                             <?php foreach ($detailedOrders[$table['table_number']] as $order): ?>
                             <div class="px-6 py-4 hover:bg-gray-50 transition-colors">
                                 <div class="flex items-center justify-between">
@@ -332,6 +360,7 @@ foreach ($tableGroups as $table) {
                                 </div>
                             </div>
                             <?php endforeach; ?>
+                            <?php endif; ?>
                         </div>
                     </div>
                     <?php endforeach; ?>

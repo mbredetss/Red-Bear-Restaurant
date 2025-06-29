@@ -4,8 +4,65 @@ require_once 'script/session_check.php'; // Mengimpor file session_check.php
 // Logika untuk menangani scan QR Code Meja
 if (isset($_GET['table_id']) && is_numeric($_GET['table_id'])) {
     $table_id = intval($_GET['table_id']);
+    
+    // Cek apakah pelanggan sudah memiliki sesi aktif di meja lain
+    $koneksi = koneksiDatabase("red bear");
+    $current_session_code = session_id() . "_" . $table_id;
+    
+    // Cek apakah pelanggan sudah memiliki sesi aktif di meja lain
+    $existing_session_query = "SELECT table_id FROM offline_table_sessions WHERE session_code LIKE ? AND status = 'occupied' AND DATE(created_at) = ?";
+    $session_pattern = session_id() . "_%";
+    $today = date('Y-m-d');
+    $stmt_existing = $koneksi->prepare($existing_session_query);
+    $stmt_existing->bind_param("ss", $session_pattern, $today);
+    $stmt_existing->execute();
+    $existing_result = $stmt_existing->get_result();
+    $has_existing_session = $existing_result->num_rows > 0;
+    $stmt_existing->close();
+    
+    if ($has_existing_session) {
+        $existing_session = $existing_result->fetch_assoc();
+        $existing_table_id = $existing_session['table_id'];
+        
+        // Jika mencoba scan meja yang berbeda, tolak akses
+        if ($existing_table_id != $table_id) {
+            $_SESSION['table_available'] = false;
+            $_SESSION['table_unavailable_reason'] = 'different_table';
+            $_SESSION['existing_table_id'] = $existing_table_id;
+        } else {
+            // Jika scan meja yang sama, izinkan akses
     $_SESSION['scanned_table_id'] = $table_id;
-    // Anda bisa menambahkan logika untuk menandai meja sebagai 'occupied' di sini jika diperlukan
+            $_SESSION['table_available'] = true;
+        }
+    } else {
+        // Cek ketersediaan meja sebelum menyimpan ke session
+        // Cek apakah meja sudah di-booking online hari ini
+        $booking_query = "SELECT id FROM table_bookings WHERE table_id = ? AND booking_date = ? AND status = 'booked'";
+        $stmt_booking = $koneksi->prepare($booking_query);
+        $stmt_booking->bind_param("is", $table_id, $today);
+        $stmt_booking->execute();
+        $booking_result = $stmt_booking->get_result();
+        $has_booking = $booking_result->num_rows > 0;
+        $stmt_booking->close();
+        
+        // Cek apakah meja sudah ditempati offline hari ini
+        $offline_query = "SELECT id FROM offline_table_sessions WHERE table_id = ? AND status = 'occupied' AND DATE(created_at) = ?";
+        $stmt_offline = $koneksi->prepare($offline_query);
+        $stmt_offline->bind_param("is", $table_id, $today);
+        $stmt_offline->execute();
+        $offline_result = $stmt_offline->get_result();
+        $has_offline_session = $offline_result->num_rows > 0;
+        $stmt_offline->close();
+        
+        // Jika meja tersedia, simpan ke session
+        if (!$has_booking && !$has_offline_session) {
+            $_SESSION['scanned_table_id'] = $table_id;
+            $_SESSION['table_available'] = true;
+        } else {
+            $_SESSION['table_available'] = false;
+            $_SESSION['table_unavailable_reason'] = $has_booking ? 'booking' : 'offline';
+        }
+    }
 }
 
 $koneksi = koneksiDatabase("red bear");
@@ -172,6 +229,35 @@ if ($result_blog) {
       <?php endif; ?>
     </nav>
   </header>
+
+  <!-- Modal Meja Tidak Tersedia -->
+  <div id="tableUnavailableModal" class="fixed inset-0 bg-black bg-opacity-60 hidden items-center justify-center z-50 px-4">
+    <div class="bg-white rounded-xl shadow-2xl w-full max-w-md p-8 relative text-center">
+      <div class="mb-6">
+        <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <i class="fas fa-exclamation-triangle text-red-600 text-2xl"></i>
+        </div>
+        <h2 class="text-2xl font-bold text-gray-800 mb-2">Meja Tidak Tersedia</h2>
+        <p class="text-gray-600" id="unavailableReason">Meja ini sudah ditempati oleh pelanggan lain.</p>
+      </div>
+      
+      <div class="bg-gray-50 rounded-lg p-4 mb-6 text-left">
+        <h3 class="font-semibold text-gray-800 mb-2">Informasi Meja:</h3>
+        <div id="tableInfo" class="text-sm text-gray-600">
+          <!-- Informasi meja akan diisi via JavaScript -->
+        </div>
+      </div>
+      
+      <div class="flex flex-col sm:flex-row gap-3">
+        <button id="closeUnavailableModal" class="flex-1 bg-gray-500 text-white py-3 rounded-lg font-bold hover:bg-gray-600 transition-colors">
+          Tutup
+        </button>
+        <a href="home.php" class="flex-1 bg-red-600 text-white py-3 rounded-lg font-bold hover:bg-red-700 transition-colors text-center">
+          Kembali ke Beranda
+        </a>
+      </div>
+    </div>
+  </div>
 
   <!-- Hero Section -->
   <section class="relative h-screen bg-cover bg-center carousel-slide overflow-hidden"
@@ -506,6 +592,117 @@ if ($result_blog) {
   </footer>
 
   <script>
+    // Melewatkan status scan ke Javascript
+    window.hasScannedTable = <?php echo isset($_SESSION['scanned_table_id']) ? 'true' : 'false'; ?>;
+    // Melewatkan status booking ke Javascript
+    window.hasBookedTable = false; // Akan diupdate via loadUserTableCode()
+    
+    // Cek ketersediaan meja saat halaman dimuat
+    document.addEventListener('DOMContentLoaded', function() {
+      <?php if (isset($_SESSION['table_available']) && !$_SESSION['table_available']): ?>
+        // Jika meja tidak tersedia, tampilkan modal
+        showTableUnavailableModal();
+      <?php endif; ?>
+      
+      // Mulai pengecekan berkala jika user sudah scan meja
+      if (window.hasScannedTable) {
+        startTableStatusCheck();
+      }
+    });
+    
+    // Fungsi untuk menampilkan modal meja tidak tersedia
+    function showTableUnavailableModal() {
+      const modal = document.getElementById('tableUnavailableModal');
+      const reason = document.getElementById('unavailableReason');
+      const tableInfo = document.getElementById('tableInfo');
+      
+      // Set pesan berdasarkan alasan
+      const unavailableReason = '<?php echo isset($_SESSION['table_unavailable_reason']) ? $_SESSION['table_unavailable_reason'] : ''; ?>';
+      
+      if (unavailableReason === 'booking') {
+        reason.textContent = 'Meja ini sudah di-booking online oleh pelanggan lain.';
+        tableInfo.innerHTML = `
+          <p><strong>Status:</strong> <span class="text-blue-600">Di-booking Online</span></p>
+          <p><strong>Tanggal:</strong> <?php echo date('d/m/Y'); ?></p>
+          <p class="text-sm text-gray-500 mt-2">Silakan pilih meja lain atau booking meja untuk waktu yang berbeda.</p>
+        `;
+      } else if (unavailableReason === 'different_table') {
+        const existingTableId = <?php echo isset($_SESSION['existing_table_id']) ? $_SESSION['existing_table_id'] : 'null'; ?>;
+        reason.textContent = 'Anda sudah memiliki sesi aktif di meja lain.';
+        tableInfo.innerHTML = `
+          <p><strong>Status:</strong> <span class="text-purple-600">Sesi Aktif di Meja Lain</span></p>
+          <p><strong>Meja Aktif:</strong> <span class="font-bold">Meja ${existingTableId}</span></p>
+          <p><strong>Tanggal:</strong> <?php echo date('d/m/Y'); ?></p>
+          <p class="text-sm text-gray-500 mt-2">Anda tidak dapat mengakses meja lain selama masih memiliki sesi aktif. Silakan kembali ke meja Anda atau selesaikan pesanan terlebih dahulu.</p>
+        `;
+      } else {
+        reason.textContent = 'Meja ini sudah ditempati oleh pelanggan lain.';
+        tableInfo.innerHTML = `
+          <p><strong>Status:</strong> <span class="text-orange-600">Sedang Digunakan</span></p>
+          <p><strong>Tanggal:</strong> <?php echo date('d/m/Y'); ?></p>
+          <p class="text-sm text-gray-500 mt-2">Silakan pilih meja lain atau tunggu hingga meja ini kosong.</p>
+        `;
+      }
+      
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      
+      // Hapus session data setelah ditampilkan
+      <?php 
+      if (isset($_SESSION['table_available'])) {
+        unset($_SESSION['table_available']);
+        unset($_SESSION['table_unavailable_reason']);
+        unset($_SESSION['existing_table_id']);
+      }
+      ?>
+    }
+    
+    // Event listener untuk menutup modal
+    document.getElementById('closeUnavailableModal').addEventListener('click', function() {
+      document.getElementById('tableUnavailableModal').classList.add('hidden');
+      document.getElementById('tableUnavailableModal').classList.remove('flex');
+    });
+    
+    // Tutup modal jika klik di luar konten
+    document.getElementById('tableUnavailableModal').addEventListener('click', function(e) {
+      if (e.target === this) {
+        this.classList.add('hidden');
+        this.classList.remove('flex');
+      }
+    });
+    
+    // Fungsi untuk mengecek status meja secara berkala
+    let tableStatusCheckInterval;
+    
+    function startTableStatusCheck() {
+      const tableId = <?php echo isset($_SESSION['scanned_table_id']) ? $_SESSION['scanned_table_id'] : 'null'; ?>;
+      if (!tableId) return;
+      
+      // Cek setiap 30 detik
+      tableStatusCheckInterval = setInterval(function() {
+        checkTableStatus(tableId);
+      }, 30000);
+      
+      // Cek pertama kali
+      checkTableStatus(tableId);
+    }
+    
+    function checkTableStatus(tableId) {
+      fetch(`admin/tables/api/check_table_status.php?table_id=${tableId}`)
+        .then(res => res.json())
+        .catch(error => {
+          console.error('Gagal mengecek status meja:', error);
+        });
+    }
+    
+    // Hentikan pengecekan saat halaman ditutup
+    window.addEventListener('beforeunload', function() {
+      if (tableStatusCheckInterval) {
+        clearInterval(tableStatusCheckInterval);
+      }
+    });
+  </script>
+  <script>
     // Blog "Read More" functionality
     document.addEventListener('DOMContentLoaded', function () {
       // Blog data (replace with dynamic data if needed)
@@ -794,12 +991,6 @@ if ($result_blog) {
     });
 
    
-  </script>
-  <script>
-    // Melewatkan status scan ke Javascript
-    window.hasScannedTable = <?php echo isset($_SESSION['scanned_table_id']) ? 'true' : 'false'; ?>;
-    // Melewatkan status booking ke Javascript
-    window.hasBookedTable = false; // Akan diupdate via loadUserTableCode()
   </script>
   <script src="script/script.js"></script>
   <script src="script/menuLoad.js"></script>

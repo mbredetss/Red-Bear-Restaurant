@@ -42,17 +42,17 @@ if ($time) {
     $stmt_bookings->close();
 } else {
     // Jika tidak ada waktu spesifik, cek semua booking hari ini
-    $bookings_query = "SELECT table_id FROM table_bookings WHERE status = 'booked' AND booking_date = ?";
-    $stmt_bookings = $koneksi->prepare($bookings_query);
+$bookings_query = "SELECT table_id FROM table_bookings WHERE status = 'booked' AND booking_date = ?";
+$stmt_bookings = $koneksi->prepare($bookings_query);
     $stmt_bookings->bind_param("s", $date);
-    $stmt_bookings->execute();
-    $bookings_result = $stmt_bookings->get_result();
-    while ($row = $bookings_result->fetch_assoc()) {
-        if (isset($all_tables[$row['table_id']])) {
-            $all_tables[$row['table_id']]['status'] = 'unavailable';
-        }
+$stmt_bookings->execute();
+$bookings_result = $stmt_bookings->get_result();
+while ($row = $bookings_result->fetch_assoc()) {
+    if (isset($all_tables[$row['table_id']])) {
+        $all_tables[$row['table_id']]['status'] = 'unavailable';
     }
-    $stmt_bookings->close();
+}
+$stmt_bookings->close();
 }
 
 // 3. Ambil meja yang ditempati offline (status 'occupied') dengan jarak waktu 2 jam
@@ -84,9 +84,9 @@ if ($time) {
     $stmt_offline->bind_param("s", $date);
     $stmt_offline->execute();
     $offline_result = $stmt_offline->get_result();
-    while ($row = $offline_result->fetch_assoc()) {
-        if (isset($all_tables[$row['table_id']])) {
-            $all_tables[$row['table_id']]['status'] = 'unavailable';
+while ($row = $offline_result->fetch_assoc()) {
+    if (isset($all_tables[$row['table_id']])) {
+        $all_tables[$row['table_id']]['status'] = 'unavailable';
             $all_tables[$row['table_id']]['next_available_time'] = 'Setelah pelanggan selesai';
         }
     }

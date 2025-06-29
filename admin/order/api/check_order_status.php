@@ -67,22 +67,22 @@ if (isset($_SESSION['user_id'])) {
         $stmt_session->close();
         
         $sql = "SELECT o.status 
-                FROM orders o
+        FROM orders o
                 WHERE o.offline_table_session_id = ? AND o.status NOT IN ('selesai', 'ditolak')
-                ORDER BY o.id DESC
+        ORDER BY o.id DESC
                 LIMIT 1";
-        
-        $stmt = $koneksi->prepare($sql);
-        if ($stmt) {
-            $stmt->bind_param("i", $offline_session_id);
-            $stmt->execute();
-            $result = $stmt->get_result();
 
-            if ($row = $result->fetch_assoc()) {
-                $hasActiveOrder = true;
-                $status = $row['status'];
-            }
-            $stmt->close();
+    $stmt = $koneksi->prepare($sql);
+    if ($stmt) {
+            $stmt->bind_param("i", $offline_session_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($row = $result->fetch_assoc()) {
+            $hasActiveOrder = true;
+            $status = $row['status'];
+        }
+        $stmt->close();
         }
     } else {
         $stmt_session->close();

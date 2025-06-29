@@ -21,25 +21,30 @@ $table_id = intval($input['table_id']);
 $koneksi = koneksiDatabase("red bear");
 
 try {
-    // Update status booking menjadi cancelled (selesai)
-    $stmt = $koneksi->prepare("UPDATE table_bookings SET status = 'cancelled' WHERE table_id = ? AND status = 'booked'");
+    // Update semua pesanan untuk meja ini menjadi selesai
+    $stmt = $koneksi->prepare("
+        UPDATE orders o 
+        JOIN offline_table_sessions ots ON o.offline_table_session_id = ots.id 
+        SET o.status = 'selesai' 
+        WHERE ots.table_id = ? AND o.status IN ('menunggu', 'memasak')
+    ");
     $stmt->bind_param("i", $table_id);
     
     if ($stmt->execute()) {
         if ($stmt->affected_rows > 0) {
             echo json_encode([
                 'success' => true, 
-                'message' => 'Booking berhasil ditandai sebagai selesai'
+                'message' => 'Semua pesanan untuk meja ini telah diselesaikan'
             ]);
         } else {
-            echo json_encode(['success' => false, 'message' => 'Tidak ada booking aktif untuk meja ini.']);
+            echo json_encode(['success' => false, 'message' => 'Tidak ada pesanan aktif untuk meja ini.']);
         }
     } else {
-        echo json_encode(['success' => false, 'message' => 'Gagal menyelesaikan booking.']);
+        echo json_encode(['success' => false, 'message' => 'Gagal menyelesaikan pesanan.']);
     }
     
     $stmt->close();
-
+    
 } catch (Exception $e) {
     echo json_encode(['success' => false, 'message' => 'Terjadi kesalahan: ' . $e->getMessage()]);
 }

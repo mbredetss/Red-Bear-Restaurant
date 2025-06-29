@@ -6,16 +6,16 @@
 
 .status-memasak { 
     background-color: #fed7aa; 
-    color: #c2410c; 
+    color: #ea580c; 
 }
 
 .status-selesai { 
-    background-color: #bbf7d0; 
+    background-color: #dcfce7; 
     color: #166534; 
 }
 
 .status-ditolak { 
-    background-color: #fecaca; 
+    background-color: #fee2e2; 
     color: #991b1b; 
 }
 
@@ -140,6 +140,8 @@ mark.bg-yellow-200 {
 /* Animation for status updates */
 .status-badge {
     transition: all 0.3s ease;
+    font-weight: 500;
+    text-transform: capitalize;
 }
 
 .status-badge.updated {
@@ -181,8 +183,7 @@ mark.bg-yellow-200 {
 
 .status-btn:hover {
     transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.1);
-    border-color: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
 .status-btn:active {
@@ -235,12 +236,13 @@ mark.bg-yellow-200 {
 }
 
 @keyframes spin {
-    from {
-        transform: rotate(0deg);
-    }
     to {
         transform: rotate(360deg);
     }
+}
+
+.fa-spinner {
+    animation: spin 1s linear infinite;
 }
 
 /* Responsive table */
@@ -255,10 +257,6 @@ mark.bg-yellow-200 {
 }
 
 /* Status badge animations */
-.status-badge {
-    transition: all 0.3s ease;
-}
-
 .status-badge:hover {
     transform: scale(1.05);
 }
@@ -270,7 +268,7 @@ mark.bg-yellow-200 {
 
 .bg-white.overflow-hidden.shadow.rounded-lg:hover {
     transform: translateY(-2px);
-    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 
 /* Auto-refresh indicator */
@@ -294,18 +292,11 @@ mark.bg-yellow-200 {
 
 /* Table group animations */
 .border.border-gray-200.rounded-lg {
-    animation: slideIn 0.3s ease-out;
+    transition: all 0.3s ease;
 }
 
-@keyframes slideIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+.border.border-gray-200.rounded-lg:hover {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
 /* Stagger animation for multiple table groups */
@@ -319,4 +310,91 @@ mark.bg-yellow-200 {
 .action-buttons {
     position: relative;
     z-index: 10;
+}
+
+/* Notification Animation */
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOut {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+/* Search and Filter Styling */
+#search-orders:focus, #status-filter:focus {
+    border-color: #ef4444;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+/* Empty State Styling */
+.text-gray-500 .fas.fa-utensils {
+    opacity: 0.5;
+}
+
+/* Table Number Badge */
+.flex.items-center.justify-center.w-12.h-12.bg-blue-500 {
+    box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3);
+}
+
+/* Order Item Hover */
+.px-6.py-4:hover {
+    background-color: #f9fafb;
+    border-left: 3px solid #ef4444;
+    margin-left: -3px;
+}
+
+/* Status Summary Badges */
+.inline-flex.items-center.px-2\.5.py-0\.5.rounded-full.text-xs.font-medium {
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+/* Disabled Button State */
+.status-btn:disabled, .table-action-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none !important;
+}
+
+/* Focus States for Accessibility */
+.status-btn:focus, .table-action-btn:focus {
+    outline: 2px solid #ef4444;
+    outline-offset: 2px;
+}
+
+/* Smooth Transitions */
+* {
+    transition: all 0.2s ease;
+}
+
+/* Custom Scrollbar */
+.overflow-y-auto::-webkit-scrollbar {
+    width: 6px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-track {
+    background: #f1f5f9;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 3px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
 } 
