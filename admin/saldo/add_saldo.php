@@ -2,9 +2,9 @@
 require_once '../../database.php';
 session_start();
 
-// Cek login admin
-if (!isset($_SESSION['user_id'])) {
-    header('Location: ../../login_register/login.php');
+// Cek login dan peran admin
+if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
+    header('Location: ../../home.php');
     exit;
 }
 
@@ -125,10 +125,20 @@ $result = $koneksi->query($query);
                         </p>
                     </div>
                     
+                    <!-- Search Bar -->
+                    <div class="px-4 py-3 sm:px-6 border-b border-gray-200">
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fas fa-search text-gray-400"></i>
+                            </div>
+                            <input type="text" id="userSearch" class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 sm:text-sm" placeholder="Cari berdasarkan nama atau email...">
+                        </div>
+                    </div>
+
                     <?php if ($result->num_rows > 0): ?>
-                        <ul class="divide-y divide-gray-200">
+                        <ul id="userList" class="divide-y divide-gray-200">
                             <?php while ($row = $result->fetch_assoc()): ?>
-                                <li class="px-4 py-4 sm:px-6">
+                                <li class="px-4 py-4 sm:px-6 user-item">
                                     <div class="flex items-center justify-between">
                                         <div class="flex items-center">
                                             <div class="flex-shrink-0">
@@ -138,7 +148,7 @@ $result = $koneksi->query($query);
                                             </div>
                                             <div class="ml-4">
                                                 <div class="flex items-center">
-                                                    <p class="text-sm font-medium text-gray-900">
+                                                    <p class="text-sm font-medium text-gray-900 user-name">
                                                         <?php echo htmlspecialchars($row['name']); ?>
                                                     </p>
                                                     <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium <?php echo $row['saldo'] > 0 ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'; ?>">
@@ -146,7 +156,7 @@ $result = $koneksi->query($query);
                                                     </span>
                                                 </div>
                                                 <div class="mt-1 flex items-center text-sm text-gray-500">
-                                                    <p>
+                                                    <p class="user-email">
                                                         <i class="fas fa-envelope mr-1"></i>
                                                         <?php echo htmlspecialchars($row['email']); ?>
                                                     </p>
@@ -172,6 +182,11 @@ $result = $koneksi->query($query);
                                 </li>
                             <?php endwhile; ?>
                         </ul>
+                        <div id="noResults" class="text-center py-12 hidden">
+                            <i class="fas fa-search text-4xl text-gray-300 mb-4"></i>
+                            <h3 class="text-lg font-medium text-gray-900 mb-2">Tidak ada hasil</h3>
+                            <p class="text-gray-500">Tidak ada user yang cocok dengan pencarian Anda.</p>
+                        </div>
                     <?php else: ?>
                         <div class="text-center py-12">
                             <i class="fas fa-users text-4xl text-gray-300 mb-4"></i>
@@ -243,6 +258,27 @@ $result = $koneksi->query($query);
                 this.classList.add('hidden');
                 this.classList.remove('flex');
             }
+        });
+        
+        // Live search functionality
+        document.getElementById('userSearch').addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const userItems = document.querySelectorAll('.user-item');
+            let resultsFound = false;
+
+            userItems.forEach(item => {
+                const name = item.querySelector('.user-name').textContent.toLowerCase();
+                const email = item.querySelector('.user-email').textContent.toLowerCase();
+                
+                if (name.includes(searchTerm) || email.includes(searchTerm)) {
+                    item.classList.remove('hidden');
+                    resultsFound = true;
+                } else {
+                    item.classList.add('hidden');
+                }
+            });
+
+            document.getElementById('noResults').classList.toggle('hidden', resultsFound);
         });
         
         // Calculate new saldo

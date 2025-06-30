@@ -2,9 +2,9 @@
 require_once '../../database.php';
 session_start();
 
-// Cek login admin
-if (!isset($_SESSION['user_id'])) {
-    header('Location: ../../login_register/login.php');
+// Cek login dan peran admin
+if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
+    header('Location: ../../home.php');
     exit;
 }
 
@@ -24,7 +24,12 @@ $result = $koneksi->query($query);
 </head>
 <body class="bg-gray-100">
     <div class="container mx-auto p-8">
-        <h1 class="text-3xl font-bold text-center mb-8">QR Code untuk Setiap Meja</h1>
+        <div class="flex justify-between items-center mb-8">
+            <h1 class="text-3xl font-bold text-center flex-grow">QR Code untuk Setiap Meja</h1>
+            <a href="../beranda.php" class="text-gray-600 hover:text-gray-900 bg-white px-4 py-2 rounded-lg shadow border transition-colors">
+                <i class="fas fa-arrow-left mr-2"></i>Kembali ke Dashboard
+            </a>
+        </div>
         <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
             <?php while ($row = $result->fetch_assoc()): ?>
                 <div class="bg-white p-6 rounded-lg shadow-lg flex flex-col items-center text-center">

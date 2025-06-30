@@ -2,9 +2,9 @@
 require_once '../../database.php';
 session_start();
 
-// Cek login admin
-if (!isset($_SESSION['user_id'])) {
-    header('Location: ../../login_register/login.php');
+// Cek login dan peran admin
+if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
+    header('Location: ../../home.php');
     exit;
 }
 
@@ -97,13 +97,12 @@ foreach ($tableGroups as $table) {
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex justify-between items-center py-4">
                     <div class="flex items-center">
-                        <a href="../beranda.php" class="text-gray-500 hover:text-gray-700 mr-4">
-                            <i class="fas fa-arrow-left"></i> Kembali
-                        </a>
                         <h1 class="text-2xl font-bold text-gray-900">Kelola Pesanan</h1>
                     </div>
                     <div class="flex items-center space-x-4">
-                        <span class="text-sm text-gray-500">Admin Panel</span>
+                        <a href="../beranda.php" class="text-gray-600 hover:text-gray-900">
+                            <i class="fas fa-arrow-left mr-2"></i>Kembali ke Dashboard
+                        </a>
                     </div>
                 </div>
             </div>
