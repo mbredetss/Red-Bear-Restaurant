@@ -6,14 +6,8 @@ include_once 'script/php/handle_qr_scan.php';
 include_once 'script/php/init_db.php';
 
 // Ambil postingan blog yang sudah dipublikasikan
-$blog_posts = [];
-$query_blog = "SELECT bp.id, bp.title, bp.content, bp.image_path, bp.created_at, u.name as author_name FROM blog_posts bp JOIN users u ON bp.user_id = u.id WHERE bp.status = 'published' ORDER BY bp.created_at DESC LIMIT 3"; // Ambil 3 postingan terbaru
-$result_blog = $koneksi->query($query_blog);
-if ($result_blog) {
-  while ($row = $result_blog->fetch_assoc()) {
-    $blog_posts[] = $row;
-  }
-}
+require_once 'script/php/get_published_blog_posts.php';
+$blog_posts = get_published_blog_posts($koneksi, 3);
 ?>
 
 <!DOCTYPE html>
@@ -108,8 +102,7 @@ if ($result_blog) {
                 class="w-full bg-red-800 text-white px-4 py-3 rounded-lg flex items-center justify-start hover:bg-red-900 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 border border-white/20"
                 aria-label="Pilih tanggal" aria-haspopup="dialog">
                 <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                 </svg>
                 <span id="selectedDateText" class="font-medium">Pilih Tanggal</span>
               </button>
@@ -550,114 +543,82 @@ if ($result_blog) {
     </div>
   </div>
 
-  <!-- WhatsApp Button -->
-  <a href="https://api.whatsapp.com/send" target="_blank"
-    class="fixed bottom-6 right-6 z-50 bg-green-500 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-lg hover:bg-green-600 transition-all transform hover:scale-110">
-    <i class="fab fa-whatsapp text-3xl"></i>
-  </a>
-
-
-
- <!-- About Section -->
-<section id="about" class="py-24 bg-gradient-to-b from-red-100 via-white to-gray-100">
-  <div class="container mx-auto px-4 max-w-5xl">
-    <div class="text-center mb-14">
-      <h2 class="text-5xl font-extrabold text-red-700 mb-4" style="font-family: 'Montserrat', sans-serif;">About Red Bear</h2>
-      <p class="text-gray-600 text-lg max-w-2xl mx-auto">
-        Red Bear is your destination for authentic Korean Barbeque, offering premium meats, fresh ingredients, and a cozy atmosphere. Our mission is to bring the best of Korean cuisine to your table, ensuring every visit is a memorable dining experience.
-      </p>
-    </div>
-    <div class="flex flex-col md:flex-row items-center gap-12 md:gap-16">
-      <div class="w-full md:w-1/2 flex justify-center">
-        <div class="relative group">
-          <img src="img/about-red-bear.png" alt="About Red Bear" class="rounded-2xl shadow-2xl object-cover w-full max-w-md border-8 border-white group-hover:scale-105 transition-transform duration-300">
-          <span class="absolute -top-4 -left-4 bg-red-600 text-white px-4 py-1 rounded-full text-xs font-bold shadow-lg">Since 2022</span>
-        </div>
+  <!-- About Section -->
+  <section id="about" class="py-24 bg-gradient-to-b from-red-100 via-white to-gray-100">
+    <div class="container mx-auto px-4 max-w-5xl">
+      <div class="text-center mb-14">
+        <h2 class="text-5xl font-extrabold text-red-700 mb-4" style="font-family: 'Montserrat', sans-serif;">About Red
+          Bear</h2>
+        <p class="text-gray-600 text-lg max-w-2xl mx-auto">
+          Red Bear is your destination for authentic Korean Barbeque, offering premium meats, fresh ingredients, and a
+          cozy atmosphere. Our mission is to bring the best of Korean cuisine to your table, ensuring every visit is a
+          memorable dining experience.
+        </p>
       </div>
-      <div class="flex-1">
-        <h3 class="text-3xl font-bold text-gray-800 mb-5">Why Choose Us?</h3>
-        <ul class="space-y-4">
-          <li class="flex items-start gap-3 group"></li>
+      <div class="flex flex-col md:flex-row items-center gap-12 md:gap-16">
+        <div class="w-full md:w-1/2 flex justify-center">
+          <div class="relative group">
+            <img src="img/about-red-bear.png" alt="About Red Bear"
+              class="rounded-2xl shadow-2xl object-cover w-full max-w-md border-8 border-white group-hover:scale-105 transition-transform duration-300">
+            <span
+              class="absolute -top-4 -left-4 bg-red-600 text-white px-4 py-1 rounded-full text-xs font-bold shadow-lg">Since
+              2022</span>
+          </div>
+        </div>
+        <div class="flex-1">
+          <h3 class="text-3xl font-bold text-gray-800 mb-5">Why Choose Us?</h3>
+          <ul class="space-y-4">
+            <li class="flex items-start gap-3 group"></li>
             <span class="text-red-600 text-xl icon-effect"><i class="fas fa-drumstick-bite"></i></span>
             <span class="text-gray-700 text-lg">Premium quality meats and ingredients</span>
-          </li>
-          <li class="flex items-start gap-3 group">
-            <span class="text-red-600 text-xl icon-effect"><i class="fas fa-fire"></i></span>
-            <span class="text-gray-700 text-lg">Traditional Korean recipes with a modern twist</span>
-          </li>
-          <li class="flex items-start gap-3 group">
-            <span class="text-red-600 text-xl icon-effect"><i class="fas fa-couch"></i></span>
-            <span class="text-gray-700 text-lg">Comfortable and stylish dining environment</span>
-          </li>
-          <li class="flex items-start gap-3 group">
-            <span class="text-red-600 text-xl icon-effect"><i class="fas fa-user-friends"></i></span>
-            <span class="text-gray-700 text-lg">Friendly and attentive service</span>
-          </li>
-          <li class="flex items-start gap-3 group">
-            <span class="text-red-600 text-xl icon-effect"><i class="fas fa-gift"></i></span>
-            <span class="text-gray-700 text-lg">Perfect for family gatherings, friends, and celebrations</span>
-          </li>
-        </ul>
-        <div class="mt-8">
-          <a href="#menu" class="inline-block bg-red-600 hover:bg-red-700 text-white font-bold px-8 py-3 rounded-full shadow-lg transition-all text-lg">See Our Menu</a>
+            </li>
+            <li class="flex items-start gap-3 group">
+              <span class="text-red-600 text-xl icon-effect"><i class="fas fa-fire"></i></span>
+              <span class="text-gray-700 text-lg">Traditional Korean recipes with a modern twist</span>
+            </li>
+            <li class="flex items-start gap-3 group">
+              <span class="text-red-600 text-xl icon-effect"><i class="fas fa-couch"></i></span>
+              <span class="text-gray-700 text-lg">Comfortable and stylish dining environment</span>
+            </li>
+            <li class="flex items-start gap-3 group">
+              <span class="text-red-600 text-xl icon-effect"><i class="fas fa-user-friends"></i></span>
+              <span class="text-gray-700 text-lg">Friendly and attentive service</span>
+            </li>
+            <li class="flex items-start gap-3 group">
+              <span class="text-red-600 text-xl icon-effect"><i class="fas fa-gift"></i></span>
+              <span class="text-gray-700 text-lg">Perfect for family gatherings, friends, and celebrations</span>
+            </li>
+          </ul>
+          <div class="mt-8">
+            <a href="#menu"
+              class="inline-block bg-red-600 hover:bg-red-700 text-white font-bold px-8 py-3 rounded-full shadow-lg transition-all text-lg">See
+              Our Menu</a>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-  <style>
-    /* About Section Background Fix */
-    #about {
-      background: linear-gradient(135deg, #ffe5e5 0%, #fff 60%, #f3f4f6 100%);
-      /* #ffe5e5 = soft red, #fff = white, #f3f4f6 = gray-100 */
-      position: relative;
-      z-index: 1;
-    }
-    #about::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(ellipse at 60% 10%, rgba(255, 0, 0, 0.07) 0%, transparent 70%);
-      z-index: 0;
-      pointer-events: none;
-    }
-    #about > .container {
-      position: relative;
-      z-index: 2;
-    }
-    /* Icon hover effect */
-    .icon-effect {
-      transition: transform 0.25s cubic-bezier(.4,0,.2,1), color 0.25s;
-      will-change: transform;
-      cursor: pointer;
-    }
-    .group:hover .icon-effect,
-    .group:focus .icon-effect {
-      transform: scale(1.25) rotate(-8deg);
-      color: #b91c1c; /* darker red */
-      filter: drop-shadow(0 2px 8px rgba(239,68,68,0.15));
-    }
-  </style>
-</section>
+  </section>
 
   <!-- Location Section -->
   <section id="location" class="py-24 bg-gradient-to-b from-gray-100 via-white to-red-50">
     <div class="container mx-auto px-4 max-w-5xl">
       <div class="text-center mb-14">
-        <h2 class="text-5xl font-extrabold text-red-700 mb-4 location-title" style="font-family: 'Montserrat', sans-serif;">Our Location</h2>
+        <h2 class="text-5xl font-extrabold text-red-700 mb-4 location-title"
+          style="font-family: 'Montserrat', sans-serif;">Our Location</h2>
         <p class="text-gray-600 text-lg max-w-2xl mx-auto location-desc">
           Find us in the heart of Jakarta and experience the best Korean BBQ in town. We can't wait to welcome you!
         </p>
       </div>
       <div class="flex flex-col md:flex-row items-center gap-12 md:gap-16">
         <div class="w-full md:w-1/2 flex justify-center">
-          <div class="relative group w-full max-w-md rounded-2xl overflow-hidden shadow-2xl border-8 border-white location-map-container">
-            <iframe 
-              src="https://www.google.com/maps?q=Jakarta+Indonesia&output=embed" 
-              width="100%" height="340"
-              class="rounded-2xl w-full h-80 border-none location-map"
-              style="min-height:320px;"
-              allowfullscreen="" loading="lazy"></iframe>
-            <span class="absolute top-4 left-4 bg-red-600 text-white px-4 py-1 rounded-full text-xs font-bold shadow-lg location-map-badge">See on Map</span>
+          <div
+            class="relative group w-full max-w-md rounded-2xl overflow-hidden shadow-2xl border-8 border-white location-map-container">
+            <iframe src="https://www.google.com/maps?q=Jakarta+Indonesia&output=embed" width="100%" height="340"
+              class="rounded-2xl w-full h-80 border-none location-map" style="min-height:320px;" allowfullscreen=""
+              loading="lazy"></iframe>
+            <span
+              class="absolute top-4 left-4 bg-red-600 text-white px-4 py-1 rounded-full text-xs font-bold shadow-lg location-map-badge">See
+              on Map</span>
           </div>
         </div>
         <div class="flex-1">
@@ -682,7 +643,8 @@ if ($result_blog) {
               </li>
             </ul>
             <div class="mt-8 flex gap-4">
-              <a href="https://www.instagram.com/redbear.indonesia?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank"
+              <a href="https://www.instagram.com/redbear.indonesia?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="
+                target="_blank"
                 class="inline-flex items-center bg-gradient-to-r from-red-600 to-yellow-500 text-white px-6 py-3 rounded-full font-bold shadow-lg hover:scale-105 transition-all text-lg location-btn-instagram">
                 <i class="fab fa-instagram mr-2"></i> Instagram
               </a>
@@ -694,194 +656,72 @@ if ($result_blog) {
           </div>
         </div>
       </div>
-      
     </div>
-    <style>
-      /* Fade-in animation for location section */
-      #location {
-        opacity: 0;
-        transform: translateY(40px);
-        transition: opacity 0.8s cubic-bezier(.4,0,.2,1), transform 0.8s cubic-bezier(.4,0,.2,1);
-      }
-      #location.visible {
-        opacity: 1;
-        transform: translateY(0);
-      }
-      /* Map zoom effect on hover */
-      .location-map-container:hover .location-map {
-        transform: scale(1.04) rotate(-1deg);
-        box-shadow: 0 8px 32px rgba(255,0,0,0.15);
-      }
-      .location-map {
-        transition: transform 0.4s cubic-bezier(.4,0,.2,1), box-shadow 0.4s;
-      }
-      /* Badge bounce */
-      .location-map-badge {
-        animation: badgeBounce 2s infinite;
-      }
-      @keyframes badgeBounce {
-        0%, 100% { transform: translateY(0);}
-        50% { transform: translateY(-8px);}
-      }
-      /* Card hover effect */
-      .location-card {
-        transition: box-shadow 0.3s, transform 0.3s;
-      }
-      .location-card:hover {
-        box-shadow: 0 12px 40px rgba(255,0,0,0.13);
-        transform: translateY(-4px) scale(1.02);
-      }
-      /* Button pulse */
-      .location-btn-instagram, .location-btn-wa {
-        position: relative;
-        overflow: hidden;
-      }
-      .location-btn-instagram::after, .location-btn-wa::after {
-        content: '';
-        position: absolute;
-        left: 50%; top: 50%;
-        width: 0; height: 0;
-        background: rgba(255,255,255,0.25);
-        border-radius: 100%;
-        transform: translate(-50%, -50%);
-        opacity: 0;
-        transition: width 0.4s, height 0.4s, opacity 0.4s;
-        z-index: 0;
-      }
-      .location-btn-instagram:active::after, .location-btn-wa:active::after {
-        width: 200%;
-        height: 200%;
-        opacity: 1;
-        transition: 0s;
-      }
-      /* Title fade-in */
-      .location-title, .location-desc, .location-card-title, .location-parking-title, .location-parking-desc {
-        opacity: 0;
-        transform: translateY(30px);
-        transition: opacity 0.7s, transform 0.7s;
-      }
-      #location.visible .location-title { opacity: 1; transform: none; transition-delay: 0.1s;}
-      #location.visible .location-desc { opacity: 1; transform: none; transition-delay: 0.2s;}
-      #location.visible .location-card-title { opacity: 1; transform: none; transition-delay: 0.3s;}
-      #location.visible .location-parking-title { opacity: 1; transform: none; transition-delay: 0.4s;}
-      #location.visible .location-parking-desc { opacity: 1; transform: none; transition-delay: 0.5s;}
-    </style>
-    <script>
-      // Intersection Observer for fade-in effect
-      document.addEventListener('DOMContentLoaded', function () {
-        var locationSection = document.getElementById('location');
-        if ('IntersectionObserver' in window) {
-          var observer = new IntersectionObserver(function(entries) {
-            entries.forEach(function(entry) {
-              if (entry.isIntersecting) {
-                locationSection.classList.add('visible');
-                observer.disconnect();
-              }
-            });
-          }, { threshold: 0.2 });
-          observer.observe(locationSection);
-        } else {
-          // Fallback
-          locationSection.classList.add('visible');
-        }
-      });
-    </script>
   </section>
-
-
 
   <!-- Blog Section -->
   <section id="blog" class="py-24 bg-gradient-to-b from-white via-red-50 to-gray-100">
-   <div class="container mx-auto px-4 max-w-6xl">
-    <div class="text-center mb-14">
-      <h2 class="text-5xl font-extrabold text-red-700 mb-4" style="font-family: 'Montserrat', sans-serif;">Our Latest Blog</h2>
-      <p class="text-gray-600 text-lg max-w-2xl mx-auto">
-       Stay updated with our news, recipes, and special events.
-      </p>
-    </div>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-      <?php if (empty($blog_posts)): ?>
-       <p class="col-span-full text-center text-gray-500">Belum ada postingan blog yang dipublikasikan.</p>
-      <?php else: ?>
-       <?php foreach ($blog_posts as $post): ?>
-        <div class="group bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100 hover:shadow-2xl transition-all duration-300 flex flex-col">
-          <?php if ($post['image_path']): ?>
-           <div class="relative h-56 overflow-hidden">
-            <img src="<?php echo htmlspecialchars($post['image_path']); ?>"
-              alt="<?php echo htmlspecialchars($post['title']); ?>"
-              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
-            <span class="absolute top-4 left-4 bg-red-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">Blog</span>
-           </div>
-          <?php endif; ?>
-          <div class="flex-1 flex flex-col p-6">
-           <h3 class="text-2xl font-bold mb-2 text-gray-800 group-hover:text-red-700 transition-colors"><?php echo htmlspecialchars($post['title']); ?></h3>
-           <p class="text-gray-500 text-xs mb-3">Oleh: <span class="font-semibold"><?php echo htmlspecialchars($post['author_name']); ?></span> &bull; <?php echo date('d M Y', strtotime($post['created_at'])); ?></p>
-           <p class="text-gray-700 mb-4 flex-1"><?php echo nl2br(substr(strip_tags($post['content']), 0, 120)); ?>...</p>
-           <div class="mt-auto">
-            <a href="blog_detail.php?id=<?php echo $post['id']; ?>"
-              class="inline-flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 focus:bg-red-800 text-white px-5 py-2 rounded-full font-bold text-sm shadow-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-400 group-hover:scale-105 group-hover:shadow-lg">
-              <i class="fas fa-book-open"></i> Baca Selengkapnya
-            </a>
-           </div>
-          </div>
+    <div class="container mx-auto px-4 max-w-6xl">
+      <div class="text-center mb-14">
+        <h2 class="text-5xl font-extrabold text-red-700 mb-4" style="font-family: 'Montserrat', sans-serif;">Our Latest
+          Blog</h2>
+        <p class="text-gray-600 text-lg max-w-2xl mx-auto">
+          Stay updated with our news, recipes, and special events.
+        </p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+        <?php if (empty($blog_posts)): ?>
+          <p class="col-span-full text-center text-gray-500">Belum ada postingan blog yang dipublikasikan.</p>
+        <?php else: ?>
+          <?php foreach ($blog_posts as $post): ?>
+            <div
+              class="group bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100 hover:shadow-2xl transition-all duration-300 flex flex-col">
+              <?php if ($post['image_path']): ?>
+                <div class="relative h-56 overflow-hidden">
+                  <img src="<?php echo htmlspecialchars($post['image_path']); ?>"
+                    alt="<?php echo htmlspecialchars($post['title']); ?>"
+                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                  <span
+                    class="absolute top-4 left-4 bg-red-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">Blog</span>
+                </div>
+              <?php endif; ?>
+              <div class="flex-1 flex flex-col p-6">
+                <h3 class="text-2xl font-bold mb-2 text-gray-800 group-hover:text-red-700 transition-colors">
+                  <?php echo htmlspecialchars($post['title']); ?>
+                </h3>
+                <p class="text-gray-500 text-xs mb-3">Oleh: <span
+                    class="font-semibold"><?php echo htmlspecialchars($post['author_name']); ?></span> &bull;
+                  <?php echo date('d M Y', strtotime($post['created_at'])); ?>
+                </p>
+                <p class="text-gray-700 mb-4 flex-1"><?php echo nl2br(substr(strip_tags($post['content']), 0, 120)); ?>...
+                </p>
+                <div class="mt-auto">
+                  <a href="blog_detail.php?id=<?php echo $post['id']; ?>"
+                    class="inline-flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 focus:bg-red-800 text-white px-5 py-2 rounded-full font-bold text-sm shadow-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-400 group-hover:scale-105 group-hover:shadow-lg">
+                    <i class="fas fa-book-open"></i> Baca Selengkapnya
+                  </a>
+                </div>
+              </div>
+            </div>
+          <?php endforeach; ?>
+        <?php endif; ?>
+      </div>
+      <div class="text-center mt-12">
+        <a href="blog.php"
+          class="inline-flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 focus:bg-red-800 text-white px-8 py-3 rounded-full font-bold text-lg shadow-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-400 hover:scale-105">
+          <i class="fas fa-list"></i> Lihat Semua Blog
+        </a>
+      </div>
+      <?php if (isset($_SESSION['user_id']) && $_SESSION['role'] === 'user'): ?>
+        <div class="text-center mt-8">
+          <a href="blog_form.php"
+            class="inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 focus:bg-blue-800 text-white px-6 py-3 rounded-full font-bold text-lg shadow-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400 hover:scale-105">
+            <i class="fas fa-pen"></i> Tulis Blog
+          </a>
         </div>
-       <?php endforeach; ?>
       <?php endif; ?>
     </div>
-    <div class="text-center mt-12">
-      <a href="blog.php"
-       class="inline-flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 focus:bg-red-800 text-white px-8 py-3 rounded-full font-bold text-lg shadow-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-400 hover:scale-105">
-        <i class="fas fa-list"></i> Lihat Semua Blog
-      </a>
-    </div>
-    <?php if (isset($_SESSION['user_id']) && $_SESSION['role'] === 'user'): ?>
-      <div class="text-center mt-8">
-       <a href="blog_form.php"
-        class="inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 focus:bg-blue-800 text-white px-6 py-3 rounded-full font-bold text-lg shadow-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400 hover:scale-105">
-        <i class="fas fa-pen"></i> Tulis Blog
-       </a>
-      </div>
-    <?php endif; ?>
-    </div>
-   <style>
-    #blog {
-      background: linear-gradient(135deg, #fff 0%, #fff5f5 60%, #f3f4f6 100%);
-      position: relative;
-      z-index: 1;
-    }
-    #blog .group:hover img {
-      filter: brightness(0.96) saturate(1.1);
-    }
-    #blog .group:hover h3 {
-      color: #b91c1c;
-    }
-    #blog .group .bg-red-600 {
-      box-shadow: 0 2px 8px rgba(239,68,68,0.13);
-    }
-    #blog .group:hover .bg-red-600 {
-      background: #b91c1c;
-    }
-    #blog .group .rounded-2xl {
-      transition: box-shadow 0.3s, transform 0.3s;
-    }
-    #blog .group:hover .rounded-2xl {
-      box-shadow: 0 12px 40px rgba(255,0,0,0.13);
-      transform: translateY(-4px) scale(1.02);
-    }
-    /* Button improvement */
-    #blog a, #blog button {
-      transition: background 0.2s, color 0.2s, box-shadow 0.2s, transform 0.2s;
-      outline: none;
-    }
-    #blog a:focus, #blog button:focus {
-      box-shadow: 0 0 0 3px rgba(239,68,68,0.25);
-    }
-    #blog a:active, #blog button:active {
-      transform: scale(0.97);
-    }
-   </style>
   </section>
-
 
   <!-- Footer -->
   <footer class="bg-gray-800 text-white pt-12 pb-8">
@@ -936,6 +776,7 @@ if ($result_blog) {
     // Mulai pengecekan berkala jika user sudah scan meja
     initTableStatusCheck();
   </script>
+  <script src="script/js/fade-inEffectBlog.js"></script>
   <script src="script/js/bookTableModal.js"></script>
   <script src="script/js/guestCountModal.js"></script>
   <script src="script/js/datePickerModal.js"></script>
@@ -943,5 +784,4 @@ if ($result_blog) {
   <script src="script/script.js"></script>
   <script src="script/menuLoad.js"></script>
 </body>
-
 </html>
