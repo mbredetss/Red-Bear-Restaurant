@@ -48,7 +48,7 @@ if ($result_blog) {
         class="hover:bg-white/10 text-white px-3 py-2 rounded-md font-semibold text-sm transition-colors">HOME</a>
       <a href="#menu"
         class="hover:bg-white/10 text-white px-3 py-2 rounded-md font-semibold text-sm transition-colors">MENU</a>
-      <a href="#"
+      <a href="#merchandise"
         class="hover:bg-white/10 text-white px-3 py-2 rounded-md font-semibold text-sm transition-colors">MERCHANDISE</a>
       <a href="#" id="tableStatusBtn"
         class="hover:bg-white/10 text-white px-3 py-2 rounded-md font-semibold text-sm transition-colors">STATUS
@@ -558,6 +558,83 @@ if ($result_blog) {
 
 
 
+  <!-- Merchandise Section -->
+  <section id="merchandise" class="py-24 bg-gradient-to-b from-yellow-50 via-white to-red-50">
+    <div class="container mx-auto px-4 max-w-6xl">
+      <div class="text-center mb-14">
+        <h2 class="text-5xl font-extrabold text-red-700 mb-4" style="font-family: 'Montserrat', sans-serif;">Red Bear Merchandise</h2>
+        <p class="text-gray-600 text-lg max-w-2xl mx-auto">
+          Show your love for Red Bear! Explore our exclusive collection of stylish and high-quality merchandise, perfect for gifts or your own collection.
+        </p>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+        <!-- Merchandise Item 1 -->
+        <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100 hover:shadow-2xl transition-all duration-300 flex flex-col group">
+          <div class="relative h-64 overflow-hidden">
+            <img src="img/merch/tshirt-redbear.png" alt="Red Bear T-Shirt" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+            <span class="absolute top-4 left-4 bg-red-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">Best Seller</span>
+          </div>
+          <div class="flex-1 flex flex-col p-6">
+            <h3 class="text-2xl font-bold mb-2 text-gray-800 group-hover:text-red-700 transition-colors">Red Bear T-Shirt</h3>
+            <p class="text-gray-700 mb-4 flex-1">Premium cotton t-shirt with exclusive Red Bear design. Available in all sizes!</p>
+            <div class="flex items-center justify-between mt-auto">
+              <span class="text-xl font-bold text-red-600">Rp120.000</span>
+              <a href="https://wa.me/6281234567890?text=Halo%20Red%20Bear%2C%20saya%20ingin%20beli%20T-Shirt%20Red%20Bear" target="_blank"
+                class="inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white px-5 py-2 rounded-full font-bold text-sm shadow-md transition-all duration-200">
+                <i class="fab fa-whatsapp"></i> Order
+              </a>
+            </div>
+          </div>
+        </div>
+        <!-- Merchandise Item 2 -->
+        <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100 hover:shadow-2xl transition-all duration-300 flex flex-col group">
+          <div class="relative h-64 overflow-hidden">
+            <img src="img/merch/tumbler-redbear.png" alt="Red Bear Tumbler" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+            <span class="absolute top-4 left-4 bg-yellow-500 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">Limited Edition</span>
+          </div>
+          <div class="flex-1 flex flex-col p-6">
+            <h3 class="text-2xl font-bold mb-2 text-gray-800 group-hover:text-red-700 transition-colors">Red Bear Tumbler</h3>
+            <p class="text-gray-700 mb-4 flex-1">Stay hydrated in style with our exclusive Red Bear tumbler. Keeps your drink hot or cold for hours.</p>
+            <div class="flex items-center justify-between mt-auto">
+              <span class="text-xl font-bold text-red-600">Rp85.000</span>
+              <a href="https://wa.me/6281234567890?text=Halo%20Red%20Bear%2C%20saya%20ingin%20beli%20Tumbler%20Red%20Bear" target="_blank"
+                class="inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white px-5 py-2 rounded-full font-bold text-sm shadow-md transition-all duration-200">
+                <i class="fab fa-whatsapp"></i> Order
+              </a>
+            </div>
+          </div>
+        </div>
+        <!-- Merchandise Item 3 -->
+        <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100 hover:shadow-2xl transition-all duration-300 flex flex-col group">
+          <div class="relative h-64 overflow-hidden">
+            <img src="img/merch/totebag-redbear.png" alt="Red Bear Tote Bag" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+            <span class="absolute top-4 left-4 bg-blue-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">New Arrival</span>
+          </div>
+          <div class="flex-1 flex flex-col p-6">
+            <h3 class="text-2xl font-bold mb-2 text-gray-800 group-hover:text-red-700 transition-colors">Red Bear Tote Bag</h3>
+            <p class="text-gray-700 mb-4 flex-1">Eco-friendly tote bag with cute Red Bear print. Perfect for daily use or as a gift!</p>
+            <div class="flex items-center justify-between mt-auto">
+              <span class="text-xl font-bold text-red-600">Rp55.000</span>
+              <a href="https://wa.me/6281234567890?text=Halo%20Red%20Bear%2C%20saya%20ingin%20beli%20Tote%20Bag%20Red%20Bear" target="_blank"
+                class="inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white px-5 py-2 rounded-full font-bold text-sm shadow-md transition-all duration-200">
+                <i class="fab fa-whatsapp"></i> Order
+              </a>
+            </div>
+          </div>
+        </div>
+        <!-- Add more merchandise items as needed -->
+      </div>
+      <div class="text-center mt-12">
+        <a href="https://www.instagram.com/redbear.indonesia/" target="_blank"
+          class="inline-flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white px-8 py-3 rounded-full font-bold text-lg shadow-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-400 hover:scale-105">
+          <i class="fab fa-instagram"></i> See More on Instagram
+        </a>
+      </div>
+    </div>
+  </section>
+
+
+
  <!-- About Section -->
 <section id="about" class="py-24 bg-gradient-to-b from-red-100 via-white to-gray-100">
   <div class="container mx-auto px-4 max-w-5xl">
@@ -604,39 +681,6 @@ if ($result_blog) {
       </div>
     </div>
   </div>
-  <style>
-    /* About Section Background Fix */
-    #about {
-      background: linear-gradient(135deg, #ffe5e5 0%, #fff 60%, #f3f4f6 100%);
-      /* #ffe5e5 = soft red, #fff = white, #f3f4f6 = gray-100 */
-      position: relative;
-      z-index: 1;
-    }
-    #about::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(ellipse at 60% 10%, rgba(255, 0, 0, 0.07) 0%, transparent 70%);
-      z-index: 0;
-      pointer-events: none;
-    }
-    #about > .container {
-      position: relative;
-      z-index: 2;
-    }
-    /* Icon hover effect */
-    .icon-effect {
-      transition: transform 0.25s cubic-bezier(.4,0,.2,1), color 0.25s;
-      will-change: transform;
-      cursor: pointer;
-    }
-    .group:hover .icon-effect,
-    .group:focus .icon-effect {
-      transform: scale(1.25) rotate(-8deg);
-      color: #b91c1c; /* darker red */
-      filter: drop-shadow(0 2px 8px rgba(239,68,68,0.15));
-    }
-  </style>
 </section>
 
   <!-- Location Section -->
@@ -664,20 +708,20 @@ if ($result_blog) {
           <div class="bg-white rounded-2xl shadow-lg p-8 border border-gray-200 location-card">
             <h3 class="text-3xl font-bold text-gray-800 mb-4 location-card-title">Red Bear Restaurant</h3>
             <ul class="text-gray-700 space-y-4 text-lg">
-              <li class="flex items-center">
-                <span class="text-red-600 text-xl mr-3"><i class="fas fa-map-marker-alt"></i></span>
+              <li class="flex items-center group">
+                <span class="text-red-600 text-xl mr-3 icon-effect"><i class="fas fa-map-marker-alt"></i></span>
                 Jl. Contoh Alamat No. 123, Jakarta, Indonesia
               </li>
-              <li class="flex items-center">
-                <span class="text-red-600 text-xl mr-3"><i class="fas fa-phone-alt"></i></span>
+              <li class="flex items-center group">
+                <span class="text-red-600 text-xl mr-3 icon-effect"><i class="fas fa-phone-alt"></i></span>
                 <a href="tel:02112345678" class="hover:underline">(021) 1234-5678</a>
               </li>
-              <li class="flex items-center">
-                <span class="text-red-600 text-xl mr-3"><i class="fas fa-clock"></i></span>
+              <li class="flex items-center group">
+                <span class="text-red-600 text-xl mr-3 icon-effect"><i class="fas fa-clock"></i></span>
                 Open: <span class="font-semibold">10:00 - 22:00</span> (Everyday)
               </li>
-              <li class="flex items-center">
-                <span class="text-red-600 text-xl mr-3"><i class="fas fa-envelope"></i></span>
+              <li class="flex items-center group">
+                <span class="text-red-600 text-xl mr-3 icon-effect"><i class="fas fa-envelope"></i></span>
                 <a href="mailto:info@redbear.com" class="hover:underline">info@redbear.com</a>
               </li>
             </ul>
@@ -694,78 +738,7 @@ if ($result_blog) {
           </div>
         </div>
       </div>
-      
-    </div>
-    <style>
-      /* Fade-in animation for location section */
-      #location {
-        opacity: 0;
-        transform: translateY(40px);
-        transition: opacity 0.8s cubic-bezier(.4,0,.2,1), transform 0.8s cubic-bezier(.4,0,.2,1);
-      }
-      #location.visible {
-        opacity: 1;
-        transform: translateY(0);
-      }
-      /* Map zoom effect on hover */
-      .location-map-container:hover .location-map {
-        transform: scale(1.04) rotate(-1deg);
-        box-shadow: 0 8px 32px rgba(255,0,0,0.15);
-      }
-      .location-map {
-        transition: transform 0.4s cubic-bezier(.4,0,.2,1), box-shadow 0.4s;
-      }
-      /* Badge bounce */
-      .location-map-badge {
-        animation: badgeBounce 2s infinite;
-      }
-      @keyframes badgeBounce {
-        0%, 100% { transform: translateY(0);}
-        50% { transform: translateY(-8px);}
-      }
-      /* Card hover effect */
-      .location-card {
-        transition: box-shadow 0.3s, transform 0.3s;
-      }
-      .location-card:hover {
-        box-shadow: 0 12px 40px rgba(255,0,0,0.13);
-        transform: translateY(-4px) scale(1.02);
-      }
-      /* Button pulse */
-      .location-btn-instagram, .location-btn-wa {
-        position: relative;
-        overflow: hidden;
-      }
-      .location-btn-instagram::after, .location-btn-wa::after {
-        content: '';
-        position: absolute;
-        left: 50%; top: 50%;
-        width: 0; height: 0;
-        background: rgba(255,255,255,0.25);
-        border-radius: 100%;
-        transform: translate(-50%, -50%);
-        opacity: 0;
-        transition: width 0.4s, height 0.4s, opacity 0.4s;
-        z-index: 0;
-      }
-      .location-btn-instagram:active::after, .location-btn-wa:active::after {
-        width: 200%;
-        height: 200%;
-        opacity: 1;
-        transition: 0s;
-      }
-      /* Title fade-in */
-      .location-title, .location-desc, .location-card-title, .location-parking-title, .location-parking-desc {
-        opacity: 0;
-        transform: translateY(30px);
-        transition: opacity 0.7s, transform 0.7s;
-      }
-      #location.visible .location-title { opacity: 1; transform: none; transition-delay: 0.1s;}
-      #location.visible .location-desc { opacity: 1; transform: none; transition-delay: 0.2s;}
-      #location.visible .location-card-title { opacity: 1; transform: none; transition-delay: 0.3s;}
-      #location.visible .location-parking-title { opacity: 1; transform: none; transition-delay: 0.4s;}
-      #location.visible .location-parking-desc { opacity: 1; transform: none; transition-delay: 0.5s;}
-    </style>
+
     <script>
       // Intersection Observer for fade-in effect
       document.addEventListener('DOMContentLoaded', function () {
@@ -843,43 +816,6 @@ if ($result_blog) {
       </div>
     <?php endif; ?>
     </div>
-   <style>
-    #blog {
-      background: linear-gradient(135deg, #fff 0%, #fff5f5 60%, #f3f4f6 100%);
-      position: relative;
-      z-index: 1;
-    }
-    #blog .group:hover img {
-      filter: brightness(0.96) saturate(1.1);
-    }
-    #blog .group:hover h3 {
-      color: #b91c1c;
-    }
-    #blog .group .bg-red-600 {
-      box-shadow: 0 2px 8px rgba(239,68,68,0.13);
-    }
-    #blog .group:hover .bg-red-600 {
-      background: #b91c1c;
-    }
-    #blog .group .rounded-2xl {
-      transition: box-shadow 0.3s, transform 0.3s;
-    }
-    #blog .group:hover .rounded-2xl {
-      box-shadow: 0 12px 40px rgba(255,0,0,0.13);
-      transform: translateY(-4px) scale(1.02);
-    }
-    /* Button improvement */
-    #blog a, #blog button {
-      transition: background 0.2s, color 0.2s, box-shadow 0.2s, transform 0.2s;
-      outline: none;
-    }
-    #blog a:focus, #blog button:focus {
-      box-shadow: 0 0 0 3px rgba(239,68,68,0.25);
-    }
-    #blog a:active, #blog button:active {
-      transform: scale(0.97);
-    }
-   </style>
   </section>
 
 
