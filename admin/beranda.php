@@ -31,6 +31,8 @@ $result = new ArrayObject([
         <!-- Tombol Navigasi di Tengah -->
         <div class="button-container">
             <a href="../admin/menu/menu.php" class="button">Ke Halaman Menu</a>
+            <a href="../admin/saldo/add_saldo.php" class="button">Tambah Saldo</a>
+            <a href="../admin/tables/generate_qr.php" class="button">Generate QR Meja</a>
             <a href="../admin/order/order.php" class="button">Ke Halaman Order</a>
             <a href="../admin/blog/manage_blog.php" class="button">Kelola Blog</a> <!-- Tambahkan ini -->
         </div>

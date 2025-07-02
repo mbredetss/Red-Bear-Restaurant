@@ -37,7 +37,7 @@
                 <?php echo nl2br(htmlspecialchars($post['content'])); ?>
             </div>
             <div class="mt-8">
-                <a href="blog.php" class="text-red-600 hover:underline font-medium">&larr; Kembali ke Blog</a>
+                <a href="home.php" class="text-red-600 hover:underline font-medium">&larr; Kembali ke Blog</a>
             </div>
         </div>
     </body>
