@@ -42,7 +42,7 @@ $blog_posts = get_published_blog_posts($koneksi, 3);
         class="hover:bg-white/10 text-white px-3 py-2 rounded-md font-semibold text-sm transition-colors">HOME</a>
       <a href="#menu"
         class="hover:bg-white/10 text-white px-3 py-2 rounded-md font-semibold text-sm transition-colors">MENU</a>
-      <a href="#"
+      <a href="#merchandise"
         class="hover:bg-white/10 text-white px-3 py-2 rounded-md font-semibold text-sm transition-colors">MERCHANDISE</a>
       <a href="#" id="tableStatusBtn"
         class="hover:bg-white/10 text-white px-3 py-2 rounded-md font-semibold text-sm transition-colors">STATUS
@@ -543,6 +543,91 @@ $blog_posts = get_published_blog_posts($koneksi, 3);
     </div>
   </div>
 
+  <!-- WhatsApp Button -->
+  <a href="https://api.whatsapp.com/send" target="_blank"
+    class="fixed bottom-6 right-6 z-50 bg-green-500 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-lg hover:bg-green-600 transition-all transform hover:scale-110">
+    <i class="fab fa-whatsapp text-3xl"></i>
+  </a>
+
+
+
+  <!-- Merchandise Section -->
+  <section id="merchandise" class="py-24 bg-gradient-to-b from-yellow-50 via-white to-red-50">
+    <div class="container mx-auto px-4 max-w-6xl">
+      <div class="text-center mb-14">
+        <h2 class="text-5xl font-extrabold text-red-700 mb-4" style="font-family: 'Montserrat', sans-serif;">Red Bear Merchandise</h2>
+        <p class="text-gray-600 text-lg max-w-2xl mx-auto">
+          Show your love for Red Bear! Explore our exclusive collection of stylish and high-quality merchandise, perfect for gifts or your own collection.
+        </p>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+        <!-- Merchandise Item 1 -->
+        <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100 hover:shadow-2xl transition-all duration-300 flex flex-col group">
+          <div class="relative h-64 overflow-hidden">
+            <img src="img/merch/tshirt-redbear.png" alt="Red Bear T-Shirt" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+            <span class="absolute top-4 left-4 bg-red-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">Best Seller</span>
+          </div>
+          <div class="flex-1 flex flex-col p-6">
+            <h3 class="text-2xl font-bold mb-2 text-gray-800 group-hover:text-red-700 transition-colors">Red Bear T-Shirt</h3>
+            <p class="text-gray-700 mb-4 flex-1">Premium cotton t-shirt with exclusive Red Bear design. Available in all sizes!</p>
+            <div class="flex items-center justify-between mt-auto">
+              <span class="text-xl font-bold text-red-600">Rp120.000</span>
+              <a href="https://wa.me/6281234567890?text=Halo%20Red%20Bear%2C%20saya%20ingin%20beli%20T-Shirt%20Red%20Bear" target="_blank"
+                class="inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white px-5 py-2 rounded-full font-bold text-sm shadow-md transition-all duration-200">
+                <i class="fab fa-whatsapp"></i> Order
+              </a>
+            </div>
+          </div>
+        </div>
+        <!-- Merchandise Item 2 -->
+        <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100 hover:shadow-2xl transition-all duration-300 flex flex-col group">
+          <div class="relative h-64 overflow-hidden">
+            <img src="img/merch/tumbler-redbear.png" alt="Red Bear Tumbler" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+            <span class="absolute top-4 left-4 bg-yellow-500 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">Limited Edition</span>
+          </div>
+          <div class="flex-1 flex flex-col p-6">
+            <h3 class="text-2xl font-bold mb-2 text-gray-800 group-hover:text-red-700 transition-colors">Red Bear Tumbler</h3>
+            <p class="text-gray-700 mb-4 flex-1">Stay hydrated in style with our exclusive Red Bear tumbler. Keeps your drink hot or cold for hours.</p>
+            <div class="flex items-center justify-between mt-auto">
+              <span class="text-xl font-bold text-red-600">Rp85.000</span>
+              <a href="https://wa.me/6281234567890?text=Halo%20Red%20Bear%2C%20saya%20ingin%20beli%20Tumbler%20Red%20Bear" target="_blank"
+                class="inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white px-5 py-2 rounded-full font-bold text-sm shadow-md transition-all duration-200">
+                <i class="fab fa-whatsapp"></i> Order
+              </a>
+            </div>
+          </div>
+        </div>
+        <!-- Merchandise Item 3 -->
+        <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100 hover:shadow-2xl transition-all duration-300 flex flex-col group">
+          <div class="relative h-64 overflow-hidden">
+            <img src="img/merch/totebag-redbear.png" alt="Red Bear Tote Bag" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+            <span class="absolute top-4 left-4 bg-blue-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">New Arrival</span>
+          </div>
+          <div class="flex-1 flex flex-col p-6">
+            <h3 class="text-2xl font-bold mb-2 text-gray-800 group-hover:text-red-700 transition-colors">Red Bear Tote Bag</h3>
+            <p class="text-gray-700 mb-4 flex-1">Eco-friendly tote bag with cute Red Bear print. Perfect for daily use or as a gift!</p>
+            <div class="flex items-center justify-between mt-auto">
+              <span class="text-xl font-bold text-red-600">Rp55.000</span>
+              <a href="https://wa.me/6281234567890?text=Halo%20Red%20Bear%2C%20saya%20ingin%20beli%20Tote%20Bag%20Red%20Bear" target="_blank"
+                class="inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white px-5 py-2 rounded-full font-bold text-sm shadow-md transition-all duration-200">
+                <i class="fab fa-whatsapp"></i> Order
+              </a>
+            </div>
+          </div>
+        </div>
+        <!-- Add more merchandise items as needed -->
+      </div>
+      <div class="text-center mt-12">
+        <a href="https://www.instagram.com/redbear.indonesia/" target="_blank"
+          class="inline-flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white px-8 py-3 rounded-full font-bold text-lg shadow-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-400 hover:scale-105">
+          <i class="fab fa-instagram"></i> See More on Instagram
+        </a>
+      </div>
+    </div>
+  </section>
+
+
+
   <!-- About Section -->
   <section id="about" class="py-24 bg-gradient-to-b from-red-100 via-white to-gray-100">
     <div class="container mx-auto px-4 max-w-5xl">
@@ -571,33 +656,31 @@ $blog_posts = get_published_blog_posts($koneksi, 3);
             <li class="flex items-start gap-3 group"></li>
             <span class="text-red-600 text-xl icon-effect"><i class="fas fa-drumstick-bite"></i></span>
             <span class="text-gray-700 text-lg">Premium quality meats and ingredients</span>
-            </li>
-            <li class="flex items-start gap-3 group">
-              <span class="text-red-600 text-xl icon-effect"><i class="fas fa-fire"></i></span>
-              <span class="text-gray-700 text-lg">Traditional Korean recipes with a modern twist</span>
-            </li>
-            <li class="flex items-start gap-3 group">
-              <span class="text-red-600 text-xl icon-effect"><i class="fas fa-couch"></i></span>
-              <span class="text-gray-700 text-lg">Comfortable and stylish dining environment</span>
-            </li>
-            <li class="flex items-start gap-3 group">
-              <span class="text-red-600 text-xl icon-effect"><i class="fas fa-user-friends"></i></span>
-              <span class="text-gray-700 text-lg">Friendly and attentive service</span>
-            </li>
-            <li class="flex items-start gap-3 group">
-              <span class="text-red-600 text-xl icon-effect"><i class="fas fa-gift"></i></span>
-              <span class="text-gray-700 text-lg">Perfect for family gatherings, friends, and celebrations</span>
-            </li>
-          </ul>
-          <div class="mt-8">
-            <a href="#menu"
-              class="inline-block bg-red-600 hover:bg-red-700 text-white font-bold px-8 py-3 rounded-full shadow-lg transition-all text-lg">See
-              Our Menu</a>
-          </div>
+          </li>
+          <li class="flex items-start gap-3 group">
+            <span class="text-red-600 text-xl icon-effect"><i class="fas fa-fire"></i></span>
+            <span class="text-gray-700 text-lg">Traditional Korean recipes with a modern twist</span>
+          </li>
+          <li class="flex items-start gap-3 group">
+            <span class="text-red-600 text-xl icon-effect"><i class="fas fa-couch"></i></span>
+            <span class="text-gray-700 text-lg">Comfortable and stylish dining environment</span>
+          </li>
+          <li class="flex items-start gap-3 group">
+            <span class="text-red-600 text-xl icon-effect"><i class="fas fa-user-friends"></i></span>
+            <span class="text-gray-700 text-lg">Friendly and attentive service</span>
+          </li>
+          <li class="flex items-start gap-3 group">
+            <span class="text-red-600 text-xl icon-effect"><i class="fas fa-gift"></i></span>
+            <span class="text-gray-700 text-lg">Perfect for family gatherings, friends, and celebrations</span>
+          </li>
+        </ul>
+        <div class="mt-8">
+          <a href="#menu" class="inline-block bg-red-600 hover:bg-red-700 text-white font-bold px-8 py-3 rounded-full shadow-lg transition-all text-lg">See Our Menu</a>
         </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
   <!-- Location Section -->
   <section id="location" class="py-24 bg-gradient-to-b from-gray-100 via-white to-red-50">
@@ -625,20 +708,20 @@ $blog_posts = get_published_blog_posts($koneksi, 3);
           <div class="bg-white rounded-2xl shadow-lg p-8 border border-gray-200 location-card">
             <h3 class="text-3xl font-bold text-gray-800 mb-4 location-card-title">Red Bear Restaurant</h3>
             <ul class="text-gray-700 space-y-4 text-lg">
-              <li class="flex items-center">
-                <span class="text-red-600 text-xl mr-3"><i class="fas fa-map-marker-alt"></i></span>
+              <li class="flex items-center group">
+                <span class="text-red-600 text-xl mr-3 icon-effect"><i class="fas fa-map-marker-alt"></i></span>
                 Jl. Contoh Alamat No. 123, Jakarta, Indonesia
               </li>
-              <li class="flex items-center">
-                <span class="text-red-600 text-xl mr-3"><i class="fas fa-phone-alt"></i></span>
+              <li class="flex items-center group">
+                <span class="text-red-600 text-xl mr-3 icon-effect"><i class="fas fa-phone-alt"></i></span>
                 <a href="tel:02112345678" class="hover:underline">(021) 1234-5678</a>
               </li>
-              <li class="flex items-center">
-                <span class="text-red-600 text-xl mr-3"><i class="fas fa-clock"></i></span>
+              <li class="flex items-center group">
+                <span class="text-red-600 text-xl mr-3 icon-effect"><i class="fas fa-clock"></i></span>
                 Open: <span class="font-semibold">10:00 - 22:00</span> (Everyday)
               </li>
-              <li class="flex items-center">
-                <span class="text-red-600 text-xl mr-3"><i class="fas fa-envelope"></i></span>
+              <li class="flex items-center group">
+                <span class="text-red-600 text-xl mr-3 icon-effect"><i class="fas fa-envelope"></i></span>
                 <a href="mailto:info@redbear.com" class="hover:underline">info@redbear.com</a>
               </li>
             </ul>
@@ -656,7 +739,27 @@ $blog_posts = get_published_blog_posts($koneksi, 3);
           </div>
         </div>
       </div>
-    </div>
+
+    <script>
+      // Intersection Observer for fade-in effect
+      document.addEventListener('DOMContentLoaded', function () {
+        var locationSection = document.getElementById('location');
+        if ('IntersectionObserver' in window) {
+          var observer = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+              if (entry.isIntersecting) {
+                locationSection.classList.add('visible');
+                observer.disconnect();
+              }
+            });
+          }, { threshold: 0.2 });
+          observer.observe(locationSection);
+        } else {
+          // Fallback
+          locationSection.classList.add('visible');
+        }
+      });
+    </script>
   </section>
 
   <!-- Blog Section -->

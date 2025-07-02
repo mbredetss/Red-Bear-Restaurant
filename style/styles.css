@@ -469,3 +469,165 @@
 #blog button:active {
   transform: scale(0.97);
 }
+
+
+
+
+ /* Only apply icon-effect to location info icons, not to IG/WA */
+      .location-card .group:hover .icon-effect,
+      .location-card .group:focus .icon-effect {
+        transform: scale(1.25) rotate(-8deg);
+        color: #b91c1c !important;
+        filter: drop-shadow(0 2px 8px rgba(239,68,68,0.15));
+        transition: transform 0.25s cubic-bezier(.4,0,.2,1), color 0.25s;
+      }
+      .icon-effect {
+        transition: transform 0.25s cubic-bezier(.4,0,.2,1), color 0.25s;
+        will-change: transform;
+        cursor: pointer;
+      }
+
+
+
+
+/* Fade-in animation for location section */
+      #location {
+        opacity: 0;
+        transform: translateY(40px);
+        transition: opacity 0.8s cubic-bezier(.4,0,.2,1), transform 0.8s cubic-bezier(.4,0,.2,1);
+      }
+      #location.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      /* Map zoom effect on hover */
+      .location-map-container:hover .location-map {
+        transform: scale(1.04) rotate(-1deg);
+        box-shadow: 0 8px 32px rgba(255,0,0,0.15);
+      }
+      .location-map {
+        transition: transform 0.4s cubic-bezier(.4,0,.2,1), box-shadow 0.4s;
+      }
+      /* Badge bounce */
+      .location-map-badge {
+        animation: badgeBounce 2s infinite;
+      }
+      @keyframes badgeBounce {
+        0%, 100% { transform: translateY(0);}
+        50% { transform: translateY(-8px);}
+      }
+      /* Card hover effect */
+      .location-card {
+        transition: box-shadow 0.3s, transform 0.3s;
+      }
+      .location-card:hover {
+        box-shadow: 0 12px 40px rgba(255,0,0,0.13);
+        transform: translateY(-4px) scale(1.02);
+      }
+      /* Button pulse */
+      .location-btn-instagram, .location-btn-wa {
+        position: relative;
+        overflow: hidden;
+      }
+      .location-btn-instagram::after, .location-btn-wa::after {
+        content: '';
+        position: absolute;
+        left: 50%; top: 50%;
+        width: 0; height: 0;
+        background: rgba(255,255,255,0.25);
+        border-radius: 100%;
+        transform: translate(-50%, -50%);
+        opacity: 0;
+        transition: width 0.4s, height 0.4s, opacity 0.4s;
+        z-index: 0;
+      }
+      .location-btn-instagram:active::after, .location-btn-wa:active::after {
+        width: 200%;
+        height: 200%;
+        opacity: 1;
+        transition: 0s;
+      }
+      /* Title fade-in */
+      .location-title, .location-desc, .location-card-title, .location-parking-title, .location-parking-desc {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: opacity 0.7s, transform 0.7s;
+      }
+      #location.visible .location-title { opacity: 1; transform: none; transition-delay: 0.1s;}
+      #location.visible .location-desc { opacity: 1; transform: none; transition-delay: 0.2s;}
+      #location.visible .location-card-title { opacity: 1; transform: none; transition-delay: 0.3s;}
+      #location.visible .location-parking-title { opacity: 1; transform: none; transition-delay: 0.4s;}
+      #location.visible .location-parking-desc { opacity: 1; transform: none; transition-delay: 0.5s;}
+
+
+
+
+  #blog {
+      background: linear-gradient(135deg, #fff 0%, #fff5f5 60%, #f3f4f6 100%);
+      position: relative;
+      z-index: 1;
+    }
+    #blog .group:hover img {
+      filter: brightness(0.96) saturate(1.1);
+    }
+    #blog .group:hover h3 {
+      color: #b91c1c;
+    }
+    #blog .group .bg-red-600 {
+      box-shadow: 0 2px 8px rgba(239,68,68,0.13);
+    }
+    #blog .group:hover .bg-red-600 {
+      background: #b91c1c;
+    }
+    #blog .group .rounded-2xl {
+      transition: box-shadow 0.3s, transform 0.3s;
+    }
+    #blog .group:hover .rounded-2xl {
+      box-shadow: 0 12px 40px rgba(255,0,0,0.13);
+      transform: translateY(-4px) scale(1.02);
+    }
+    /* Button improvement */
+    #blog a, #blog button {
+      transition: background 0.2s, color 0.2s, box-shadow 0.2s, transform 0.2s;
+      outline: none;
+    }
+    #blog a:focus, #blog button:focus {
+      box-shadow: 0 0 0 3px rgba(239,68,68,0.25);
+    }
+    #blog a:active, #blog button:active {
+      transform: scale(0.97);
+    }     
+
+
+
+     /* About Section Background Fix */
+    #about {
+      background: linear-gradient(135deg, #ffe5e5 0%, #fff 60%, #f3f4f6 100%);
+      /* #ffe5e5 = soft red, #fff = white, #f3f4f6 = gray-100 */
+      position: relative;
+      z-index: 1;
+    }
+    #about::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 60% 10%, rgba(255, 0, 0, 0.07) 0%, transparent 70%);
+      z-index: 0;
+      pointer-events: none;
+    }
+    #about > .container {
+      position: relative;
+      z-index: 2;
+    }
+    /* Icon hover effect */
+    .icon-effect {
+      transition: transform 0.25s cubic-bezier(.4,0,.2,1), color 0.25s;
+      will-change: transform;
+      cursor: pointer;
+    }
+    .group:hover .icon-effect,
+    .group:focus .icon-effect {
+      transform: scale(1.25) rotate(-8deg);
+      color: #b91c1c; /* darker red */
+      filter: drop-shadow(0 2px 8px rgba(239,68,68,0.15));
+    }
