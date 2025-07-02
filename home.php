@@ -739,27 +739,6 @@ $blog_posts = get_published_blog_posts($koneksi, 3);
           </div>
         </div>
       </div>
-
-    <script>
-      // Intersection Observer for fade-in effect
-      document.addEventListener('DOMContentLoaded', function () {
-        var locationSection = document.getElementById('location');
-        if ('IntersectionObserver' in window) {
-          var observer = new IntersectionObserver(function(entries) {
-            entries.forEach(function(entry) {
-              if (entry.isIntersecting) {
-                locationSection.classList.add('visible');
-                observer.disconnect();
-              }
-            });
-          }, { threshold: 0.2 });
-          observer.observe(locationSection);
-        } else {
-          // Fallback
-          locationSection.classList.add('visible');
-        }
-      });
-    </script>
   </section>
 
   <!-- Blog Section -->
