@@ -1,8 +1,22 @@
 <?php
+require_once __DIR__ . '/../database.php'; // path koneksi yang benar
+
 // Dummy data
-$customers = 3782;
-$orders = 5359;
 $monthlySales = [120, 370, 180, 300, 150, 170, 290, 90, 210, 360, 280, 100];
+
+
+
+// Ambil jumlah pelanggan (role 'user')
+$queryCustomers = "SELECT COUNT(*) AS total_customers FROM users WHERE role = 'user'";
+$resultCustomers = $koneksi->query($queryCustomers);
+$customers = ($resultCustomers && $row = $resultCustomers->fetch_assoc()) ? $row['total_customers'] : 0;
+
+// Ambil jumlah order
+$queryOrders = "SELECT COUNT(*) AS total_orders FROM orders";
+$resultOrders = $koneksi->query($queryOrders);
+$orders = ($resultOrders && $row = $resultOrders->fetch_assoc()) ? $row['total_orders'] : 0;
+
+
 
 $result = new ArrayObject([
     ['id' => 1, 'nama_user' => 'Budi', 'produk' => 'Nasi Goreng', 'jumlah' => 2, 'status' => 'Belum Bayar'],
@@ -29,6 +43,7 @@ $result = new ArrayObject([
     <div class="flex h-screen">
 
         <!-- Sidebar -->
+        <!-- Sidebar -->
         <aside class="w-64 bg-white border-r p-6 flex flex-col space-y-6">
             <h2 class="text-xl font-bold text-blue-700 mb-4">Admin Panel</h2>
             <nav class="flex flex-col gap-4">
@@ -38,8 +53,14 @@ $result = new ArrayObject([
                     Profile</a>
                 <a href="#" onclick="showContent('invoice')" class="text-gray-700 hover:text-blue-600">🧾 Invoice</a>
                 <a href="#" onclick="showContent('laporan')" class="text-gray-700 hover:text-blue-600">📈 Laporan</a>
-            </nav>
+                <hr class="my-2">
+                <a href="../home.php" class="text-gray-700 hover:text-blue-600">👥 Ke Halaman User</a>
+                <a href="../admin/saldo/add_saldo.php" class="text-gray-700 hover:text-blue-600">💰 Tambah Saldo</a>
+                <a href="../admin/tables/generate_qr.php" class="text-gray-700 hover:text-blue-600">📱 Generate QR
+                    Meja</a>
+                <a href="../admin/order/order.php" class="text-gray-700 hover:text-blue-600">🛒 Ke Halaman Order</a>
         </aside>
+
 
         <!-- Main Content -->
         <div class="flex-1 flex flex-col overflow-y-auto">
@@ -158,69 +179,121 @@ $result = new ArrayObject([
 
                 <!-- Laporan -->
                 <div id="content-laporan" class="hidden">
-                    <h2 class="text-xl font-bold mb-4">Laporan Penjualan</h2>
-                    <p class="mb-2">Contoh laporan mingguan: 2 pembeli nasi goreng, 1 es teh.</p>
-                    <button onclick="exportWord()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">📝
-                        Export to Word</button>
-                </div>
+    <h2 class="text-xl font-bold mb-4">Laporan Penjualan</h2>
+
+    <?php
+    require_once __DIR__ . '/../database.php';
+
+    $query = "
+        SELECT u.name AS nama_user, o.created_at, o.status
+        FROM orders o
+        JOIN users u ON o.user_id = u.id
+        WHERE o.created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)
+        ORDER BY o.created_at DESC
+    ";
+
+    $result = $koneksi->query($query);
+    $data = [];
+
+    while ($row = $result->fetch_assoc()) {
+        $data[] = [
+            'nama' => $row['nama_user'],
+            'tanggal' => $row['created_at'],
+            'status' => $row['status']
+        ];
+    }
+
+    // Simpan juga sebagai JSON
+    file_put_contents(__DIR__ . '/laporan.json', json_encode($data, JSON_PRETTY_PRINT));
+    ?>
+
+    <?php if (count($data) > 0): ?>
+        <table class="min-w-full bg-white rounded shadow mb-4">
+            <thead class="bg-gray-100">
+                <tr>
+                    <th class="px-4 py-2 text-left">Nama</th>
+                    <th class="px-4 py-2 text-left">Tanggal</th>
+                    <th class="px-4 py-2 text-left">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($data as $row): ?>
+                    <tr class="border-t">
+                        <td class="px-4 py-2"><?= htmlspecialchars($row['nama']) ?></td>
+                        <td class="px-4 py-2"><?= $row['tanggal'] ?></td>
+                        <td class="px-4 py-2"><?= $row['status'] ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+
+        <!-- Tombol Export -->
+        <a href="export-laporan.php" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+            📝 Export to Word
+        </a>
+    <?php else: ?>
+        <p class="text-gray-600">Tidak ada transaksi dalam 7 hari terakhir.</p>
+    <?php endif; ?>
+</div>
+
+
 
             </main>
+
+            <!-- Tombol Navigasi di Tengah -->
+
         </div>
-    </div>
 
-    <script>
-        function toggleDropdown() {
-            document.getElementById('dropdown').classList.toggle('hidden');
-        }
-
-        function showContent(id) {
-            const contents = ['dashboard', 'profile', 'invoice', 'laporan'];
-            contents.forEach(c => {
-                document.getElementById('content-' + c).classList.add('hidden');
-            });
-            document.getElementById('content-' + id).classList.remove('hidden');
-        }
-
-        // Sales Chart
-        const ctx = document.getElementById('salesChart').getContext('2d');
-        new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-                datasets: [{
-                    label: 'Sales',
-                    data: <?= json_encode($monthlySales) ?>,
-                    backgroundColor: '#6366F1'
-                }]
-            },
-            options: { responsive: true, scales: { y: { beginAtZero: true } } }
-        });
-
-        // Progress Chart
-        const progressCtx = document.getElementById('progressChart').getContext('2d');
-        new Chart(progressCtx, {
-            type: 'doughnut',
-            data: {
-                datasets: [{
-                    data: [75.55, 24.45],
-                    backgroundColor: ['#6366F1', '#E5E7EB'],
-                    borderWidth: 0
-                }]
-            },
-            options: {
-                cutout: '80%',
-                plugins: {
-                    legend: { display: false },
-                    tooltip: { enabled: false }
-                }
+        <script>
+            function toggleDropdown() {
+                document.getElementById('dropdown').classList.toggle('hidden');
             }
-        });
 
-        function exportWord() {
-            alert("Ekspor Word disiapkan di backend menggunakan PHPWord.");
-            // Logika ekspor backend dengan PHPWord bisa ditambahkan di route `laporan-export.php`
-        }
-    </script>
+            function showContent(id) {
+                const contents = ['dashboard', 'profile', 'invoice', 'laporan'];
+                contents.forEach(c => {
+                    document.getElementById('content-' + c).classList.add('hidden');
+                });
+                document.getElementById('content-' + id).classList.remove('hidden');
+            }
+
+            // Sales Chart
+            const ctx = document.getElementById('salesChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                    datasets: [{
+                        label: 'Sales',
+                        data: <?= json_encode($monthlySales) ?>,
+                        backgroundColor: '#6366F1'
+                    }]
+                },
+                options: { responsive: true, scales: { y: { beginAtZero: true } } }
+            });
+
+            // Progress Chart
+            const progressCtx = document.getElementById('progressChart').getContext('2d');
+            new Chart(progressCtx, {
+                type: 'doughnut',
+                data: {
+                    datasets: [{
+                        data: [75.55, 24.45],
+                        backgroundColor: ['#6366F1', '#E5E7EB'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    cutout: '80%',
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { enabled: false }
+                    }
+                }
+            });
+
+            
+        </script>
 </body>
 
 </html>

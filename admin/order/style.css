@@ -1,0 +1,400 @@
+/* Admin Order Management Styles */
+.status-menunggu { 
+    background-color: #fef3c7; 
+    color: #92400e; 
+}
+
+.status-memasak { 
+    background-color: #fed7aa; 
+    color: #ea580c; 
+}
+
+.status-selesai { 
+    background-color: #dcfce7; 
+    color: #166534; 
+}
+
+.status-ditolak { 
+    background-color: #fee2e2; 
+    color: #991b1b; 
+}
+
+/* Table Group Styles */
+.table-group {
+    transition: all 0.3s ease;
+}
+
+.table-group:hover {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.table-header {
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.table-header:hover {
+    background: linear-gradient(to right, #dbeafe, #c7d2fe);
+}
+
+/* Table Number Badge */
+.table-number-badge {
+    transition: transform 0.2s ease;
+}
+
+.table-header:hover .table-number-badge {
+    transform: scale(1.05);
+}
+
+/* Status Summary Badges */
+.status-summary-badge {
+    transition: all 0.2s ease;
+}
+
+.status-summary-badge:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Order Item Styles */
+.order-item {
+    transition: all 0.2s ease;
+}
+
+.order-item:hover {
+    background-color: #f9fafb;
+    transform: translateX(2px);
+}
+
+/* Collapse Indicator */
+.collapse-indicator {
+    transition: transform 0.2s ease;
+}
+
+.table-header:hover .collapse-indicator {
+    transform: scale(1.1);
+}
+
+/* Search Highlight */
+mark.bg-yellow-200 {
+    padding: 1px 2px;
+    border-radius: 2px;
+    font-weight: 600;
+}
+
+/* Empty State */
+.empty-state {
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .table-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    
+    .status-summary {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+    
+    .order-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    
+    .action-buttons {
+        width: 100%;
+        justify-content: flex-start;
+    }
+}
+
+/* Loading States */
+.loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+}
+
+/* Animation for status updates */
+.status-badge {
+    transition: all 0.3s ease;
+    font-weight: 500;
+    text-transform: capitalize;
+}
+
+.status-badge.updated {
+    animation: pulse 0.6s ease-in-out;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Hover effects for table rows */
+.hover\:bg-gray-50:hover {
+    background-color: #f9fafb;
+}
+
+/* Enhanced button visibility */
+.status-btn {
+    transition: all 0.2s ease-in-out;
+    border: 1px solid transparent;
+    font-weight: 600;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    position: relative;
+    z-index: 5;
+    min-width: 100px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(4px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+.status-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.status-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.status-btn:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
+}
+
+/* Specific button colors for better contrast */
+.status-btn.bg-blue-600 {
+    background-color: #2563eb !important;
+    color: white !important;
+    border-color: #1d4ed8;
+}
+
+.status-btn.bg-blue-600:hover {
+    background-color: #1d4ed8 !important;
+    border-color: #1e40af;
+}
+
+.status-btn.bg-green-600 {
+    background-color: #16a34a !important;
+    color: white !important;
+    border-color: #15803d;
+}
+
+.status-btn.bg-green-600:hover {
+    background-color: #15803d !important;
+    border-color: #166534;
+}
+
+.status-btn.bg-red-600 {
+    background-color: #dc2626 !important;
+    color: white !important;
+    border-color: #b91c1c;
+}
+
+.status-btn.bg-red-600:hover {
+    background-color: #b91c1c !important;
+    border-color: #991b1b;
+}
+
+/* Loading animation */
+.loading {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.fa-spinner {
+    animation: spin 1s linear infinite;
+}
+
+/* Responsive table */
+@media (max-width: 768px) {
+    .overflow-x-auto {
+        overflow-x: auto;
+    }
+    
+    table {
+        min-width: 800px;
+    }
+}
+
+/* Status badge animations */
+.status-badge:hover {
+    transform: scale(1.05);
+}
+
+/* Stats card hover effects */
+.bg-white.overflow-hidden.shadow.rounded-lg {
+    transition: all 0.3s ease;
+}
+
+.bg-white.overflow-hidden.shadow.rounded-lg:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* Auto-refresh indicator */
+.auto-refresh-indicator {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.auto-refresh-indicator.show {
+    opacity: 1;
+}
+
+/* Table group animations */
+.border.border-gray-200.rounded-lg {
+    transition: all 0.3s ease;
+}
+
+.border.border-gray-200.rounded-lg:hover {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Stagger animation for multiple table groups */
+.border.border-gray-200.rounded-lg:nth-child(1) { animation-delay: 0.1s; }
+.border.border-gray-200.rounded-lg:nth-child(2) { animation-delay: 0.2s; }
+.border.border-gray-200.rounded-lg:nth-child(3) { animation-delay: 0.3s; }
+.border.border-gray-200.rounded-lg:nth-child(4) { animation-delay: 0.4s; }
+.border.border-gray-200.rounded-lg:nth-child(5) { animation-delay: 0.5s; }
+
+/* Action buttons container */
+.action-buttons {
+    position: relative;
+    z-index: 10;
+}
+
+/* Notification Animation */
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOut {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+/* Search and Filter Styling */
+#search-orders:focus, #status-filter:focus {
+    border-color: #ef4444;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+/* Empty State Styling */
+.text-gray-500 .fas.fa-utensils {
+    opacity: 0.5;
+}
+
+/* Table Number Badge */
+.flex.items-center.justify-center.w-12.h-12.bg-blue-500 {
+    box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3);
+}
+
+/* Order Item Hover */
+.px-6.py-4:hover {
+    background-color: #f9fafb;
+    border-left: 3px solid #ef4444;
+    margin-left: -3px;
+}
+
+/* Status Summary Badges */
+.inline-flex.items-center.px-2\.5.py-0\.5.rounded-full.text-xs.font-medium {
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+/* Disabled Button State */
+.status-btn:disabled, .table-action-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none !important;
+}
+
+/* Focus States for Accessibility */
+.status-btn:focus, .table-action-btn:focus {
+    outline: 2px solid #ef4444;
+    outline-offset: 2px;
+}
+
+/* Smooth Transitions */
+* {
+    transition: all 0.2s ease;
+}
+
+/* Custom Scrollbar */
+.overflow-y-auto::-webkit-scrollbar {
+    width: 6px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-track {
+    background: #f1f5f9;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 3px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+} 

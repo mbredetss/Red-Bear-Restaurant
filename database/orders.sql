@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 21 Jun 2025 pada 07.54
+-- Waktu pembuatan: 27 Jun 2025 pada 11.50
 -- Versi server: 10.4.32-MariaDB
 -- Versi PHP: 8.1.25
 
@@ -29,10 +29,17 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `orders` (
   `id` int(11) NOT NULL,
-  `user_id` int(11) DEFAULT NULL,
-  `status` enum('menunggu','diproses','dikirim','selesai','ditolak') DEFAULT 'menunggu',
+  `offline_table_session_id` int(11) DEFAULT NULL,
+  `booking_id` int(11) DEFAULT NULL,
+  `username` varchar(255) NOT NULL,
+  `menu_id` int(11) NOT NULL,
+  `menu_name` varchar(255) NOT NULL,
+  `quantity` int(11) NOT NULL DEFAULT 1,
+  `catatan` text DEFAULT NULL,
+  `status` enum('menunggu','memasak','selesai','ditolak') NOT NULL DEFAULT 'menunggu',
+  `order_type` enum('offline','booking') NOT NULL DEFAULT 'offline',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Indexes for dumped tables
@@ -43,7 +50,15 @@ CREATE TABLE `orders` (
 --
 ALTER TABLE `orders`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `user_id` (`user_id`);
+  ADD KEY `offline_table_session_id` (`offline_table_session_id`),
+  ADD KEY `booking_id` (`booking_id`),
+  ADD KEY `menu_id` (`menu_id`),
+  ADD KEY `status` (`status`),
+  ADD KEY `created_at` (`created_at`),
+  ADD KEY `order_type` (`order_type`),
+  ADD KEY `idx_orders_session_status` (`offline_table_session_id`,`status`),
+  ADD KEY `idx_orders_booking_status` (`booking_id`,`status`),
+  ADD KEY `idx_orders_created_status` (`created_at`,`status`);
 
 --
 -- AUTO_INCREMENT untuk tabel yang dibuang
@@ -53,19 +68,10 @@ ALTER TABLE `orders`
 -- AUTO_INCREMENT untuk tabel `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
-
---
--- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
---
-
---
--- Ketidakleluasaan untuk tabel `orders`
---
-ALTER TABLE `orders`
-  ADD CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+ 

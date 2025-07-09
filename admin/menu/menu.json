@@ -1,34 +1,18 @@
 {
-    "udang-kuah": {
+    "BBQ": {
         "tersedia": true,
         "jenis": "makanan"
     },
-    "ayam-pedas": {
+    "Wagyu A5": {
         "tersedia": true,
         "jenis": "makanan"
     },
-    "nasi-goreng": {
-        "tersedia": true,
-        "jenis": "makanan"
-    },
-    "whiskey": {
+    "Blue Hawaii": {
         "tersedia": true,
         "jenis": "minuman"
     },
-    "anggur": {
+    "Fassionala Sunrise": {
         "tersedia": true,
         "jenis": "minuman"
-    },
-    "jus-aneka-rasa": {
-        "tersedia": true,
-        "jenis": "minuman"
-    },
-    "teh": {
-        "tersedia": true,
-        "jenis": "minuman"
-    },
-    "ikan": {
-        "tersedia": true,
-        "jenis": "makanan"
     }
 }

@@ -11,3 +11,5 @@ function koneksiDatabase($namaDatabase = "red bear", $host = "localhost", $usern
 
     return $koneksi;
 }
+ 
+$koneksi = koneksiDatabase();
