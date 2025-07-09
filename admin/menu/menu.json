@@ -1,18 +1,14 @@
 {
     "BBQ": {
-        "tersedia": true,
-        "jenis": "makanan"
+        "tersedia": false
     },
     "Wagyu A5": {
-        "tersedia": true,
-        "jenis": "makanan"
+        "tersedia": true
     },
     "Blue Hawaii": {
-        "tersedia": true,
-        "jenis": "minuman"
+        "tersedia": true
     },
     "Fassionala Sunrise": {
-        "tersedia": true,
-        "jenis": "minuman"
+        "tersedia": true
     }
 }
