@@ -1,5 +1,17 @@
 <?php
-require_once __DIR__ . '/../database.php'; // path koneksi yang benar
+require_once __DIR__ . '/../database.php';
+
+// Menangani konfirmasi pesanan
+if (isset($_GET['konfirmasi_id'])) {
+    $konfirmasi_id = (int) $_GET['konfirmasi_id'];
+    $koneksi->query("UPDATE orders SET status = 'selesai' WHERE id = $konfirmasi_id");
+
+    // Redirect agar URL kembali bersih
+    header("Location: " . strtok($_SERVER["REQUEST_URI"], '?'));
+    exit;
+}
+
+
 
 // Dummy data
 $monthlySales = [120, 370, 180, 300, 150, 170, 290, 90, 210, 360, 280, 100];
@@ -18,10 +30,6 @@ $orders = ($resultOrders && $row = $resultOrders->fetch_assoc()) ? $row['total_o
 
 
 
-$result = new ArrayObject([
-    ['id' => 1, 'nama_user' => 'Budi', 'produk' => 'Nasi Goreng', 'jumlah' => 2, 'status' => 'Belum Bayar'],
-    ['id' => 2, 'nama_user' => 'Siti', 'produk' => 'Es Teh', 'jumlah' => 1, 'status' => 'Terkonfirmasi']
-], ArrayObject::ARRAY_AS_PROPS);
 ?>
 
 <!DOCTYPE html>
@@ -65,31 +73,7 @@ $result = new ArrayObject([
         <!-- Main Content -->
         <div class="flex-1 flex flex-col overflow-y-auto">
 
-            <!-- Topbar -->
-            <header class="bg-white shadow p-4 flex justify-end items-center">
-                <div class="relative">
-                    <button onclick="toggleDropdown()" class="flex items-center gap-2 focus:outline-none">
-                        <img src="https://i.pravatar.cc/40" class="w-10 h-10 rounded-full" />
-                        <span class="font-semibold">Musharof</span>
-                        <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path d="M19 9l-7 7-7-7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                        </svg>
-                    </button>
-                    <div id="dropdown" class="hidden absolute right-0 mt-2 w-56 bg-white border rounded-lg shadow z-50">
-                        <div class="p-4">
-                            <p class="font-semibold">Musharof Chowdhury</p>
-                            <p class="text-sm text-gray-500">randomuser@pimjo.com</p>
-                        </div>
-                        <hr>
-                        <a href="#" onclick="showContent('profile')" class="block px-4 py-2 hover:bg-gray-100">👤 Edit
-                            Profile</a>
-                        <a href="#" class="block px-4 py-2 hover:bg-gray-100">⚙ Account Settings</a>
-                        <a href="#" class="block px-4 py-2 hover:bg-gray-100">❓ Support</a>
-                        <hr>
-                        <a href="logout.php" class="block px-4 py-2 text-red-500 hover:bg-gray-100">🚪 Sign Out</a>
-                    </div>
-                </div>
-            </header>
+
 
             <!-- Dynamic Content Container -->
             <main class="p-6 space-y-8">
@@ -142,101 +126,135 @@ $result = new ArrayObject([
                     </div>
                 </div>
 
+
+                <!-- Invoice -->
                 <!-- Invoice -->
                 <div id="content-invoice" class="hidden">
                     <h2 class="text-xl font-bold mb-4">Riwayat Transaksi</h2>
+
+                    <?php
+                    $queryInvoice = "
+        SELECT o.id, u.name AS nama_user, o.status, o.created_at
+        FROM orders o
+        LEFT JOIN users u ON o.user_id = u.id
+        ORDER BY o.created_at DESC
+    ";
+                    $invoiceResult = $koneksi->query($queryInvoice);
+                    ?>
+
                     <table class="min-w-full bg-white rounded shadow">
                         <thead class="bg-gray-100">
                             <tr>
                                 <th class="px-4 py-2 text-left">ID</th>
                                 <th class="px-4 py-2 text-left">Nama</th>
-                                <th class="px-4 py-2 text-left">Produk</th>
-                                <th class="px-4 py-2 text-left">Jumlah</th>
+                                <th class="px-4 py-2 text-left">Tanggal</th>
                                 <th class="px-4 py-2 text-left">Status</th>
                                 <th class="px-4 py-2 text-left">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach ($result as $r): ?>
+                            <?php while ($row = $invoiceResult->fetch_assoc()): ?>
                                 <tr class="border-t">
-                                    <td class="px-4 py-2"><?= $r['id'] ?></td>
-                                    <td class="px-4 py-2"><?= $r['nama_user'] ?></td>
-                                    <td class="px-4 py-2"><?= $r['produk'] ?></td>
-                                    <td class="px-4 py-2"><?= $r['jumlah'] ?></td>
-                                    <td class="px-4 py-2"><?= $r['status'] ?></td>
+                                    <td class="px-4 py-2"><?= $row['id'] ?></td>
+                                    <td class="px-4 py-2"><?= htmlspecialchars($row['nama_user']) ?></td>
+                                    <td class="px-4 py-2"><?= $row['created_at'] ?></td>
+                                    <td class="px-4 py-2"><?= ucfirst($row['status']) ?></td>
                                     <td class="px-4 py-2">
-                                        <?php if ($r['status'] != 'Terkonfirmasi'): ?>
-                                            <a href="#" class="text-blue-600">Konfirmasi</a>
+                                        <?php if ($row['status'] != 'selesai'): ?>
+                                            <a href="?konfirmasi_id=<?= $row['id'] ?>"
+                                                class="text-blue-600 hover:underline">Konfirmasi</a>
                                         <?php else: ?>
-                                            <span class="text-green-600">Terkonfirmasi</span>
+                                            <span class="text-green-600">Selesai</span>
                                         <?php endif; ?>
                                     </td>
                                 </tr>
-                            <?php endforeach; ?>
+                            <?php endwhile; ?>
                         </tbody>
                     </table>
                 </div>
 
+
+
                 <!-- Laporan -->
                 <div id="content-laporan" class="hidden">
-    <h2 class="text-xl font-bold mb-4">Laporan Penjualan</h2>
+                    <h2 class="text-xl font-bold mb-4">Laporan Penjualan</h2>
 
-    <?php
-    require_once __DIR__ . '/../database.php';
+                    <?php
+                    // Ambil filter periode dari URL, default "harian"
+                    $periode = $_GET['periode'] ?? 'harian';
+                    switch ($periode) {
+                        case 'minggu':
+                            $interval = '7 DAY';
+                            break;
+                        case 'bulan':
+                            $interval = '30 DAY';
+                            break;
+                        case 'harian':
+                        default:
+                            $interval = '1 DAY';
+                            break;
+                    }
 
-    $query = "
+                    // Query laporan: ambil order dengan created_at >= NOW() - interval yang dipilih
+                    $query = "
         SELECT u.name AS nama_user, o.created_at, o.status
         FROM orders o
         JOIN users u ON o.user_id = u.id
-        WHERE o.created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)
+        WHERE o.created_at >= DATE_SUB(NOW(), INTERVAL $interval)
         ORDER BY o.created_at DESC
     ";
+                    $result = $koneksi->query($query);
+                    $data = [];
+                    while ($row = $result->fetch_assoc()) {
+                        $data[] = [
+                            'nama' => $row['nama_user'],
+                            'tanggal' => $row['created_at'],
+                            'status' => $row['status']
+                        ];
+                    }
+                    // Simpan data laporan ke file JSON (untuk digunakan eksport Word)
+                    file_put_contents(__DIR__ . '/laporan.json', json_encode($data, JSON_PRETTY_PRINT));
+                    ?>
 
-    $result = $koneksi->query($query);
-    $data = [];
+                    <!-- Dropdown filter waktu (gunakan parameter 'periode') -->
+                    <form method="GET" class="mb-4">
+                        <label for="periode" class="mr-2 font-semibold">Filter Waktu:</label>
+                        <select name="periode" id="periode" class="border rounded px-2 py-1"
+                            onchange="this.form.submit()">
+                            <option value="harian" <?= $periode == 'harian' ? 'selected' : '' ?>>Harian</option>
+                            <option value="minggu" <?= $periode == 'minggu' ? 'selected' : '' ?>>Mingguan</option>
+                            <option value="bulan" <?= $periode == 'bulan' ? 'selected' : '' ?>>Bulanan</option>
+                        </select>
+                    </form>
 
-    while ($row = $result->fetch_assoc()) {
-        $data[] = [
-            'nama' => $row['nama_user'],
-            'tanggal' => $row['created_at'],
-            'status' => $row['status']
-        ];
-    }
+                    <?php if (count($data) > 0): ?>
+                        <table class="min-w-full bg-white rounded shadow mb-4">
+                            <thead class="bg-gray-100">
+                                <tr>
+                                    <th class="px-4 py-2 text-left">Nama</th>
+                                    <th class="px-4 py-2 text-left">Tanggal</th>
+                                    <th class="px-4 py-2 text-left">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($data as $row): ?>
+                                    <tr class="border-t">
+                                        <td class="px-4 py-2"><?= htmlspecialchars($row['nama']) ?></td>
+                                        <td class="px-4 py-2"><?= $row['tanggal'] ?></td>
+                                        <td class="px-4 py-2"><?= $row['status'] ?></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    <?php else: ?>
+                        <p class="text-gray-600 mb-4">Tidak ada transaksi pada periode ini.</p>
+                    <?php endif; ?>
 
-    // Simpan juga sebagai JSON
-    file_put_contents(__DIR__ . '/laporan.json', json_encode($data, JSON_PRETTY_PRINT));
-    ?>
-
-    <?php if (count($data) > 0): ?>
-        <table class="min-w-full bg-white rounded shadow mb-4">
-            <thead class="bg-gray-100">
-                <tr>
-                    <th class="px-4 py-2 text-left">Nama</th>
-                    <th class="px-4 py-2 text-left">Tanggal</th>
-                    <th class="px-4 py-2 text-left">Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($data as $row): ?>
-                    <tr class="border-t">
-                        <td class="px-4 py-2"><?= htmlspecialchars($row['nama']) ?></td>
-                        <td class="px-4 py-2"><?= $row['tanggal'] ?></td>
-                        <td class="px-4 py-2"><?= $row['status'] ?></td>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-
-        <!-- Tombol Export -->
-        <a href="export-laporan.php" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-            📝 Export to Word
-        </a>
-    <?php else: ?>
-        <p class="text-gray-600">Tidak ada transaksi dalam 7 hari terakhir.</p>
-    <?php endif; ?>
-</div>
-
-
+                    <!-- Tombol Export (selalu tampil meskipun data kosong) -->
+                    <a href="export-laporan.php" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                        📝 Export to Word
+                    </a>
+                </div>
 
             </main>
 
@@ -292,7 +310,7 @@ $result = new ArrayObject([
                 }
             });
 
-            
+
         </script>
 </body>
 
