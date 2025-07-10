@@ -560,7 +560,7 @@ $blog_posts = get_published_blog_posts($koneksi, 3);
         <div
           class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100 hover:shadow-2xl transition-all duration-300 flex flex-col group">
           <div class="relative h-64 overflow-hidden">
-            <img src="img/merch/tshirt-redbear.png" alt="Red Bear T-Shirt"
+            <img src="img/merchandise/t-shirt.jpg" alt="Red Bear T-Shirt"
               class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
             <span
               class="absolute top-4 left-4 bg-red-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">Best
@@ -585,7 +585,7 @@ $blog_posts = get_published_blog_posts($koneksi, 3);
         <div
           class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100 hover:shadow-2xl transition-all duration-300 flex flex-col group">
           <div class="relative h-64 overflow-hidden">
-            <img src="img/merch/tumbler-redbear.png" alt="Red Bear Tumbler"
+            <img src="img/merchandise/tumbler.jpg" alt="Red Bear Tumbler"
               class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
             <span
               class="absolute top-4 left-4 bg-yellow-500 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">Limited
@@ -610,7 +610,7 @@ $blog_posts = get_published_blog_posts($koneksi, 3);
         <div
           class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100 hover:shadow-2xl transition-all duration-300 flex flex-col group">
           <div class="relative h-64 overflow-hidden">
-            <img src="img/merch/totebag-redbear.png" alt="Red Bear Tote Bag"
+            <img src="img/merchandise/tote-bag.jpg" alt="Red Bear Tote Bag"
               class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
             <span
               class="absolute top-4 left-4 bg-blue-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">New
