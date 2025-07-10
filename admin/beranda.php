@@ -13,8 +13,21 @@ if (isset($_GET['konfirmasi_id'])) {
 
 
 
-// Dummy data
-$monthlySales = [120, 370, 180, 300, 150, 170, 290, 90, 210, 360, 280, 100];
+$monthlySales = array_fill(0, 12, 0); // Indeks dari 0 agar cocok dengan JS
+
+$queryMonthlySales = "
+    SELECT MONTH(created_at) AS bulan, COUNT(*) AS total
+    FROM orders
+    WHERE YEAR(created_at) = YEAR(CURDATE())
+    GROUP BY MONTH(created_at)
+";
+
+$resultMonthly = $koneksi->query($queryMonthlySales);
+while ($row = $resultMonthly->fetch_assoc()) {
+    $bulan = (int) $row['bulan']; // bulan: 1-12
+    $monthlySales[$bulan - 1] = (int) $row['total']; // array index 0-11
+}
+
 
 
 
@@ -275,28 +288,39 @@ $orders = ($resultOrders && $row = $resultOrders->fetch_assoc()) ? $row['total_o
                 document.getElementById('content-' + id).classList.remove('hidden');
             }
 
-            // Sales Chart
+            // Sales Chart - Bar Chart (bulanan)
             const ctx = document.getElementById('salesChart').getContext('2d');
+            const salesData = <?= json_encode(array_values($monthlySales)) ?>;
             new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
                     datasets: [{
                         label: 'Sales',
-                        data: <?= json_encode($monthlySales) ?>,
+                        data: salesData,
                         backgroundColor: '#6366F1'
                     }]
                 },
-                options: { responsive: true, scales: { y: { beginAtZero: true } } }
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: { beginAtZero: true }
+                    }
+                }
             });
 
-            // Progress Chart
+            // Progress Chart - Monthly Target
+            const currentMonth = new Date().getMonth(); // 0 = Jan, 11 = Dec
+            const currentMonthSales = salesData[currentMonth] || 0;
+            const target = 100;
+            const percent = Math.min((currentMonthSales / target) * 100, 100).toFixed(2);
+
             const progressCtx = document.getElementById('progressChart').getContext('2d');
             new Chart(progressCtx, {
                 type: 'doughnut',
                 data: {
                     datasets: [{
-                        data: [75.55, 24.45],
+                        data: [percent, 100 - percent],
                         backgroundColor: ['#6366F1', '#E5E7EB'],
                         borderWidth: 0
                     }]
@@ -310,8 +334,13 @@ $orders = ($resultOrders && $row = $resultOrders->fetch_assoc()) ? $row['total_o
                 }
             });
 
-
+            // Tampilkan persen ke elemen text
+            document.addEventListener("DOMContentLoaded", () => {
+                const text = document.querySelector('#progressChart').closest('div').querySelector('p.text-center');
+                if (text) text.innerText = `${percent}%`;
+            });
         </script>
+
 </body>
 
 </html>
