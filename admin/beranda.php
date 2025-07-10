@@ -30,6 +30,7 @@ while ($row = $resultMonthly->fetch_assoc()) {
 
 
 
+
 require_once __DIR__ . '/../database.php'; // path koneksi yang benar
 
 // ======= Cek Kode Meja (Dimasukkan ke beranda.php) =======
@@ -61,9 +62,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['check_table_submit']))
         $booking = false;
     }
 }
-
-// Dummy data
-$monthlySales = [120, 370, 180, 300, 150, 170, 290, 90, 210, 360, 280, 100];
 
 // Ambil jumlah pelanggan (role 'user')
 $queryCustomers = "SELECT COUNT(*) AS total_customers FROM users WHERE role = 'user'";
@@ -105,8 +103,10 @@ $orders = ($resultOrders && $row = $resultOrders->fetch_assoc()) ? $row['total_o
                     Profile</a>
                 <a href="#" onclick="showContent('invoice')" class="text-gray-700 hover:text-blue-600">🧾 Invoice</a>
                 <a href="#" onclick="showContent('laporan')" class="text-gray-700 hover:text-blue-600">📈 Laporan</a>
-                <a href="#" onclick="showContent('checkkode')" class="text-gray-700 hover:text-blue-600">🔍 Cek Kode
-                    Meja</a>
+                <a href="#" onclick="showContent('checkkode')" class="text-gray-700 hover:text-blue-600">
+                    🔍 Cek Kode Meja
+                </a>
+
                 <hr class="my-2">
                 <a href="../home.php" class="text-gray-700 hover:text-blue-600">👥 Ke Halaman User</a>
                 <a href="../admin/saldo/add_saldo.php" class="text-gray-700 hover:text-blue-600">💰 Tambah Saldo</a>
@@ -301,101 +301,54 @@ $orders = ($resultOrders && $row = $resultOrders->fetch_assoc()) ? $row['total_o
                     <a href="export-laporan.php" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
                         📝 Export to Word
                     </a>
-                </div>
-                    <h2 class="text-xl font-bold mb-4">Laporan Penjualan</h2>
-                    <?php   
-                    require_once __DIR__ . '/../database.php';
-                    $query = "
-                        SELECT u.name AS nama_user, o.created_at, o.status
-                        FROM orders o
-                        JOIN users u ON o.user_id = u.id
-                        WHERE o.created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)
-                        ORDER BY o.created_at DESC
-                    ";
-                    $result = $koneksi->query($query);
-                    $data = [];
-                    while ($row = $result->fetch_assoc()) {
-                        $data[] = [
-                            'nama' => $row['nama_user'],
-                            'tanggal' => $row['created_at'],
-                            'status' => $row['status']
-                        ];
-                    }
-                    file_put_contents(__DIR__ . '/laporan.json', json_encode($data, JSON_PRETTY_PRINT));
-                    ?>
-                    <?php if (count($data) > 0): ?>
-                        <table class="min-w-full bg-white rounded shadow mb-4">
-                            <thead class="bg-gray-100">
-                                <tr>
-                                    <th class="px-4 py-2 text-left">Nama</th>
-                                    <th class="px-4 py-2 text-left">Tanggal</th>
-                                    <th class="px-4 py-2 text-left">Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach ($data as $row): ?>
-                                    <tr class="border-t">
-                                        <td class="px-4 py-2"><?= htmlspecialchars($row['nama']) ?></td>
-                                        <td class="px-4 py-2"><?= $row['tanggal'] ?></td>
-                                        <td class="px-4 py-2"><?= $row['status'] ?></td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
-                        <a href="export-laporan.php" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-                            📝 Export to Word
-                        </a>
-                    <?php else: ?>
-                        <p class="text-gray-600">Tidak ada transaksi dalam 7 hari terakhir.</p>
-                    <?php endif; ?>
-                </div>
-                <!-- Check Kode Meja -->
-                <div id="content-checkkode" class="<?= (isset($_POST['check_table_submit']) ? '' : 'hidden') ?>">
-                    <div class="bg-white p-6 rounded shadow">
-                        <h2 class="text-xl font-bold mb-4">Cek Kode Meja</h2>
-                        <form method="POST" class="flex gap-4 mb-4">
-                            <input type="text" name="table_code" placeholder="Masukkan Kode Meja" required
-                                class="border px-4 py-2 rounded w-64 focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                            <button type="submit" name="check_table_submit"
-                                class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-                                🔍 Cek
-                            </button>
-                        </form>
 
-                        <?php if (isset($booking) && $booking): ?>
-                            <table class="min-w-full bg-white rounded shadow mb-4">
-                                <thead class="bg-gray-100">
-                                    <tr>
-                                        <th class="px-4 py-2">Kode Meja</th>
-                                        <th class="px-4 py-2">Pelanggan</th>
-                                        <th class="px-4 py-2">Email</th>
-                                        <th class="px-4 py-2">No HP</th>
-                                        <th class="px-4 py-2">Tanggal</th>
-                                        <th class="px-4 py-2">Waktu</th>
-                                        <th class="px-4 py-2">Status</th>
-                                        <th class="px-4 py-2">Jumlah Tamu</th>
-                                        <th class="px-4 py-2">Catatan</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr class="border-t">
-                                        <td class="px-4 py-2"><?= htmlspecialchars($booking['table_code']) ?></td>
-                                        <td class="px-4 py-2"><?= htmlspecialchars($booking['pelanggan']) ?></td>
-                                        <td class="px-4 py-2"><?= htmlspecialchars($booking['email']) ?></td>
-                                        <td class="px-4 py-2"><?= htmlspecialchars($booking['phone'] ?? '-') ?></td>
-                                        <td class="px-4 py-2"><?= htmlspecialchars($booking['booking_date']) ?></td>
-                                        <td class="px-4 py-2"><?= htmlspecialchars($booking['booking_time']) ?></td>
-                                        <td class="px-4 py-2"><?= htmlspecialchars($booking['status']) ?></td>
-                                        <td class="px-4 py-2"><?= htmlspecialchars($booking['jumlah_tamu']) ?></td>
-                                        <td class="px-4 py-2"><?= htmlspecialchars($booking['catatan'] ?? '-') ?></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        <?php elseif (isset($booking) && !$booking): ?>
-                            <p class="text-red-500">Kode meja tidak valid atau tidak ditemukan.</p>
-                        <?php endif; ?>
+                    <!-- Cek Kode Meja -->
+                    <div id="content-checkkode" class="hidden">
+                        <div class="bg-white p-6 rounded shadow">
+                            <h2 class="text-xl font-bold mb-4">Cek Kode Meja</h2>
+                            <form method="POST" class="flex gap-4 mb-4">
+                                <input type="text" name="table_code" placeholder="Masukkan Kode Meja" required
+                                    class="border px-4 py-2 rounded w-64 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                                <button type="submit" name="check_table_submit"
+                                    class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                                    🔍 Cek
+                                </button>
+                            </form>
+
+                            <?php if (isset($booking) && $booking): ?>
+                                <table class="min-w-full bg-white rounded shadow mb-4">
+                                    <thead class="bg-gray-100">
+                                        <tr>
+                                            <th class="px-4 py-2">Kode Meja</th>
+                                            <th class="px-4 py-2">Pelanggan</th>
+                                            <th class="px-4 py-2">Email</th>
+                                            <th class="px-4 py-2">No HP</th>
+                                            <th class="px-4 py-2">Tanggal</th>
+                                            <th class="px-4 py-2">Waktu</th>
+                                            <th class="px-4 py-2">Status</th>
+                                            <th class="px-4 py-2">Jumlah Tamu</th>
+                                            <th class="px-4 py-2">Catatan</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="border-t">
+                                            <td class="px-4 py-2"><?= htmlspecialchars($booking['table_code']) ?></td>
+                                            <td class="px-4 py-2"><?= htmlspecialchars($booking['pelanggan']) ?></td>
+                                            <td class="px-4 py-2"><?= htmlspecialchars($booking['email']) ?></td>
+                                            <td class="px-4 py-2"><?= htmlspecialchars($booking['phone'] ?? '-') ?></td>
+                                            <td class="px-4 py-2"><?= htmlspecialchars($booking['booking_date']) ?></td>
+                                            <td class="px-4 py-2"><?= htmlspecialchars($booking['booking_time']) ?></td>
+                                            <td class="px-4 py-2"><?= htmlspecialchars($booking['status']) ?></td>
+                                            <td class="px-4 py-2"><?= htmlspecialchars($booking['jumlah_tamu']) ?></td>
+                                            <td class="px-4 py-2"><?= htmlspecialchars($booking['catatan'] ?? '-') ?></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            <?php elseif (isset($_POST['check_table_submit'])): ?>
+                                <p class="text-red-500">Kode meja tidak valid atau tidak ditemukan.</p>
+                            <?php endif; ?>
+                        </div>
                     </div>
-                </div>
 
             </main>
         </div>
@@ -406,7 +359,7 @@ $orders = ($resultOrders && $row = $resultOrders->fetch_assoc()) ? $row['total_o
             }
 
             function showContent(id) {
-                const contents = ['dashboard', 'profile', 'invoice', 'laporan', 'checkkode'];
+                const contents = ['dashboard', 'profile', 'invoice', 'laporan'];
                 contents.forEach(c => {
                     document.getElementById('content-' + c).classList.add('hidden');
                 });
