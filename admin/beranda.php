@@ -113,6 +113,7 @@ $orders = ($resultOrders && $row = $resultOrders->fetch_assoc()) ? $row['total_o
                 <a href="../admin/tables/generate_qr.php" class="text-gray-700 hover:text-blue-600">📱 Generate QR
                     Meja</a>
                 <a href="../admin/order/order.php" class="text-gray-700 hover:text-blue-600">🛒 Ke Halaman Order</a>
+                <a href="../admin/menu/menu.php" class="text-gray-700 hover:text-blue-600">📜 Tambah Menu</a>
             </nav>
         </aside>
 
