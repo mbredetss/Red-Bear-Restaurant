@@ -301,54 +301,54 @@ $orders = ($resultOrders && $row = $resultOrders->fetch_assoc()) ? $row['total_o
                     <a href="export-laporan.php" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
                         📝 Export to Word
                     </a>
+                </div>
+                <!-- Cek Kode Meja -->
+                <div id="content-checkkode" class="hidden">
+                    <div class="bg-white p-6 rounded shadow">
+                        <h2 class="text-xl font-bold mb-4">Cek Kode Meja</h2>
+                        <form method="POST" class="flex gap-4 mb-4">
+                            <input type="text" name="table_code" placeholder="Masukkan Kode Meja" required
+                                class="border px-4 py-2 rounded w-64 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                            <button type="submit" name="check_table_submit"
+                                class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                                🔍 Cek
+                            </button>
+                        </form>
 
-                    <!-- Cek Kode Meja -->
-                    <div id="content-checkkode" class="hidden">
-                        <div class="bg-white p-6 rounded shadow">
-                            <h2 class="text-xl font-bold mb-4">Cek Kode Meja</h2>
-                            <form method="POST" class="flex gap-4 mb-4">
-                                <input type="text" name="table_code" placeholder="Masukkan Kode Meja" required
-                                    class="border px-4 py-2 rounded w-64 focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                                <button type="submit" name="check_table_submit"
-                                    class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-                                    🔍 Cek
-                                </button>
-                            </form>
-
-                            <?php if (isset($booking) && $booking): ?>
-                                <table class="min-w-full bg-white rounded shadow mb-4">
-                                    <thead class="bg-gray-100">
-                                        <tr>
-                                            <th class="px-4 py-2">Kode Meja</th>
-                                            <th class="px-4 py-2">Pelanggan</th>
-                                            <th class="px-4 py-2">Email</th>
-                                            <th class="px-4 py-2">No HP</th>
-                                            <th class="px-4 py-2">Tanggal</th>
-                                            <th class="px-4 py-2">Waktu</th>
-                                            <th class="px-4 py-2">Status</th>
-                                            <th class="px-4 py-2">Jumlah Tamu</th>
-                                            <th class="px-4 py-2">Catatan</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr class="border-t">
-                                            <td class="px-4 py-2"><?= htmlspecialchars($booking['table_code']) ?></td>
-                                            <td class="px-4 py-2"><?= htmlspecialchars($booking['pelanggan']) ?></td>
-                                            <td class="px-4 py-2"><?= htmlspecialchars($booking['email']) ?></td>
-                                            <td class="px-4 py-2"><?= htmlspecialchars($booking['phone'] ?? '-') ?></td>
-                                            <td class="px-4 py-2"><?= htmlspecialchars($booking['booking_date']) ?></td>
-                                            <td class="px-4 py-2"><?= htmlspecialchars($booking['booking_time']) ?></td>
-                                            <td class="px-4 py-2"><?= htmlspecialchars($booking['status']) ?></td>
-                                            <td class="px-4 py-2"><?= htmlspecialchars($booking['jumlah_tamu']) ?></td>
-                                            <td class="px-4 py-2"><?= htmlspecialchars($booking['catatan'] ?? '-') ?></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            <?php elseif (isset($_POST['check_table_submit'])): ?>
-                                <p class="text-red-500">Kode meja tidak valid atau tidak ditemukan.</p>
-                            <?php endif; ?>
-                        </div>
+                        <?php if (isset($booking) && $booking): ?>
+                            <table class="min-w-full bg-white rounded shadow mb-4">
+                                <thead class="bg-gray-100">
+                                    <tr>
+                                        <th class="px-4 py-2">Kode Meja</th>
+                                        <th class="px-4 py-2">Pelanggan</th>
+                                        <th class="px-4 py-2">Email</th>
+                                        <th class="px-4 py-2">No HP</th>
+                                        <th class="px-4 py-2">Tanggal</th>
+                                        <th class="px-4 py-2">Waktu</th>
+                                        <th class="px-4 py-2">Status</th>
+                                        <th class="px-4 py-2">Jumlah Tamu</th>
+                                        <th class="px-4 py-2">Catatan</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="border-t">
+                                        <td class="px-4 py-2"><?= htmlspecialchars($booking['table_code']) ?></td>
+                                        <td class="px-4 py-2"><?= htmlspecialchars($booking['pelanggan']) ?></td>
+                                        <td class="px-4 py-2"><?= htmlspecialchars($booking['email']) ?></td>
+                                        <td class="px-4 py-2"><?= htmlspecialchars($booking['phone'] ?? '-') ?></td>
+                                        <td class="px-4 py-2"><?= htmlspecialchars($booking['booking_date']) ?></td>
+                                        <td class="px-4 py-2"><?= htmlspecialchars($booking['booking_time']) ?></td>
+                                        <td class="px-4 py-2"><?= htmlspecialchars($booking['status']) ?></td>
+                                        <td class="px-4 py-2"><?= htmlspecialchars($booking['jumlah_tamu']) ?></td>
+                                        <td class="px-4 py-2"><?= htmlspecialchars($booking['catatan'] ?? '-') ?></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        <?php elseif (isset($_POST['check_table_submit'])): ?>
+                            <p class="text-red-500">Kode meja tidak valid atau tidak ditemukan.</p>
+                        <?php endif; ?>
                     </div>
+                </div>
 
             </main>
         </div>
