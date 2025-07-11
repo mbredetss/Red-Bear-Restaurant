@@ -45,8 +45,7 @@ $blog_posts = get_published_blog_posts($koneksi, 3);
       <a href="#merchandise"
         class="hover:bg-white/10 text-white px-3 py-2 rounded-md font-semibold text-sm transition-colors">MERCHANDISE</a>
       <a href="#" id="tableStatusBtn"
-        class="hover:bg-white/10 text-white px-3 py-2 rounded-md font-semibold text-sm transition-colors">STATUS
-        MEJA</a>
+        class="hover:bg-white/10 text-white px-3 py-2 rounded-md font-semibold text-sm transition-colors">STATUS MEJA</a>
 
       <!-- More Dropdown -->
       <div class="relative" id="more-dropdown">
